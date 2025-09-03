@@ -1,16 +1,16 @@
 import { useState, useRef, useEffect } from 'react';
-import { Editor } from '@tinymce/tinymce-react';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, Save, Eye, AlertCircle } from 'lucide-react';
+import { ArrowLeft, Save, Eye, Upload } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
 import { BlogPost } from '@/types/database';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 
 interface BlogEditorProps {
   post?: BlogPost | null;
@@ -20,7 +20,7 @@ interface BlogEditorProps {
 
 const BlogEditor = ({ post, onSave, onCancel }: BlogEditorProps) => {
   const { toast } = useToast();
-  const editorRef = useRef<any>(null);
+  const quillRef = useRef<ReactQuill>(null);
   const [formData, setFormData] = useState<BlogPost>({
     title: '',
     slug: '',
@@ -34,8 +34,6 @@ const BlogEditor = ({ post, onSave, onCancel }: BlogEditorProps) => {
   });
   const [loading, setLoading] = useState(false);
   const [tagsInput, setTagsInput] = useState(post?.tags?.join(', ') || '');
-  const [tinyMceApiKey, setTinyMceApiKey] = useState(localStorage.getItem('tinymce_api_key') || '');
-  const [showApiKeyInput, setShowApiKeyInput] = useState(false);
 
   useEffect(() => {
     // Auto-generate slug from title
@@ -49,16 +47,85 @@ const BlogEditor = ({ post, onSave, onCancel }: BlogEditorProps) => {
     }
   }, [formData.title, post]);
 
-  const handleApiKeySubmit = () => {
-    if (tinyMceApiKey.trim()) {
-      localStorage.setItem('tinymce_api_key', tinyMceApiKey.trim());
-      setShowApiKeyInput(false);
-      toast({
-        title: "Successo",
-        description: "API Key TinyMCE salvata. Ricarica la pagina per applicare le modifiche.",
-      });
+  const handleImageUpload = () => {
+    const input = document.createElement('input');
+    input.setAttribute('type', 'file');
+    input.setAttribute('accept', 'image/*');
+    input.click();
+
+    input.onchange = async () => {
+      const file = input.files?.[0];
+      if (!file) return;
+
+      try {
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${Math.random()}.${fileExt}`;
+        const filePath = `blog-images/${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from('blog-images')
+          .upload(filePath, file);
+
+        if (uploadError) throw uploadError;
+
+        const { data: { publicUrl } } = supabase.storage
+          .from('blog-images')
+          .getPublicUrl(filePath);
+
+        const quill = quillRef.current?.getEditor();
+        if (quill) {
+          const range = quill.getSelection();
+          quill.insertEmbed(range?.index || 0, 'image', publicUrl);
+        }
+
+        toast({
+          title: "Successo",
+          description: "Immagine caricata correttamente",
+        });
+      } catch (error) {
+        console.error('Error uploading image:', error);
+        toast({
+          title: "Errore",
+          description: "Errore nel caricamento dell'immagine",
+          variant: "destructive",
+        });
+      }
+    };
+  };
+
+  const modules = {
+    toolbar: {
+      container: [
+        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+        ['bold', 'italic', 'underline', 'strike'],
+        [{ 'color': [] }, { 'background': [] }],
+        [{ 'script': 'sub'}, { 'script': 'super' }],
+        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+        [{ 'indent': '-1'}, { 'indent': '+1' }],
+        [{ 'direction': 'rtl' }],
+        [{ 'align': [] }],
+        ['blockquote', 'code-block'],
+        ['link', 'image', 'video'],
+        ['clean']
+      ],
+      handlers: {
+        image: handleImageUpload
+      }
+    },
+    clipboard: {
+      matchVisual: false,
     }
   };
+
+  const formats = [
+    'header', 'font', 'size',
+    'bold', 'italic', 'underline', 'strike', 'blockquote',
+    'list', 'bullet', 'indent',
+    'link', 'image', 'video',
+    'color', 'background',
+    'align', 'direction',
+    'code-block', 'script'
+  ];
 
   const handleSave = async () => {
     if (!formData.title || !formData.content) {
@@ -199,65 +266,20 @@ const BlogEditor = ({ post, onSave, onCancel }: BlogEditorProps) => {
 
                 <div>
                   <Label>Contenuto *</Label>
-                  <div className="mt-2">
-                    {!tinyMceApiKey ? (
-                      <div className="space-y-4">
-                        <Alert>
-                          <AlertCircle className="h-4 w-4" />
-                          <AlertDescription>
-                            API Key TinyMCE non configurata. È necessaria per utilizzare l'editor avanzato.
-                          </AlertDescription>
-                        </Alert>
-                        
-                        {!showApiKeyInput ? (
-                          <Button variant="outline" onClick={() => setShowApiKeyInput(true)}>
-                            Configura API Key
-                          </Button>
-                        ) : (
-                          <div className="flex gap-2">
-                            <Input
-                              placeholder="Inserisci la tua API Key TinyMCE"
-                              value={tinyMceApiKey}
-                              onChange={(e) => setTinyMceApiKey(e.target.value)}
-                              type="password"
-                            />
-                            <Button onClick={handleApiKeySubmit}>Salva</Button>
-                            <Button variant="ghost" onClick={() => setShowApiKeyInput(false)}>
-                              Annulla
-                            </Button>
-                          </div>
-                        )}
-                        
-                        <Textarea
-                          value={formData.content}
-                          onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
-                          placeholder="Contenuto dell'articolo (editor di base)"
-                          rows={20}
-                          className="font-mono text-sm"
-                        />
-                      </div>
-                    ) : (
-                      <Editor
-                        apiKey={tinyMceApiKey}
-                        onInit={(evt, editor) => editorRef.current = editor}
-                        value={formData.content}
-                        onEditorChange={(content) => setFormData(prev => ({ ...prev, content }))}
-                        init={{
-                          height: 500,
-                          menubar: true,
-                          branding: false,
-                          plugins: [
-                            'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-                            'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-                            'insertdatetime', 'media', 'table', 'help', 'wordcount'
-                          ],
-                          toolbar: 'undo redo | blocks | bold italic forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
-                          content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
-                          skin: 'oxide-dark',
-                          content_css: 'dark'
-                        }}
-                      />
-                    )}
+                  <div className="mt-2 bg-white rounded-lg">
+                    <ReactQuill
+                      ref={quillRef}
+                      theme="snow"
+                      value={formData.content}
+                      onChange={(content) => setFormData(prev => ({ ...prev, content }))}
+                      modules={modules}
+                      formats={formats}
+                      style={{
+                        height: '400px',
+                        marginBottom: '50px'
+                      }}
+                      placeholder="Inizia a scrivere il tuo articolo..."
+                    />
                   </div>
                 </div>
               </CardContent>
