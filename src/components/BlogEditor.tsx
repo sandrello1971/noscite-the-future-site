@@ -6,10 +6,11 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, Save, Eye } from 'lucide-react';
+import { ArrowLeft, Save, Eye, AlertCircle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
 import { BlogPost } from '@/types/database';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 interface BlogEditorProps {
   post?: BlogPost | null;
@@ -33,6 +34,8 @@ const BlogEditor = ({ post, onSave, onCancel }: BlogEditorProps) => {
   });
   const [loading, setLoading] = useState(false);
   const [tagsInput, setTagsInput] = useState(post?.tags?.join(', ') || '');
+  const [tinyMceApiKey, setTinyMceApiKey] = useState(localStorage.getItem('tinymce_api_key') || '');
+  const [showApiKeyInput, setShowApiKeyInput] = useState(false);
 
   useEffect(() => {
     // Auto-generate slug from title
@@ -45,6 +48,17 @@ const BlogEditor = ({ post, onSave, onCancel }: BlogEditorProps) => {
       setFormData(prev => ({ ...prev, slug }));
     }
   }, [formData.title, post]);
+
+  const handleApiKeySubmit = () => {
+    if (tinyMceApiKey.trim()) {
+      localStorage.setItem('tinymce_api_key', tinyMceApiKey.trim());
+      setShowApiKeyInput(false);
+      toast({
+        title: "Successo",
+        description: "API Key TinyMCE salvata. Ricarica la pagina per applicare le modifiche.",
+      });
+    }
+  };
 
   const handleSave = async () => {
     if (!formData.title || !formData.content) {
@@ -186,26 +200,64 @@ const BlogEditor = ({ post, onSave, onCancel }: BlogEditorProps) => {
                 <div>
                   <Label>Contenuto *</Label>
                   <div className="mt-2">
-                    <Editor
-                      apiKey="hhhxgf8ved2ogrhp8q2c8c3piiofusg5dextxiawl3t07pm9"
-                      onInit={(evt, editor) => editorRef.current = editor}
-                      value={formData.content}
-                      onEditorChange={(content) => setFormData(prev => ({ ...prev, content }))}
-                      init={{
-                        height: 500,
-                        menubar: true,
-                        branding: false,
-                        plugins: [
-                          'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-                          'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-                          'insertdatetime', 'media', 'table', 'help', 'wordcount'
-                        ],
-                        toolbar: 'undo redo | blocks | bold italic forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
-                        content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
-                        skin: 'oxide-dark',
-                        content_css: 'dark'
-                      }}
-                    />
+                    {!tinyMceApiKey ? (
+                      <div className="space-y-4">
+                        <Alert>
+                          <AlertCircle className="h-4 w-4" />
+                          <AlertDescription>
+                            API Key TinyMCE non configurata. È necessaria per utilizzare l'editor avanzato.
+                          </AlertDescription>
+                        </Alert>
+                        
+                        {!showApiKeyInput ? (
+                          <Button variant="outline" onClick={() => setShowApiKeyInput(true)}>
+                            Configura API Key
+                          </Button>
+                        ) : (
+                          <div className="flex gap-2">
+                            <Input
+                              placeholder="Inserisci la tua API Key TinyMCE"
+                              value={tinyMceApiKey}
+                              onChange={(e) => setTinyMceApiKey(e.target.value)}
+                              type="password"
+                            />
+                            <Button onClick={handleApiKeySubmit}>Salva</Button>
+                            <Button variant="ghost" onClick={() => setShowApiKeyInput(false)}>
+                              Annulla
+                            </Button>
+                          </div>
+                        )}
+                        
+                        <Textarea
+                          value={formData.content}
+                          onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
+                          placeholder="Contenuto dell'articolo (editor di base)"
+                          rows={20}
+                          className="font-mono text-sm"
+                        />
+                      </div>
+                    ) : (
+                      <Editor
+                        apiKey={tinyMceApiKey}
+                        onInit={(evt, editor) => editorRef.current = editor}
+                        value={formData.content}
+                        onEditorChange={(content) => setFormData(prev => ({ ...prev, content }))}
+                        init={{
+                          height: 500,
+                          menubar: true,
+                          branding: false,
+                          plugins: [
+                            'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+                            'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                            'insertdatetime', 'media', 'table', 'help', 'wordcount'
+                          ],
+                          toolbar: 'undo redo | blocks | bold italic forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+                          content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+                          skin: 'oxide-dark',
+                          content_css: 'dark'
+                        }}
+                      />
+                    )}
                   </div>
                 </div>
               </CardContent>
