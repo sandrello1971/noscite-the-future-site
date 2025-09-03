@@ -25,83 +25,82 @@ import { Link } from "react-router-dom";
 const Percorsi = () => {
   const corsi = [
     {
-      id: "corso-1",
-      title: "Intelligenza Artificiale Operativa",
+      id: "initium",
+      title: "Initium – Fondamenta AI Operativa",
       duration: "20 ore",
-      modules: 6,
+      modules: 5,
       participants: "max 12",
       certification: "Certified AI Productivity User",
-      description: "Competenze fondamentali per usare ChatGPT e Copilot 365 nelle attività quotidiane",
+      description: "Acquisire competenze pratiche per usare ChatGPT e Copilot 365 nelle attività quotidiane e introdurre il concetto di Second Brain",
       icon: Brain,
       color: "text-primary",
       bgColor: "bg-primary/10",
       features: [
-        "Fondamenti dell'AI conversazionale",
-        "ChatGPT per il business: prompt engineering",
-        "ChatGPT avanzato per PMI",
-        "Microsoft Copilot 365: produttività quotidiana",
-        "Microsoft Copilot 365: applicazioni avanzate",
-        "Second Brain: introduzione teorica"
+        "Intro AI e Prompt Engineering Base",
+        "AI per il Business Quotidiano",
+        "Copilot 365 – Produttività immediata",
+        "Copilot 365 – Funzionalità Avanzate",
+        "Introduzione al Second Brain"
       ],
       benefits: [
         "Riduzione 40-60% tempo stesura documenti",
-        "Miglioramento qualità comunicazioni",
-        "Automazione task ripetitivi Office 365",
-        "Accelerazione analisi dati e report"
+        "Struttura dei prompt efficaci",
+        "Integrazione AI in Word, Excel, Outlook",
+        "Workflow complessi e personalizzati"
       ]
     },
     {
-      id: "corso-2", 
-      title: "Second Brain in Azienda",
+      id: "structura", 
+      title: "Structura – Second Brain Aziendale",
       duration: "24 ore",
       modules: 6,
       participants: "max 12",
       certification: "Certified Second Brain Implementer",
-      description: "Sistema scalabile di knowledge management con metodologia CODE e tool Obsidian",
+      description: "Creare un sistema scalabile di gestione della conoscenza con Obsidian, integrato con AI e processi aziendali",
       icon: BookOpen,
       color: "text-secondary",
       bgColor: "bg-secondary/10",
-      prerequisite: "Corso 1",
+      prerequisite: "Initium",
       features: [
-        "Fondamenti Second Brain e metodo CODE",
-        "Configurazione Obsidian e Vault aziendale",
-        "Organizzazione avanzata e template",
-        "Integrazione AI e automazioni",
-        "Collaborazione in team e governance",
-        "Certificazione e piano d'azione"
+        "Metodo CODE e fondamenti",
+        "Setup Vault Aziendale",
+        "Template e Organizzazione Avanzata",
+        "AI & Automazioni",
+        "Collaborazione e Governance",
+        "Certificazione e Piano d'Azione"
       ],
       benefits: [
         "Riduzione 70% tempo ricerca informazioni",
-        "Miglioramento onboarding nuovi dipendenti",
-        "Standardizzazione procedure aziendali",
-        "Continuità operativa e knowledge retention"
+        "Tassonomie e collegamenti intelligenti",
+        "Plugin AI per Obsidian",
+        "Roadmap di implementazione"
       ]
     },
     {
-      id: "corso-3",
-      title: "Collaborazione Intelligente", 
+      id: "communitas",
+      title: "Communitas – Collaborazione Intelligente", 
       duration: "24 ore",
       modules: 6,
       participants: "max 12",
-      certification: "Certified Collaboration Tools User",
-      description: "Comunicazione interna, gestione progetti e produttività con strumenti digitali",
+      certification: "Certified Collaboration Hub User",
+      description: "Creare un sistema di collaborazione e project management integrato, basato su Obsidian come Collaboration Hub",
       icon: Users,
       color: "text-primary",
       bgColor: "bg-primary/10",
-      prerequisite: "Corso 1 (consigliato Corso 2)",
+      prerequisite: "Initium (consigliato Structura)",
       features: [
-        "Fondamenti collaborazione digitale",
-        "Microsoft Teams: comunicazione e documenti",
-        "Trello: Kanban digitale e automazioni",
-        "Asana: pianificazione e monitoraggio",
-        "Slack: comunicazione veloce e workflow",
-        "Integrazione multi-tool e roadmap"
+        "Fondamenti di Collaborazione e Governance",
+        "Obsidian come Collaboration Hub",
+        "Gestione Progetti con Bases",
+        "Task Management e Automazioni",
+        "Comunicazione e Integrazione Esterna",
+        "Certificazione e Roadmap"
       ],
       benefits: [
-        "Riduzione 30-50% tempo coordinamento team",
-        "Miglioramento trasparenza progetti",
-        "Eliminazione silos informativi",
-        "Accelerazione processi decisionali"
+        "Riduzione tool-fatigue",
+        "Dashboard team con Dataview",
+        "Task management integrato",
+        "Playbook collaborativo aziendale"
       ]
     }
   ];
@@ -271,46 +270,46 @@ const Percorsi = () => {
                 
                 <TabsContent value="sequenziale" className="space-y-6">
                   <div className="space-y-4">
-                    <div className="flex items-center space-x-4 p-4 bg-muted/50 rounded-lg">
-                      <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white font-bold">1</div>
-                      <div>
-                        <h4 className="font-semibold">Mese 1: Corso 1</h4>
-                        <p className="text-sm text-muted-foreground">Implementazione ChatGPT e Copilot</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-4 p-4 bg-muted/50 rounded-lg">
-                      <div className="w-8 h-8 bg-secondary rounded-full flex items-center justify-center text-white font-bold">2</div>
-                      <div>
-                        <h4 className="font-semibold">Mese 4: Corso 2</h4>
-                        <p className="text-sm text-muted-foreground">Implementazione Second Brain</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-4 p-4 bg-muted/50 rounded-lg">
-                      <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white font-bold">3</div>
-                      <div>
-                        <h4 className="font-semibold">Mese 7: Corso 3</h4>
-                        <p className="text-sm text-muted-foreground">Implementazione collaboration tools</p>
-                      </div>
-                    </div>
+                     <div className="flex items-center space-x-4 p-4 bg-muted/50 rounded-lg">
+                       <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white font-bold">1</div>
+                       <div>
+                         <h4 className="font-semibold">Mese 1: Initium</h4>
+                         <p className="text-sm text-muted-foreground">Fondamenta AI Operativa - ChatGPT e Copilot</p>
+                       </div>
+                     </div>
+                     <div className="flex items-center space-x-4 p-4 bg-muted/50 rounded-lg">
+                       <div className="w-8 h-8 bg-secondary rounded-full flex items-center justify-center text-white font-bold">2</div>
+                       <div>
+                         <h4 className="font-semibold">Mese 3-4: Structura</h4>
+                         <p className="text-sm text-muted-foreground">Second Brain Aziendale con Obsidian</p>
+                       </div>
+                     </div>
+                     <div className="flex items-center space-x-4 p-4 bg-muted/50 rounded-lg">
+                       <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white font-bold">3</div>
+                       <div>
+                         <h4 className="font-semibold">Mese 6-7: Communitas</h4>
+                         <p className="text-sm text-muted-foreground">Collaborazione Intelligente - Obsidian Hub</p>
+                       </div>
+                     </div>
                   </div>
                 </TabsContent>
                 
                 <TabsContent value="accelerato" className="space-y-6">
                   <div className="space-y-4">
-                    <div className="flex items-center space-x-4 p-4 bg-muted/50 rounded-lg">
-                      <Zap className="h-8 w-8 text-secondary" />
-                      <div>
-                        <h4 className="font-semibold">Corsi 1+2 Consecutivi</h4>
-                        <p className="text-sm text-muted-foreground">Per team più tech-savvy con supporto intensivo</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-4 p-4 bg-muted/50 rounded-lg">
-                      <Target className="h-8 w-8 text-primary" />
-                      <div>
-                        <h4 className="font-semibold">Implementazione Parallela</h4>
-                        <p className="text-sm text-muted-foreground">Corso 3 dopo consolidamento primi due</p>
-                      </div>
-                    </div>
+                     <div className="flex items-center space-x-4 p-4 bg-muted/50 rounded-lg">
+                       <Zap className="h-8 w-8 text-secondary" />
+                       <div>
+                         <h4 className="font-semibold">Initium+Structura Consecutivi</h4>
+                         <p className="text-sm text-muted-foreground">Per team più tech-savvy con supporto intensivo</p>
+                       </div>
+                     </div>
+                     <div className="flex items-center space-x-4 p-4 bg-muted/50 rounded-lg">
+                       <Target className="h-8 w-8 text-primary" />
+                       <div>
+                         <h4 className="font-semibold">Implementazione Parallela</h4>
+                         <p className="text-sm text-muted-foreground">Communitas dopo consolidamento primi due corsi</p>
+                       </div>
+                     </div>
                   </div>
                 </TabsContent>
               </Tabs>

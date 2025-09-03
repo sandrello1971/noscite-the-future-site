@@ -42,13 +42,13 @@ serve(async (req) => {
         content: `
         Digital Productivity Transformation per PMI - 68 ore totali divise in 3 corsi:
         
-        Corso 1: Intelligenza Artificiale Operativa (20 ore) - Competenze fondamentali per usare ChatGPT e Copilot 365, con certificazione Certified AI Productivity User. Riduzione 40-60% tempo stesura documenti.
+        Initium – Fondamenta AI Operativa (20 ore, 5 moduli) - Acquisire competenze pratiche per usare ChatGPT e Copilot 365 nelle attività quotidiane e introdurre il concetto di Second Brain. Certificazione: Certified AI Productivity User. Moduli: Intro AI e Prompt Engineering Base, AI per il Business Quotidiano, Copilot 365 – Produttività immediata, Copilot 365 – Funzionalità Avanzate, Introduzione al Second Brain. Riduzione 40-60% tempo stesura documenti.
         
-        Corso 2: Second Brain in Azienda (24 ore) - Sistema scalabile di knowledge management con metodologia CODE e tool Obsidian. Riduzione 70% tempo ricerca informazioni.
+        Structura – Second Brain Aziendale (24 ore, 6 moduli) - Creare un sistema scalabile di gestione della conoscenza con Obsidian, integrato con AI e processi aziendali. Certificazione: Certified Second Brain Implementer. Prerequisito: Initium. Moduli: Metodo CODE e fondamenti, Setup Vault Aziendale, Template e Organizzazione Avanzata, AI & Automazioni, Collaborazione e Governance, Certificazione e Piano d'Azione. Riduzione 70% tempo ricerca informazioni.
         
-        Corso 3: Collaborazione Intelligente (24 ore) - Microsoft Teams, Trello, Asana, Slack per migliorare comunicazione e produttività. Riduzione 30-50% tempo coordinamento team.
+        Communitas – Collaborazione Intelligente (24 ore, 6 moduli) - Creare un sistema di collaborazione e project management integrato, basato su Obsidian come Collaboration Hub. Certificazione: Certified Collaboration Hub User. Prerequisito: Initium (consigliato Structura). Moduli: Fondamenti di Collaborazione e Governance, Obsidian come Collaboration Hub, Gestione Progetti con Bases, Task Management e Automazioni, Comunicazione e Integrazione Esterna, Certificazione e Roadmap. Riduzione tool-fatigue.
         
-        ROI medio +300% in 12 mesi. Target: PMI 5-50 dipendenti. Modalità: In presenza o online.
+        Transforma – Percorso Integrato: tutti e tre i corsi per 68 ore totali. Target: PMI 5-50 dipendenti. Max 12 partecipanti per corso. Modalità: In presenza o online. Implementazione consigliata: Mese 1 Initium, Mese 3-4 Structura, Mese 6-7 Communitas, Mese 12 Revisione completa e ROI.
         `,
         sourceId: "percorsi",
         contentType: "page"
