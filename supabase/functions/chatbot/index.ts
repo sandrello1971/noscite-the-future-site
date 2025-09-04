@@ -35,7 +35,7 @@ serve(async (req) => {
     const { data: knowledgeData, error: knowledgeError } = await supabase
       .from('knowledge_base')
       .select('content, title, source_id')
-      .or(`content.ilike.%${keywords[0] || 'noscite'}%,title.ilike.%${keywords[0] || 'noscite'}%`)
+      .or('content.ilike.%' + (keywords[0] || 'noscite') + '%,title.ilike.%' + (keywords[0] || 'noscite') + '%')
       .limit(5);
 
     if (knowledgeError) {
@@ -46,7 +46,7 @@ serve(async (req) => {
     const { data: documentsData, error: documentsError } = await supabase
       .from('documents')
       .select('title, description, file_url, category')
-      .or(`title.ilike.%${keywords[0] || ''}%,description.ilike.%${keywords[0] || ''}%`)
+      .or('title.ilike.%' + (keywords[0] || '') + '%,description.ilike.%' + (keywords[0] || '') + '%')
       .limit(3);
 
     if (documentsError) {
@@ -55,12 +55,12 @@ serve(async (req) => {
 
     // Costruisci il contesto dal knowledge base
     const knowledgeContext = knowledgeData?.map(item => 
-      `FONTE SITO WEB - ${item.title ? item.title + ': ' : ''}${item.content}`
+      'FONTE SITO WEB - ' + (item.title ? item.title + ': ' : '') + item.content
     ).join('\n\n') || '';
 
     // Costruisci il contesto dai documenti
     const documentsContext = documentsData?.map(item => 
-      `FONTE DOCUMENTO - "${item.title}": ${item.description || 'Documento disponibile'} (Categoria: ${item.category || 'Non specificata'})`
+      'FONTE DOCUMENTO - "' + item.title + '": ' + (item.description || 'Documento disponibile') + ' (Categoria: ' + (item.category || 'Non specificata') + ')'
     ).join('\n\n') || '';
 
     // Combina tutti i contesti
@@ -72,7 +72,7 @@ serve(async (req) => {
     const openaiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${Deno.env.get('OPENAI_API_KEY')}`,
+        'Authorization': 'Bearer ' + Deno.env.get('OPENAI_API_KEY'),
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -80,26 +80,22 @@ serve(async (req) => {
         messages: [
           {
             role: 'system',
-            content: `Sei un assistente AI per Noscite, un'azienda che offre servizi di trasformazione digitale e formazione sull'intelligenza artificiale. 
-            
-            Usa le seguenti informazioni per rispondere alle domande sui servizi e sui contenuti di Noscite:
-            
-            ${context}
-            
-             ISTRUZIONI IMPORTANTI:
-             - Fornisci sempre risposte dettagliate e specifiche basate sulle informazioni fornite
-             - IMPORTANTE: Quando usi informazioni da documenti, indica SEMPRE chiaramente il nome del documento come fonte
-             - Quando usi informazioni dal sito web, puoi menzionare "dalle informazioni sul sito Noscite"
-             - Formato per citare documenti: "Come indicato nel documento '[Nome Documento]'..." 
-             - Quando parli di percorsi formativi, menziona sempre di visitare la pagina /percorsi per maggiori dettagli
-             - Quando parli di servizi, rimanda alla pagina /servizi 
-             - Per informazioni aziendali, rimanda a /chi-siamo
-             - Per contatti, rimanda a /contatti
-             - Per documenti specifici, suggerisci di consultare la sezione risorse su /risorse
-             - Includi sempre link utili nelle tue risposte quando appropriato
-             - Solo DOPO aver fornito informazioni specifiche, suggerisci di contattare Noscite per dettagli personalizzati
-             
-             Rispondi sempre in modo professionale, dettagliato e utile, citando sempre le fonti.
+            content: 'Sei un assistente AI per Noscite, un\\'azienda che offre servizi di trasformazione digitale e formazione sull\\'intelligenza artificiale. \n\n' +
+            'Usa le seguenti informazioni per rispondere alle domande sui servizi e sui contenuti di Noscite:\n\n' +
+            context + '\n\n' +
+            'ISTRUZIONI IMPORTANTI:\n' +
+            '- Fornisci sempre risposte dettagliate e specifiche basate sulle informazioni fornite\n' +
+            '- IMPORTANTE: Quando usi informazioni da documenti, indica SEMPRE chiaramente il nome del documento come fonte\n' +
+            '- Quando usi informazioni dal sito web, puoi menzionare "dalle informazioni sul sito Noscite"\n' +
+            '- Formato per citare documenti: "Come indicato nel documento \\'[Nome Documento]\\'..."\n' +
+            '- Quando parli di percorsi formativi, menziona sempre di visitare la pagina /percorsi per maggiori dettagli\n' +
+            '- Quando parli di servizi, rimanda alla pagina /servizi\n' +
+            '- Per informazioni aziendali, rimanda a /chi-siamo\n' +
+            '- Per contatti, rimanda a /contatti\n' +
+            '- Per documenti specifici, suggerisci di consultare la sezione risorse su /risorse\n' +
+            '- Includi sempre link utili nelle tue risposte quando appropriato\n' +
+            '- Solo DOPO aver fornito informazioni specifiche, suggerisci di contattare Noscite per dettagli personalizzati\n\n' +
+            'Rispondi sempre in modo professionale, dettagliato e utile, citando sempre le fonti.'
           },
           {
             role: 'user',
@@ -114,7 +110,7 @@ serve(async (req) => {
     if (!openaiResponse.ok) {
       const errorData = await openaiResponse.text();
       console.error('OpenAI API error:', errorData);
-      throw new Error(`OpenAI API error: ${openaiResponse.status}`);
+      throw new Error('OpenAI API error: ' + openaiResponse.status);
     }
 
     const responseData = await openaiResponse.json();
