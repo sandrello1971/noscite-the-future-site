@@ -25,12 +25,10 @@ const Hero = () => {
           <div className="space-y-8 animate-fade-in">
             <div className="space-y-4">
               <h1 className="text-4xl lg:text-6xl font-bold text-foreground leading-tight">
-                Il Tuo Partner per
-                <span className="block text-primary">l'Evoluzione Digitale</span>
+                <span className="block text-primary">In digitali nova virtus</span>
               </h1>
               <p className="text-xl text-muted-foreground leading-relaxed">
-                Trasformiamo le aziende attraverso l'intelligenza artificiale e la formazione digitale. 
-                Dalla strategia all'implementazione, ti accompagniamo verso il futuro.
+                Innovazione human-centric: consulenza, implementazione e academy integrate per risultati concreti e sostenibili.
               </p>
             </div>
             
