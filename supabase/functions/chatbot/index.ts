@@ -31,22 +31,40 @@ serve(async (req) => {
 
     // Cerca nel knowledge base con filtro per keyword rilevanti
     const keywords = message.toLowerCase().split(' ').filter(word => word.length > 3);
-    const searchPattern = keywords.join('|');
     
     const { data: knowledgeData, error: knowledgeError } = await supabase
       .from('knowledge_base')
       .select('content, title, source_id')
       .or(`content.ilike.%${keywords[0] || 'noscite'}%,title.ilike.%${keywords[0] || 'noscite'}%`)
-      .limit(10);
+      .limit(5);
 
     if (knowledgeError) {
       console.error('Error fetching knowledge base:', knowledgeError);
     }
 
+    // Cerca anche nei documenti caricati
+    const { data: documentsData, error: documentsError } = await supabase
+      .from('documents')
+      .select('title, description, file_url, category')
+      .or(`title.ilike.%${keywords[0] || ''}%,description.ilike.%${keywords[0] || ''}%`)
+      .limit(3);
+
+    if (documentsError) {
+      console.error('Error fetching documents:', documentsError);
+    }
+
     // Costruisci il contesto dal knowledge base
-    const context = knowledgeData?.map(item => 
-      `${item.title ? item.title + ': ' : ''}${item.content}`
+    const knowledgeContext = knowledgeData?.map(item => 
+      `FONTE SITO WEB - ${item.title ? item.title + ': ' : ''}${item.content}`
     ).join('\n\n') || '';
+
+    // Costruisci il contesto dai documenti
+    const documentsContext = documentsData?.map(item => 
+      `FONTE DOCUMENTO - "${item.title}": ${item.description || 'Documento disponibile'} (Categoria: ${item.category || 'Non specificata'})`
+    ).join('\n\n') || '';
+
+    // Combina tutti i contesti
+    const context = [knowledgeContext, documentsContext].filter(c => c.length > 0).join('\n\n---\n\n');
 
     console.log('Retrieved context length:', context.length);
 
@@ -68,16 +86,20 @@ serve(async (req) => {
             
             ${context}
             
-            ISTRUZIONI IMPORTANTI:
-            - Fornisci sempre risposte dettagliate e specifiche basate sulle informazioni fornite
-            - Quando parli di percorsi formativi, menziona sempre di visitare la pagina /percorsi per maggiori dettagli
-            - Quando parli di servizi, rimanda alla pagina /servizi 
-            - Per informazioni aziendali, rimanda a /chi-siamo
-            - Per contatti, rimanda a /contatti
-            - Includi sempre link utili nelle tue risposte quando appropriato
-            - Solo DOPO aver fornito informazioni specifiche, suggerisci di contattare Noscite per dettagli personalizzati
-            
-            Rispondi sempre in modo professionale, dettagliato e utile.`
+             ISTRUZIONI IMPORTANTI:
+             - Fornisci sempre risposte dettagliate e specifiche basate sulle informazioni fornite
+             - IMPORTANTE: Quando usi informazioni da documenti, indica SEMPRE chiaramente il nome del documento come fonte
+             - Quando usi informazioni dal sito web, puoi menzionare "dalle informazioni sul sito Noscite"
+             - Formato per citare documenti: "Come indicato nel documento '[Nome Documento]'..." 
+             - Quando parli di percorsi formativi, menziona sempre di visitare la pagina /percorsi per maggiori dettagli
+             - Quando parli di servizi, rimanda alla pagina /servizi 
+             - Per informazioni aziendali, rimanda a /chi-siamo
+             - Per contatti, rimanda a /contatti
+             - Per documenti specifici, suggerisci di consultare la sezione risorse su /risorse
+             - Includi sempre link utili nelle tue risposte quando appropriato
+             - Solo DOPO aver fornito informazioni specifiche, suggerisci di contattare Noscite per dettagli personalizzati
+             
+             Rispondi sempre in modo professionale, dettagliato e utile, citando sempre le fonti.
           },
           {
             role: 'user',
@@ -105,7 +127,7 @@ serve(async (req) => {
       .from('chat_conversations')
       .select('messages')
       .eq('session_id', sessionId)
-      .single();
+      .maybeSingle();
 
     const messages = existingConversation?.messages || [];
     messages.push(
