@@ -8,6 +8,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 import { Mail, Phone, MapPin, Send, AlertCircle } from "lucide-react";
 import DOMPurify from 'dompurify';
+import { supabase } from "@/integrations/supabase/client";
 
 interface FormData {
   name: string;
@@ -108,8 +109,20 @@ export default function ContactForm() {
     setLoading(true);
 
     try {
-      // Simulate form submission - in a real app, this would send to a backend
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Send email via Supabase edge function
+      const { error } = await supabase.functions.invoke('send-contact-email', {
+        body: {
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone || undefined,
+          company: formData.company || undefined,
+          message: formData.message,
+        },
+      });
+
+      if (error) {
+        throw new Error(error.message);
+      }
       
       toast({
         title: "Messaggio inviato!",
@@ -159,7 +172,7 @@ export default function ContactForm() {
                     <Mail className="h-6 w-6 text-primary mt-1" />
                     <div>
                       <h4 className="font-medium">Email</h4>
-                      <p className="text-muted-foreground">info@noscite.ai</p>
+                      <p className="text-muted-foreground">notitiae@noscite.it</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-4">
