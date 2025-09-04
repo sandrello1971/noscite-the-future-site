@@ -29,11 +29,15 @@ serve(async (req) => {
 
     console.log('Processing chat message:', message);
 
-    // Cerca nel knowledge base usando similarità testuale (semplificata)
+    // Cerca nel knowledge base con filtro per keyword rilevanti
+    const keywords = message.toLowerCase().split(' ').filter(word => word.length > 3);
+    const searchPattern = keywords.join('|');
+    
     const { data: knowledgeData, error: knowledgeError } = await supabase
       .from('knowledge_base')
-      .select('content, title')
-      .limit(5);
+      .select('content, title, source_id')
+      .or(`content.ilike.%${keywords[0] || 'noscite'}%,title.ilike.%${keywords[0] || 'noscite'}%`)
+      .limit(10);
 
     if (knowledgeError) {
       console.error('Error fetching knowledge base:', knowledgeError);
@@ -64,7 +68,16 @@ serve(async (req) => {
             
             ${context}
             
-            Rispondi sempre in modo professionale e utile. Se non trovi informazioni specifiche nel contesto fornito, suggerisci di contattare Noscite per maggiori dettagli.`
+            ISTRUZIONI IMPORTANTI:
+            - Fornisci sempre risposte dettagliate e specifiche basate sulle informazioni fornite
+            - Quando parli di percorsi formativi, menziona sempre di visitare la pagina /percorsi per maggiori dettagli
+            - Quando parli di servizi, rimanda alla pagina /servizi 
+            - Per informazioni aziendali, rimanda a /chi-siamo
+            - Per contatti, rimanda a /contatti
+            - Includi sempre link utili nelle tue risposte quando appropriato
+            - Solo DOPO aver fornito informazioni specifiche, suggerisci di contattare Noscite per dettagli personalizzati
+            
+            Rispondi sempre in modo professionale, dettagliato e utile.`
           },
           {
             role: 'user',
