@@ -2,7 +2,6 @@ import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import Services from "@/components/Services";
 import Partners from "@/components/Partners";
-import Testimonials from "@/components/Testimonials";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -15,7 +14,6 @@ const Index = () => {
         <Hero />
         <Partners />
         <Services />
-        <Testimonials />
       </main>
       <Footer />
     </div>
