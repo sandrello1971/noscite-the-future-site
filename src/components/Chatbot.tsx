@@ -5,6 +5,47 @@ import { MessageCircle, X, Send, Minimize2, Maximize2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { ChatMessage } from '@/types/database';
 
+// Helper function to render markdown links as clickable links
+const renderMessageWithLinks = (content: string) => {
+  // Regex per individuare link markdown [text](url)
+  const markdownLinkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
+  
+  const parts = [];
+  let lastIndex = 0;
+  let match;
+
+  while ((match = markdownLinkRegex.exec(content)) !== null) {
+    // Aggiungi testo prima del link
+    if (match.index > lastIndex) {
+      parts.push(content.slice(lastIndex, match.index));
+    }
+    
+    // Aggiungi il link cliccabile
+    const linkText = match[1];
+    const linkUrl = match[2];
+    parts.push(
+      <a
+        key={match.index}
+        href={linkUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-blue-600 hover:text-blue-800 underline"
+      >
+        {linkText}
+      </a>
+    );
+    
+    lastIndex = match.index + match[0].length;
+  }
+  
+  // Aggiungi il testo rimanente
+  if (lastIndex < content.length) {
+    parts.push(content.slice(lastIndex));
+  }
+  
+  return parts.length > 0 ? parts : content;
+};
+
 const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
@@ -135,7 +176,9 @@ const Chatbot = () => {
                         : 'bg-muted text-foreground'
                     }`}
                   >
-                    <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                    <div className="text-sm whitespace-pre-wrap">
+                      {renderMessageWithLinks(message.content)}
+                    </div>
                   </div>
                 </div>
               ))}
