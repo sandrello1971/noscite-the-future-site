@@ -16,6 +16,15 @@ export function useAuth() {
   const [loading, setLoading] = useState(true);
   const [roleLoading, setRoleLoading] = useState(false);
 
+  console.log('🔍 useAuth state:', { 
+    hasUser: !!user, 
+    userEmail: user?.email,
+    userRole, 
+    loading, 
+    roleLoading,
+    combinedLoading: loading || roleLoading
+  });
+
   useEffect(() => {
     let mounted = true;
     
@@ -71,9 +80,10 @@ export function useAuth() {
   }, []);
 
   const fetchUserRole = async (userId: string) => {
+    console.log('🔄 Starting fetchUserRole for:', userId);
     setRoleLoading(true);
     try {
-      console.log('Fetching role for user:', userId);
+      console.log('📡 Making role query request...');
       
       const { data, error } = await supabase
         .from('user_roles')
@@ -81,20 +91,27 @@ export function useAuth() {
         .eq('user_id', userId)
         .single();
 
-      console.log('Role fetch result:', data, error);
+      console.log('📋 Role query completed:', { data, error });
 
-      if (error && error.code !== 'PGRST116') { // PGRST116 = no rows returned
-        console.error('Error fetching user role:', error);
-        setUserRole('user'); // Default to user role if error
+      if (error) {
+        if (error.code === 'PGRST116') { 
+          console.log('🔍 No role found for user, defaulting to user');
+          setUserRole('user');
+        } else {
+          console.error('❌ Error fetching user role:', error);
+          console.error('❌ Error details:', error.message, error.code);
+          setUserRole('user'); // Default to user role if error
+        }
       } else {
         const role = data?.role || 'user';
-        console.log('Setting user role to:', role);
+        console.log('✅ Setting user role to:', role);
         setUserRole(role);
       }
     } catch (error) {
-      console.error('Error fetching user role:', error);
+      console.error('💥 Exception in fetchUserRole:', error);
       setUserRole('user'); // Default to user role
     } finally {
+      console.log('🏁 fetchUserRole completed, setting roleLoading to false');
       setRoleLoading(false);
     }
   };
