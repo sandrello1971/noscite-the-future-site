@@ -113,21 +113,10 @@ const ChiSiamo = () => {
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {team.map((member, index) => (
-                <Card key={member.name} className="hover-lift text-center">
-                  <CardContent className="p-8">
-                    <img 
-                      src={member.image} 
-                      alt={member.name}
-                      className="w-32 h-32 rounded-full mx-auto mb-6 object-cover"
-                    />
-                    <h3 className="text-xl font-semibold text-foreground mb-2">{member.name}</h3>
-                    <div className="text-primary font-medium mb-4">{member.role}</div>
-                    <p className="text-muted-foreground leading-relaxed">{member.bio}</p>
-                  </CardContent>
-                </Card>
-              ))}
+            <div className="text-center py-12">
+              <p className="text-lg text-muted-foreground">
+                Presto presenteremo il nostro team di esperti.
+              </p>
             </div>
           </div>
         </section>
