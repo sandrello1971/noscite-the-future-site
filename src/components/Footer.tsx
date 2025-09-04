@@ -24,8 +24,8 @@ const Footer = () => {
     { name: "Chi Siamo", href: "/chi-siamo" },
     { name: "Il Team", href: "/chi-siamo#team" },
     { name: "Carriere", href: "/carriere" },
-    { name: "Privacy Policy", href: "/privacy" },
-    { name: "Cookie Policy", href: "/cookie" }
+    { name: "Privacy Policy", href: "/privacy-policy" },
+    { name: "Cookie Policy", href: "/cookie-policy" }
   ];
 
   return (
