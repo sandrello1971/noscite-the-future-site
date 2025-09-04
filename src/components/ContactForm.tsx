@@ -179,7 +179,7 @@ export default function ContactForm() {
                     <Phone className="h-6 w-6 text-primary mt-1" />
                     <div>
                       <h4 className="font-medium">Telefono</h4>
-                      <p className="text-muted-foreground">+39 02 1234 5678</p>
+                      <p className="text-muted-foreground">+39 347 6859801</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-4">
