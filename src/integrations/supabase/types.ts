@@ -14,6 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_audit_log: {
+        Row: {
+          action: string
+          admin_user_id: string
+          created_at: string | null
+          id: string
+          ip_address: unknown | null
+          record_id: string | null
+          table_name: string
+          user_agent: string | null
+        }
+        Insert: {
+          action: string
+          admin_user_id: string
+          created_at?: string | null
+          id?: string
+          ip_address?: unknown | null
+          record_id?: string | null
+          table_name: string
+          user_agent?: string | null
+        }
+        Update: {
+          action?: string
+          admin_user_id?: string
+          created_at?: string | null
+          id?: string
+          ip_address?: unknown | null
+          record_id?: string | null
+          table_name?: string
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       blog_posts: {
         Row: {
           author_id: string | null
@@ -164,6 +197,39 @@ export type Database = {
         }
         Relationships: []
       }
+      newsletter_rate_limit: {
+        Row: {
+          attempts: number | null
+          blocked_until: string | null
+          created_at: string | null
+          email: string
+          first_attempt: string | null
+          id: string
+          ip_address: unknown
+          last_attempt: string | null
+        }
+        Insert: {
+          attempts?: number | null
+          blocked_until?: string | null
+          created_at?: string | null
+          email: string
+          first_attempt?: string | null
+          id?: string
+          ip_address: unknown
+          last_attempt?: string | null
+        }
+        Update: {
+          attempts?: number | null
+          blocked_until?: string | null
+          created_at?: string | null
+          email?: string
+          first_attempt?: string | null
+          id?: string
+          ip_address?: unknown
+          last_attempt?: string | null
+        }
+        Relationships: []
+      }
       newsletter_subscriptions: {
         Row: {
           active: boolean
@@ -256,6 +322,17 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: Database["public"]["Enums"]["app_role"]
       }
+      get_newsletter_subscriptions_with_logging: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          active: boolean
+          created_at: string
+          email: string
+          id: string
+          subscribed_at: string
+          updated_at: string
+        }[]
+      }
       halfvec_avg: {
         Args: { "": number[] }
         Returns: unknown
@@ -295,6 +372,10 @@ export type Database = {
         Args: { "": unknown }
         Returns: unknown
       }
+      is_valid_email: {
+        Args: { email: string }
+        Returns: boolean
+      }
       ivfflat_bit_support: {
         Args: { "": unknown }
         Returns: unknown
@@ -314,6 +395,10 @@ export type Database = {
       l2_normalize: {
         Args: { "": string } | { "": unknown } | { "": unknown }
         Returns: unknown
+      }
+      log_admin_access: {
+        Args: { p_action: string; p_record_id?: string; p_table_name: string }
+        Returns: undefined
       }
       match_knowledge_base: {
         Args: {

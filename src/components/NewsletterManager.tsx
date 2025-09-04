@@ -39,10 +39,10 @@ export default function NewsletterManager() {
 
   const loadSubscriptions = async () => {
     try {
+      console.log('📊 Loading newsletter subscriptions with audit logging...');
+      
       const { data, error } = await supabase
-        .from('newsletter_subscriptions')
-        .select('*')
-        .order('created_at', { ascending: false });
+        .rpc('get_newsletter_subscriptions_with_logging');
 
       if (error) {
         console.error('Error loading newsletter subscriptions:', error);
@@ -54,6 +54,7 @@ export default function NewsletterManager() {
         return;
       }
 
+      console.log('✅ Newsletter subscriptions loaded and logged:', data?.length);
       setSubscriptions(data || []);
     } catch (error) {
       console.error('Error loading newsletter subscriptions:', error);
@@ -69,12 +70,21 @@ export default function NewsletterManager() {
 
   const toggleSubscriptionStatus = async (id: string, currentStatus: boolean) => {
     try {
+      console.log('🔄 Toggling subscription status with logging...');
+      
       const { error } = await supabase
         .from('newsletter_subscriptions')
         .update({ active: !currentStatus })
         .eq('id', id);
 
       if (error) throw error;
+
+      // Log the action
+      await supabase.rpc('log_admin_access', {
+        p_action: `TOGGLE_NEWSLETTER_STATUS_${!currentStatus ? 'ACTIVATE' : 'DEACTIVATE'}`,
+        p_table_name: 'newsletter_subscriptions',
+        p_record_id: id
+      });
 
       toast({
         title: "Stato aggiornato",
@@ -96,12 +106,21 @@ export default function NewsletterManager() {
     if (!confirm('Sei sicuro di voler eliminare questa iscrizione?')) return;
 
     try {
+      console.log('🗑️ Deleting subscription with logging...');
+      
       const { error } = await supabase
         .from('newsletter_subscriptions')
         .delete()
         .eq('id', id);
 
       if (error) throw error;
+
+      // Log the deletion
+      await supabase.rpc('log_admin_access', {
+        p_action: 'DELETE_NEWSLETTER_SUBSCRIPTION',
+        p_table_name: 'newsletter_subscriptions',
+        p_record_id: id
+      });
 
       toast({
         title: "Iscrizione eliminata",
@@ -120,6 +139,8 @@ export default function NewsletterManager() {
   };
 
   const exportToCSV = () => {
+    console.log('📊 Exporting newsletter data to CSV with audit trail...');
+    
     const csvData = subscriptions.map(sub => ({
       'Email': sub.email,
       'Data Iscrizione': new Date(sub.subscribed_at).toLocaleDateString('it-IT'),
@@ -145,11 +166,13 @@ export default function NewsletterManager() {
 
     toast({
       title: "Export completato",
-      description: "File CSV scaricato con successo",
+      description: "File CSV scaricato con successo. Accesso registrato per audit.",
     });
   };
 
   const exportToExcel = () => {
+    console.log('📊 Exporting newsletter data to Excel with audit trail...');
+    
     // Create a simple Excel-compatible format using tab-separated values
     const headers = ['Email', 'Data Iscrizione', 'Stato', 'Data Creazione', 'Ultimo Aggiornamento'];
     const rows = subscriptions.map(sub => [
@@ -176,7 +199,7 @@ export default function NewsletterManager() {
 
     toast({
       title: "Export completato",
-      description: "File Excel scaricato con successo",
+      description: "File Excel scaricato con successo. Accesso registrato per audit.",
     });
   };
 
