@@ -8,7 +8,7 @@ const Footer = () => {
     { name: "Athenaeum AI", href: "/servizi#academy" },
     { name: "AI Launchpad", href: "/servizi#launchpad" },
     { name: "AI Sprint", href: "/servizi#sprint" },
-    { name: "Evolution Partner", href: "/servizi#evolution" },
+    { name: "AI Evolution Partner", href: "/servizi#evolution" },
     { name: "Fractional CIO", href: "/servizi#cio" }
   ];
 
