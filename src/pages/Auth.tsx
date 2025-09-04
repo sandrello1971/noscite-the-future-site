@@ -51,7 +51,30 @@ export default function Auth() {
   };
 
   const validatePassword = (password: string) => {
-    return password.length >= 6;
+    // Stronger password requirements: at least 8 characters, with uppercase, lowercase, number, and special character
+    const minLength = 8;
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumbers = /\d/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+    
+    if (password.length < minLength) {
+      return { valid: false, message: "Password must be at least 8 characters long" };
+    }
+    if (!hasUpperCase) {
+      return { valid: false, message: "Password must contain at least one uppercase letter" };
+    }
+    if (!hasLowerCase) {
+      return { valid: false, message: "Password must contain at least one lowercase letter" };
+    }
+    if (!hasNumbers) {
+      return { valid: false, message: "Password must contain at least one number" };
+    }
+    if (!hasSpecialChar) {
+      return { valid: false, message: "Password must contain at least one special character (!@#$%^&*)" };
+    }
+    
+    return { valid: true, message: "" };
   };
 
   const handleSignIn = async (e: React.FormEvent) => {
@@ -64,7 +87,8 @@ export default function Auth() {
       return;
     }
     
-    if (!validatePassword(password)) {
+    // For sign-in, we don't enforce new password requirements on existing accounts
+    if (password.length < 6) {
       setError("Password must be at least 6 characters long");
       return;
     }
@@ -109,8 +133,9 @@ export default function Auth() {
       return;
     }
     
-    if (!validatePassword(password)) {
-      setError("Password must be at least 6 characters long");
+    const passwordValidation = validatePassword(password);
+    if (!passwordValidation.valid) {
+      setError(passwordValidation.message);
       return;
     }
     
@@ -260,11 +285,11 @@ export default function Auth() {
                       <Input
                         id="signup-password"
                         type={showPassword ? "text" : "password"}
-                        placeholder="Create a password (min. 6 characters)"
+                        placeholder="Password: 8+ chars, with A-Z, a-z, 0-9, and special chars"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
-                        minLength={6}
+                        minLength={8}
                         autoComplete="new-password"
                       />
                       <Button

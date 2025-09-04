@@ -28,6 +28,7 @@ import DocumentManager from "@/components/DocumentManager";
 import DocumentsList from "@/components/DocumentsList";
 import UserManager from "@/components/UserManager";
 import NewsletterManager from "@/components/NewsletterManager";
+import SecurityDashboard from "@/components/SecurityDashboard";
 
 export default function NosciteAdminDashboard() {
   const { user, loading: authLoading, userRole, isAdmin, signOut } = useAuth();
@@ -309,11 +310,12 @@ export default function NosciteAdminDashboard() {
       {/* Main Content */}
       <div className="container mx-auto px-4 lg:px-8 py-8">
         <Tabs defaultValue="blog" className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="blog">Gestione Blog</TabsTrigger>
             <TabsTrigger value="documents">Gestione Documenti</TabsTrigger>
             <TabsTrigger value="newsletter">Newsletter</TabsTrigger>
             <TabsTrigger value="users">Gestione Utenti</TabsTrigger>
+            <TabsTrigger value="security">Sicurezza</TabsTrigger>
           </TabsList>
 
           {/* Blog Management */}
@@ -420,6 +422,14 @@ export default function NosciteAdminDashboard() {
               <h2 className="text-2xl font-bold">Gestione Utenti</h2>
             </div>
             <UserManager />
+          </TabsContent>
+
+          {/* Security Dashboard */}
+          <TabsContent value="security" className="space-y-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-bold">Pannello di Sicurezza</h2>
+            </div>
+            <SecurityDashboard />
           </TabsContent>
         </Tabs>
       </div>

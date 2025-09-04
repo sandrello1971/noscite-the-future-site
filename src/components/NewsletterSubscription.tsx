@@ -18,10 +18,31 @@ const NewsletterSubscription = ({ className = "", variant = 'default' }: Newslet
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!email || !email.includes('@')) {
+    // Enhanced email validation
+    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+    
+    if (!email || !emailRegex.test(email) || email.length > 254) {
       toast({
         title: "Email non valida",
         description: "Inserisci un indirizzo email valido",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Check for suspicious patterns
+    const suspiciousPatterns = [
+      /<script/i,
+      /javascript:/i,
+      /on\w+\s*=/i,
+      /<iframe/i,
+      /data:text\/html/i
+    ];
+    
+    if (suspiciousPatterns.some(pattern => pattern.test(email))) {
+      toast({
+        title: "Email non valida",
+        description: "L'email contiene caratteri non consentiti",
         variant: "destructive",
       });
       return;
@@ -32,7 +53,7 @@ const NewsletterSubscription = ({ className = "", variant = 'default' }: Newslet
       // Save to database
       const { error } = await supabase
         .from('newsletter_subscriptions')
-        .insert([{ email }]);
+        .insert([{ email: email.toLowerCase().trim() }]);
 
       if (error) {
         if (error.code === '23505') { // Unique constraint violation

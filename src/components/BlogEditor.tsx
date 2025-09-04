@@ -11,6 +11,7 @@ import { ArrowLeft, Save, Eye, Upload, AlertTriangle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
 import { BlogPost } from '@/types/database';
+import DOMPurify from 'dompurify';
 
 interface BlogEditorProps {
   post?: BlogPost | null;
@@ -88,6 +89,15 @@ const BlogEditor = ({ post, onSave, onCancel }: BlogEditorProps) => {
     });
   };
 
+  const escapeHtml = (unsafe: string): string => {
+    return unsafe
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  };
+
   const handlePreview = () => {
     if (!formData.content) {
       toast({
@@ -98,14 +108,25 @@ const BlogEditor = ({ post, onSave, onCancel }: BlogEditorProps) => {
       return;
     }
 
-    // Apri una nuova finestra con l'anteprima
+    // Sanitize all user input to prevent XSS
+    const sanitizedTitle = escapeHtml(formData.title || 'Titolo non definito');
+    const sanitizedCategory = formData.category ? escapeHtml(formData.category) : '';
+    const sanitizedExcerpt = formData.excerpt ? escapeHtml(formData.excerpt) : '';
+    
+    // For content, use DOMPurify for more sophisticated sanitization
+    const sanitizedContent = DOMPurify.sanitize(formData.content, {
+      ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li', 'blockquote', 'img', 'a'],
+      ALLOWED_ATTR: ['href', 'src', 'alt', 'title', 'target', 'rel'],
+      ALLOW_DATA_ATTR: false
+    });
+
+    // Apri una nuova finestra con l'anteprima sicura
     const previewWindow = window.open('', '_blank');
     if (previewWindow) {
-      previewWindow.document.write(`
-        <!DOCTYPE html>
+      const htmlContent = `<!DOCTYPE html>
         <html>
         <head>
-          <title>${formData.title || 'Anteprima Articolo'}</title>
+          <title>${sanitizedTitle}</title>
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <style>
@@ -118,17 +139,33 @@ const BlogEditor = ({ post, onSave, onCancel }: BlogEditorProps) => {
           </style>
         </head>
         <body>
-          <h1>${formData.title || 'Titolo non definito'}</h1>
+          <h1>${sanitizedTitle}</h1>
           <div class="meta">
-            ${formData.category ? `Categoria: ${formData.category} | ` : ''}
-            ${formData.excerpt ? `Estratto: ${formData.excerpt}` : ''}
+            ${sanitizedCategory ? `Categoria: ${sanitizedCategory} | ` : ''}
+            ${sanitizedExcerpt ? `Estratto: ${sanitizedExcerpt}` : ''}
           </div>
-          <div class="content">${formData.content}</div>
+          <div class="content">${sanitizedContent}</div>
         </body>
-        </html>
-      `);
+        </html>`;
+      
+      previewWindow.document.write(htmlContent);
       previewWindow.document.close();
     }
+  };
+
+  const validateAndSanitizeInput = (input: string, maxLength: number = 1000): string => {
+    if (!input) return '';
+    
+    // Remove potentially dangerous content
+    const sanitized = DOMPurify.sanitize(input.trim(), {
+      ALLOWED_TAGS: input === formData.content ? 
+        ['p', 'br', 'strong', 'em', 'u', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li', 'blockquote', 'img', 'a', 'table', 'tr', 'td', 'th', 'tbody', 'thead'] : 
+        [],
+      ALLOWED_ATTR: ['href', 'src', 'alt', 'title', 'target', 'rel'],
+      ALLOW_DATA_ATTR: false
+    });
+    
+    return sanitized.length > maxLength ? sanitized.substring(0, maxLength) : sanitized;
   };
 
   const handleSave = async () => {
@@ -141,16 +178,59 @@ const BlogEditor = ({ post, onSave, onCancel }: BlogEditorProps) => {
       return;
     }
 
+    // Validate title length
+    if (formData.title.length > 200) {
+      toast({
+        title: "Errore",
+        description: "Il titolo non può superare i 200 caratteri",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Validate and sanitize all inputs
+    const sanitizedTitle = validateAndSanitizeInput(formData.title, 200);
+    const sanitizedSlug = validateAndSanitizeInput(formData.slug, 100);
+    const sanitizedExcerpt = validateAndSanitizeInput(formData.excerpt, 500);
+    const sanitizedCategory = validateAndSanitizeInput(formData.category, 50);
+    const sanitizedContent = validateAndSanitizeInput(formData.content, 50000);
+    const sanitizedImageUrl = formData.featured_image_url ? 
+      DOMPurify.sanitize(formData.featured_image_url, { ALLOWED_TAGS: [], ALLOWED_ATTR: [] }) : '';
+
+    // Validate URL if provided
+    if (sanitizedImageUrl) {
+      try {
+        new URL(sanitizedImageUrl);
+      } catch {
+        toast({
+          title: "Errore",
+          description: "L'URL dell'immagine in evidenza non è valido",
+          variant: "destructive",
+        });
+        return;
+      }
+    }
+
     setLoading(true);
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('User not authenticated');
 
-      const tags = tagsInput.split(',').map(tag => tag.trim()).filter(Boolean);
+      const tags = tagsInput.split(',')
+        .map(tag => validateAndSanitizeInput(tag, 30))
+        .filter(Boolean)
+        .slice(0, 10); // Limit to 10 tags
+
       const dataToSave = {
-        ...formData,
+        title: sanitizedTitle,
+        slug: sanitizedSlug || sanitizedTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
+        excerpt: sanitizedExcerpt,
+        category: sanitizedCategory,
+        content: sanitizedContent,
+        featured_image_url: sanitizedImageUrl || null,
         tags,
         author_id: user.id,
+        published: formData.published,
         published_at: formData.published ? new Date().toISOString() : null
       };
 
