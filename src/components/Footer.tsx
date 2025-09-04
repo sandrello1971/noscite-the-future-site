@@ -40,6 +40,10 @@ const Footer = () => {
                 alt="Noscite Logo" 
                 className="h-24 w-auto mb-4 brightness-0 invert"
               />
+              <h3 className="text-2xl font-bold mb-3">
+                <span className="text-primary">In Digitali</span>
+                <span className="block text-secondary">Nova Virtus</span>
+              </h3>
               <p className="text-primary-foreground/80 leading-relaxed">
                 Innovazione human-centric: consulenza, implementazione e academy integrate per risultati concreti e sostenibili.
               </p>
