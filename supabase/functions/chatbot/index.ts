@@ -170,6 +170,9 @@ serve(async (req) => {
 
     console.log('Generated AI response length:', finalResponse.length);
 
+    // Set session context for RLS policies
+    await supabase.rpc('set_session_context', { session_id_param: sessionId });
+
     // Salva la conversazione
     const { data: existingConversation } = await supabase
       .from('chat_conversations')
