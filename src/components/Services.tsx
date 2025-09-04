@@ -8,8 +8,8 @@ const Services = () => {
     {
       icon: BookOpen,
       title: "Athenaeum AI",
-      description: "Formazione completa su intelligenza artificiale, machine learning e automazione aziendale",
-      features: ["Corsi certificati", "Follow-up personalizzato", "Community esclusiva"],
+      description: "Percorso formativo di 68 ore: Initium (AI Operativa), Structura (Second Brain), Communitas (Collaborazione)",
+      features: ["3 Certificazioni incluse", "Ecosistema Obsidian integrato", "ROI misurabile"],
       color: "text-primary"
     },
     {

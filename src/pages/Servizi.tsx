@@ -11,24 +11,25 @@ const Servizi = () => {
       id: "academy",
       icon: BookOpen,
       title: "Athenaeum AI",
-      subtitle: "Digital Productivity Transformation per PMI",
-      description: "Percorso formativo completo di 68 ore diviso in 3 corsi sequenziali: Intelligenza Artificiale Operativa, Second Brain in Azienda e Collaborazione Intelligente. Progettato per PMI che vogliono trasformare la produttività attraverso AI, knowledge management e strumenti di collaborazione digitale.",
-      duration: "6-8 mesi",
+      subtitle: "In Digitali Nova Virtus",
+      description: "Percorso formativo completo di 68 ore diviso in 3 corsi sequenziali per la trasformazione digitale delle PMI. Target: imprenditori, manager e personale operativo di aziende 5-50 dipendenti. Modalità: in presenza o online.",
+      duration: "12 mesi con implementazione graduale",
       
       features: [
-        "Corso 1: IA Operativa (20h) - ChatGPT e Copilot 365",
-        "Corso 2: Second Brain (24h) - Knowledge management con Obsidian",
-        "Corso 3: Collaborazione Intelligente (24h) - Teams, Trello, Asana, Slack",
+        "Initium – Fondamenta AI Operativa (20h, 5 moduli × 4h)",
+        "Structura – Second Brain Aziendale (24h, 6 moduli × 4h)", 
+        "Communitas – Collaborazione Intelligente (24h, 6 moduli × 4h)",
+        "Transforma – Percorso Integrato completo (68h totali)",
         "Max 12 partecipanti per corso",
-        "Certificazioni: AI Productivity User, Second Brain Implementer, Collaboration Tools User",
-        "Follow-up ROI a 3 mesi per ogni corso",
-        "Community alumni e webinar trimestrali"
+        "Certificazioni: AI Productivity User, Second Brain Implementer, Collaboration Hub User",
+        "Ecosistema digitale integrato con Obsidian come hub centrale",
+        "ROI misurabile e roadmap personalizzata"
       ],
       benefits: [
-        "Riduzione significativa tempo attività ripetitive",
-        "Miglioramento produttività team",
-        "Team autonomo e produttivo",
-        "Processi digitalizzati e scalabili"
+        "Unificazione knowledge + progetti + task in unico sistema",
+        "Riduzione tool-fatigue con meno strumenti, più valore",
+        "Processi scalabili dal singolo team a tutta l'azienda",
+        "Allineamento con servizi AI Sprint & Evolution Partner"
       ]
     },
     {
