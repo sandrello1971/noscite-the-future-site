@@ -40,9 +40,15 @@ const BlogEditor = ({ post, onSave, onCancel }: BlogEditorProps) => {
   const [tempKey, setTempKey] = useState('');
 
   useEffect(() => {
-    // Usa l'API key del segreto che abbiamo impostato
-    setApiKey('your-tinymce-api-key-here');
-    setKeyLoading(false);
+    // Recupera la chiave API da localStorage oppure usa la demo key
+    try {
+      const saved = localStorage.getItem('tinymce_api_key');
+      setApiKey(saved || 'no-api-key');
+    } catch {
+      setApiKey('no-api-key');
+    } finally {
+      setKeyLoading(false);
+    }
   }, []);
 
   useEffect(() => {
@@ -67,8 +73,12 @@ const BlogEditor = ({ post, onSave, onCancel }: BlogEditorProps) => {
       return;
     }
 
-    // Salva temporaneamente la chiave
-    setApiKey(tempKey.trim());
+    // Salva la chiave in localStorage e nello stato
+    const cleaned = tempKey.trim();
+    try {
+      localStorage.setItem('tinymce_api_key', cleaned);
+    } catch {}
+    setApiKey(cleaned);
     setShowKeyForm(false);
     setTempKey('');
     
@@ -264,92 +274,88 @@ const BlogEditor = ({ post, onSave, onCancel }: BlogEditorProps) => {
                     <div className="mt-2 p-4 border rounded-lg">
                       <p className="text-muted-foreground">Caricamento editor...</p>
                     </div>
-                  ) : !apiKey ? (
-                    <div className="mt-2 space-y-4">
-                      <Alert>
-                        <AlertTriangle className="h-4 w-4" />
-                        <AlertDescription>
-                          Per utilizzare l'editor avanzato è necessaria una chiave API di TinyMCE.
-                          <Button
-                            variant="link"
-                            size="sm"
-                            className="p-0 h-auto ml-1"
-                            onClick={() => setShowKeyForm(!showKeyForm)}
-                          >
-                            {showKeyForm ? 'Annulla' : 'Inserisci chiave API'}
-                          </Button>
-                        </AlertDescription>
-                      </Alert>
-                      
-                      {showKeyForm && (
-                        <div className="p-4 border rounded-lg space-y-3">
-                          <Input
-                            value={tempKey}
-                            onChange={(e) => setTempKey(e.target.value)}
-                            placeholder="Inserisci la tua chiave API TinyMCE"
-                            type="password"
-                          />
-                          <Button onClick={handleSaveApiKey} size="sm">
-                            Salva Chiave API
-                          </Button>
+                  ) : (
+                    <>
+                      {apiKey === 'no-api-key' && (
+                        <div className="mt-2 space-y-4">
+                          <Alert>
+                            <AlertTriangle className="h-4 w-4" />
+                            <AlertDescription>
+                              Stai usando la chiave demo di TinyMCE. Inserisci la tua chiave API per rimuovere i limiti.
+                              <Button
+                                variant="link"
+                                size="sm"
+                                className="p-0 h-auto ml-1"
+                                onClick={() => setShowKeyForm(!showKeyForm)}
+                              >
+                                {showKeyForm ? 'Annulla' : 'Inserisci chiave API'}
+                              </Button>
+                            </AlertDescription>
+                          </Alert>
+
+                          {showKeyForm && (
+                            <div className="p-4 border rounded-lg space-y-3">
+                              <Input
+                                value={tempKey}
+                                onChange={(e) => setTempKey(e.target.value)}
+                                placeholder="Inserisci la tua chiave API TinyMCE"
+                                type="password"
+                              />
+                              <Button onClick={handleSaveApiKey} size="sm">
+                                Salva Chiave API
+                              </Button>
+                            </div>
+                          )}
                         </div>
                       )}
-                      
-                      <Textarea
-                        value={formData.content}
-                        onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
-                        placeholder="Scrivi il contenuto dell'articolo..."
-                        rows={15}
-                        className="font-mono"
-                      />
-                    </div>
-                  ) : (
-                    <div className="mt-2">
-                      <Editor
-                        apiKey={apiKey}
-                        onInit={(evt, editor) => editorRef.current = editor}
-                        value={formData.content}
-                        onEditorChange={(content) => setFormData(prev => ({ ...prev, content }))}
-                        init={{
-                          height: 500,
-                          menubar: false,
-                          plugins: [
-                            'advlist autolink lists link image charmap print preview anchor',
-                            'searchreplace visualblocks code fullscreen',
-                            'insertdatetime media table paste code help wordcount'
-                          ],
-                          toolbar: 'undo redo | formatselect | ' +
-                          'bold italic backcolor | alignleft aligncenter ' +
-                          'alignright alignjustify | bullist numlist outdent indent | ' +
-                          'removeformat | image link | code preview | help',
-                          content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
-                          images_upload_handler: async (blobInfo) => {
-                            return new Promise(async (resolve, reject) => {
-                              try {
-                                const file = blobInfo.blob();
-                                const fileExt = file.type.split('/')[1];
-                                const fileName = `${Math.random()}.${fileExt}`;
-                                const filePath = `blog-images/${fileName}`;
 
-                                const { error: uploadError } = await supabase.storage
-                                  .from('blog-images')
-                                  .upload(filePath, file);
+                      <div className="mt-2">
+                        <Editor
+                          apiKey={apiKey}
+                          onInit={(evt, editor) => editorRef.current = editor}
+                          value={formData.content}
+                          onEditorChange={(content) => setFormData(prev => ({ ...prev, content }))}
+                          init={{
+                            height: 500,
+                            menubar: false,
+                            plugins: [
+                              'advlist autolink lists link image charmap print preview anchor',
+                              'searchreplace visualblocks code fullscreen',
+                              'insertdatetime media table paste code help wordcount'
+                            ],
+                            toolbar: 'undo redo | formatselect | ' +
+                            'bold italic backcolor | alignleft aligncenter ' +
+                            'alignright alignjustify | bullist numlist outdent indent | ' +
+                            'removeformat | image link | code preview | help',
+                            content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+                            images_upload_handler: async (blobInfo) => {
+                              return new Promise(async (resolve, reject) => {
+                                try {
+                                  const file = blobInfo.blob();
+                                  const fileExt = file.type.split('/')[1];
+                                  const fileName = `${Math.random()}.${fileExt}`;
+                                  const filePath = `blog-images/${fileName}`;
 
-                                if (uploadError) throw uploadError;
+                                  const { error: uploadError } = await supabase.storage
+                                    .from('blog-images')
+                                    .upload(filePath, file);
 
-                                const { data: { publicUrl } } = supabase.storage
-                                  .from('blog-images')
-                                  .getPublicUrl(filePath);
+                                  if (uploadError) throw uploadError;
 
-                                resolve(publicUrl);
-                              } catch (error) {
-                                reject(error);
-                              }
-                            });
-                          }
-                        }}
-                      />
-                    </div>
+                                  const { data: { publicUrl } } = supabase.storage
+                                    .from('blog-images')
+                                    .getPublicUrl(filePath);
+
+                                  resolve(publicUrl);
+                                } catch (error) {
+                                  reject(error);
+                                }
+                              });
+                            }
+                          }}
+                        />
+                      </div>
+                    </>
                   )}
                 </div>
               </CardContent>

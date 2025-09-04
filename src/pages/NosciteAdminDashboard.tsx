@@ -85,7 +85,7 @@ export default function NosciteAdminDashboard() {
     } else {
       console.log('⏳ Still loading auth state...');
     }
-  }, [user, authLoading, userRole, isAdmin, navigate]);
+  }, [user, authLoading, userRole, navigate]);
 
   const loadBlogPosts = async () => {
     try {
