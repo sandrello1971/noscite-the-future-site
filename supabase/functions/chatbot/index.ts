@@ -81,21 +81,25 @@ serve(async (req) => {
       }
     }
 
-    // Cerca anche nei documenti caricati
+    // 3) Ricerca nei documenti (specifica per contenuti)
     const { data: documentsData, error: documentsError } = await supabase
       .from('documents')
       .select('title, description, file_url, category')
       .or('title.ilike.%' + (keywords[0] || '') + '%,description.ilike.%' + (keywords[0] || '') + '%')
-      .limit(3);
+      .limit(10);
 
     if (documentsError) {
       console.error('Error fetching documents:', documentsError);
     }
 
-    // Costruisci il contesto dal knowledge base
-    const knowledgeContext = knowledgeData?.map(item => 
-      'FONTE SITO WEB - ' + (item.title ? item.title + ': ' : '') + item.content
-    ).join('\n\n') || '';
+    // 4) Costruisci il contesto completo
+    const knowledgeContext = semanticMatches.length > 0 
+      ? semanticMatches.map(item => 
+          'FONTE SITO WEB - ' + (item.title ? item.title + ': ' : '') + item.content
+        ).join('\n\n')
+      : (knowledgeData || []).map(item => 
+          'FONTE SITO WEB - ' + (item.title ? item.title + ': ' : '') + item.content
+        ).join('\n\n');
 
     // Costruisci il contesto dai documenti
     const documentsContext = documentsData?.map(item => 

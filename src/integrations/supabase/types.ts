@@ -288,6 +288,21 @@ export type Database = {
         Args: { "": string } | { "": unknown } | { "": unknown }
         Returns: unknown
       }
+      match_knowledge_base: {
+        Args: {
+          match_count?: number
+          match_threshold?: number
+          query_embedding: string
+        }
+        Returns: {
+          content: string
+          content_type: string
+          distance: number
+          id: string
+          source_id: string
+          title: string
+        }[]
+      }
       set_session_context: {
         Args: { session_id_param: string }
         Returns: undefined
