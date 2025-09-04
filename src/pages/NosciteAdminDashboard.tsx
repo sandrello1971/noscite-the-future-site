@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import BlogEditor from "@/components/BlogEditor";
 import DocumentManager from "@/components/DocumentManager";
+import DocumentsList from "@/components/DocumentsList";
 import UserManager from "@/components/UserManager";
 
 export default function NosciteAdminDashboard() {
@@ -397,6 +398,11 @@ export default function NosciteAdminDashboard() {
           {/* Documents Management */}
           <TabsContent value="documents" className="space-y-6">
             <DocumentManager onDocumentChange={loadDocuments} />
+            <DocumentsList 
+              documents={documents} 
+              onDocumentChange={loadDocuments}
+              showActions={true}
+            />
           </TabsContent>
 
           {/* Users Management */}

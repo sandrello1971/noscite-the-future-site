@@ -1,0 +1,103 @@
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { useToast } from '@/components/ui/use-toast';
+import { ArrowRight } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+
+interface NewsletterSubscriptionProps {
+  className?: string;
+  variant?: 'default' | 'footer';
+}
+
+const NewsletterSubscription = ({ className = "", variant = 'default' }: NewsletterSubscriptionProps) => {
+  const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!email || !email.includes('@')) {
+      toast({
+        title: "Email non valida",
+        description: "Inserisci un indirizzo email valido",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setLoading(true);
+    try {
+      // Per ora salviamo solo localmente
+      console.log('Newsletter subscription:', email);
+
+      toast({
+        title: "Iscrizione completata!",
+        description: "Ti sei iscritto con successo alla newsletter",
+      });
+
+      setEmail('');
+    } catch (error) {
+      console.error('Newsletter subscription error:', error);
+      toast({
+        title: "Errore",
+        description: "Si è verificato un errore durante l'iscrizione",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (variant === 'footer') {
+    return (
+      <form onSubmit={handleSubscribe} className={className}>
+        <div className="flex flex-col sm:flex-row gap-3">
+          <Input
+            type="email"
+            placeholder="La tua email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            disabled={loading}
+            className="flex-1"
+          />
+          <Button 
+            type="submit" 
+            variant="secondary" 
+            size="sm"
+            disabled={loading}
+          >
+            {loading ? 'Iscrizione...' : 'Iscriviti'}
+          </Button>
+        </div>
+      </form>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubscribe} className={className}>
+      <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
+        <Input 
+          type="email" 
+          placeholder="La tua email" 
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          disabled={loading}
+          className="flex-1 px-4 py-3 rounded-lg border border-input bg-background"
+        />
+        <Button 
+          type="submit" 
+          variant="cta" 
+          size="lg"
+          disabled={loading}
+        >
+          {loading ? 'Iscrizione...' : 'Iscriviti'}
+          <ArrowRight className="ml-2 h-5 w-5" />
+        </Button>
+      </div>
+    </form>
+  );
+};
+
+export default NewsletterSubscription;

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Mail, Phone, MapPin, Linkedin, Twitter, Youtube } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import NewsletterSubscription from "@/components/NewsletterSubscription";
 
 const Footer = () => {
   const services = [
@@ -119,9 +120,7 @@ const Footer = () => {
               <p className="text-primary-foreground/80 text-sm mb-4">
                 Ricevi le ultime novità sull'AI e la trasformazione digitale
               </p>
-              <Button variant="secondary" size="sm" asChild>
-                <Link to="/newsletter">Iscriviti</Link>
-              </Button>
+              <NewsletterSubscription variant="footer" />
             </div>
           </div>
         </div>

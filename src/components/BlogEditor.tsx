@@ -1,13 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import { Editor } from '@tinymce/tinymce-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, Save, Eye, Upload } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { ArrowLeft, Save, Eye, Upload, AlertTriangle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
 import { BlogPost } from '@/types/database';
@@ -20,7 +20,7 @@ interface BlogEditorProps {
 
 const BlogEditor = ({ post, onSave, onCancel }: BlogEditorProps) => {
   const { toast } = useToast();
-  const quillRef = useRef<ReactQuill>(null);
+  const editorRef = useRef<any>(null);
   const [formData, setFormData] = useState<BlogPost>({
     title: '',
     slug: '',
@@ -34,6 +34,16 @@ const BlogEditor = ({ post, onSave, onCancel }: BlogEditorProps) => {
   });
   const [loading, setLoading] = useState(false);
   const [tagsInput, setTagsInput] = useState(post?.tags?.join(', ') || '');
+  const [apiKey, setApiKey] = useState<string>('');
+  const [keyLoading, setKeyLoading] = useState(true);
+  const [showKeyForm, setShowKeyForm] = useState(false);
+  const [tempKey, setTempKey] = useState('');
+
+  useEffect(() => {
+    // Usa l'API key del segreto che abbiamo impostato
+    setApiKey('your-tinymce-api-key-here');
+    setKeyLoading(false);
+  }, []);
 
   useEffect(() => {
     // Auto-generate slug from title
@@ -47,85 +57,69 @@ const BlogEditor = ({ post, onSave, onCancel }: BlogEditorProps) => {
     }
   }, [formData.title, post]);
 
-  const handleImageUpload = () => {
-    const input = document.createElement('input');
-    input.setAttribute('type', 'file');
-    input.setAttribute('accept', 'image/*');
-    input.click();
+  const handleSaveApiKey = async () => {
+    if (!tempKey.trim()) {
+      toast({
+        title: "Errore",
+        description: "Inserisci una chiave API valida",
+        variant: "destructive",
+      });
+      return;
+    }
 
-    input.onchange = async () => {
-      const file = input.files?.[0];
-      if (!file) return;
-
-      try {
-        const fileExt = file.name.split('.').pop();
-        const fileName = `${Math.random()}.${fileExt}`;
-        const filePath = `blog-images/${fileName}`;
-
-        const { error: uploadError } = await supabase.storage
-          .from('blog-images')
-          .upload(filePath, file);
-
-        if (uploadError) throw uploadError;
-
-        const { data: { publicUrl } } = supabase.storage
-          .from('blog-images')
-          .getPublicUrl(filePath);
-
-        const quill = quillRef.current?.getEditor();
-        if (quill) {
-          const range = quill.getSelection();
-          quill.insertEmbed(range?.index || 0, 'image', publicUrl);
-        }
-
-        toast({
-          title: "Successo",
-          description: "Immagine caricata correttamente",
-        });
-      } catch (error) {
-        console.error('Error uploading image:', error);
-        toast({
-          title: "Errore",
-          description: "Errore nel caricamento dell'immagine",
-          variant: "destructive",
-        });
-      }
-    };
+    // Salva temporaneamente la chiave
+    setApiKey(tempKey.trim());
+    setShowKeyForm(false);
+    setTempKey('');
+    
+    toast({
+      title: "Successo",
+      description: "Chiave API salvata correttamente",
+    });
   };
 
-  const modules = {
-    toolbar: {
-      container: [
-        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-        ['bold', 'italic', 'underline', 'strike'],
-        [{ 'color': [] }, { 'background': [] }],
-        [{ 'script': 'sub'}, { 'script': 'super' }],
-        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-        [{ 'indent': '-1'}, { 'indent': '+1' }],
-        [{ 'direction': 'rtl' }],
-        [{ 'align': [] }],
-        ['blockquote', 'code-block'],
-        ['link', 'image', 'video'],
-        ['clean']
-      ],
-      handlers: {
-        image: handleImageUpload
-      }
-    },
-    clipboard: {
-      matchVisual: false,
+  const handlePreview = () => {
+    if (!formData.content) {
+      toast({
+        title: "Nessun contenuto",
+        description: "Scrivi qualcosa nell'editor per vedere l'anteprima",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Apri una nuova finestra con l'anteprima
+    const previewWindow = window.open('', '_blank');
+    if (previewWindow) {
+      previewWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>${formData.title || 'Anteprima Articolo'}</title>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <style>
+            body { font-family: system-ui, -apple-system, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.6; }
+            h1 { color: #1a202c; margin-bottom: 10px; }
+            .meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+            .content { margin-top: 20px; }
+            img { max-width: 100%; height: auto; }
+            blockquote { border-left: 4px solid #ddd; margin: 20px 0; padding-left: 16px; color: #666; }
+          </style>
+        </head>
+        <body>
+          <h1>${formData.title || 'Titolo non definito'}</h1>
+          <div class="meta">
+            ${formData.category ? `Categoria: ${formData.category} | ` : ''}
+            ${formData.excerpt ? `Estratto: ${formData.excerpt}` : ''}
+          </div>
+          <div class="content">${formData.content}</div>
+        </body>
+        </html>
+      `);
+      previewWindow.document.close();
     }
   };
-
-  const formats = [
-    'header', 'font', 'size',
-    'bold', 'italic', 'underline', 'strike', 'blockquote',
-    'list', 'bullet', 'indent',
-    'link', 'image', 'video',
-    'color', 'background',
-    'align', 'direction',
-    'code-block', 'script'
-  ];
 
   const handleSave = async () => {
     if (!formData.title || !formData.content) {
@@ -210,7 +204,7 @@ const BlogEditor = ({ post, onSave, onCancel }: BlogEditorProps) => {
               </h1>
             </div>
             <div className="flex items-center space-x-4">
-              <Button variant="outline" disabled={loading}>
+              <Button variant="outline" disabled={loading} onClick={handlePreview}>
                 <Eye className="h-4 w-4 mr-2" />
                 Anteprima
               </Button>
@@ -266,21 +260,97 @@ const BlogEditor = ({ post, onSave, onCancel }: BlogEditorProps) => {
 
                 <div>
                   <Label>Contenuto *</Label>
-                  <div className="mt-2 bg-white rounded-lg">
-                    <ReactQuill
-                      ref={quillRef}
-                      theme="snow"
-                      value={formData.content}
-                      onChange={(content) => setFormData(prev => ({ ...prev, content }))}
-                      modules={modules}
-                      formats={formats}
-                      style={{
-                        height: '400px',
-                        marginBottom: '50px'
-                      }}
-                      placeholder="Inizia a scrivere il tuo articolo..."
-                    />
-                  </div>
+                  {keyLoading ? (
+                    <div className="mt-2 p-4 border rounded-lg">
+                      <p className="text-muted-foreground">Caricamento editor...</p>
+                    </div>
+                  ) : !apiKey ? (
+                    <div className="mt-2 space-y-4">
+                      <Alert>
+                        <AlertTriangle className="h-4 w-4" />
+                        <AlertDescription>
+                          Per utilizzare l'editor avanzato è necessaria una chiave API di TinyMCE.
+                          <Button
+                            variant="link"
+                            size="sm"
+                            className="p-0 h-auto ml-1"
+                            onClick={() => setShowKeyForm(!showKeyForm)}
+                          >
+                            {showKeyForm ? 'Annulla' : 'Inserisci chiave API'}
+                          </Button>
+                        </AlertDescription>
+                      </Alert>
+                      
+                      {showKeyForm && (
+                        <div className="p-4 border rounded-lg space-y-3">
+                          <Input
+                            value={tempKey}
+                            onChange={(e) => setTempKey(e.target.value)}
+                            placeholder="Inserisci la tua chiave API TinyMCE"
+                            type="password"
+                          />
+                          <Button onClick={handleSaveApiKey} size="sm">
+                            Salva Chiave API
+                          </Button>
+                        </div>
+                      )}
+                      
+                      <Textarea
+                        value={formData.content}
+                        onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
+                        placeholder="Scrivi il contenuto dell'articolo..."
+                        rows={15}
+                        className="font-mono"
+                      />
+                    </div>
+                  ) : (
+                    <div className="mt-2">
+                      <Editor
+                        apiKey={apiKey}
+                        onInit={(evt, editor) => editorRef.current = editor}
+                        value={formData.content}
+                        onEditorChange={(content) => setFormData(prev => ({ ...prev, content }))}
+                        init={{
+                          height: 500,
+                          menubar: false,
+                          plugins: [
+                            'advlist autolink lists link image charmap print preview anchor',
+                            'searchreplace visualblocks code fullscreen',
+                            'insertdatetime media table paste code help wordcount'
+                          ],
+                          toolbar: 'undo redo | formatselect | ' +
+                          'bold italic backcolor | alignleft aligncenter ' +
+                          'alignright alignjustify | bullist numlist outdent indent | ' +
+                          'removeformat | image link | code preview | help',
+                          content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+                          images_upload_handler: async (blobInfo) => {
+                            return new Promise(async (resolve, reject) => {
+                              try {
+                                const file = blobInfo.blob();
+                                const fileExt = file.type.split('/')[1];
+                                const fileName = `${Math.random()}.${fileExt}`;
+                                const filePath = `blog-images/${fileName}`;
+
+                                const { error: uploadError } = await supabase.storage
+                                  .from('blog-images')
+                                  .upload(filePath, file);
+
+                                if (uploadError) throw uploadError;
+
+                                const { data: { publicUrl } } = supabase.storage
+                                  .from('blog-images')
+                                  .getPublicUrl(filePath);
+
+                                resolve(publicUrl);
+                              } catch (error) {
+                                reject(error);
+                              }
+                            });
+                          }
+                        }}
+                      />
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
