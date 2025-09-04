@@ -10,11 +10,11 @@ const Servizi = () => {
     {
       id: "academy",
       icon: BookOpen,
-      title: "AI Academy",
+      title: "Athenaeum AI",
       subtitle: "Digital Productivity Transformation per PMI",
       description: "Percorso formativo completo di 68 ore diviso in 3 corsi sequenziali: Intelligenza Artificiale Operativa, Second Brain in Azienda e Collaborazione Intelligente. Progettato per PMI che vogliono trasformare la produttività attraverso AI, knowledge management e strumenti di collaborazione digitale.",
       duration: "6-8 mesi",
-      price: "A partire da €12.000",
+      
       features: [
         "Corso 1: IA Operativa (20h) - ChatGPT e Copilot 365",
         "Corso 2: Second Brain (24h) - Knowledge management con Obsidian",
@@ -38,7 +38,7 @@ const Servizi = () => {
       subtitle: "Il Tuo Primo Passo nell'AI, Semplice e Rapido",
       description: "Il pacchetto perfetto per partire subito con l'Intelligenza Artificiale nella tua attività. In poche settimane scoprirai cosa può fare l'AI per te e imparerai a usarla sul campo, con risultati tangibili e immediati.",
       duration: "4-6 settimane",
-      price: "Forfait accessibile",
+      
       features: [
         "Assessment semplificato di processi e opportunità",
         "Workshop operativo (½ giornata) + Corso 1 (ChatGPT & Copilot 365)",
@@ -61,7 +61,7 @@ const Servizi = () => {
       subtitle: "Il Tuo Primo Progetto AI con KPI Misurabili",
       description: "Pacchetto progettuale per sviluppare un caso d'uso AI ad alto impatto. Ti accompagniamo dall'analisi alla realizzazione, formando il tuo team per garantire che la soluzione venga adottata e generi valore.",
       duration: "5-6 mesi",
-      price: "Modulare (base + opzioni)",
+      
       features: [
         "Assessment approfondito di processi e dati",
         "Scelta strategica del caso d'uso e definizione KPI",
@@ -85,7 +85,7 @@ const Servizi = () => {
       subtitle: "Il Tuo Partner AI di Fiducia, Tutto l'Anno",
       description: "Programma annuale che ti affianca nella trasformazione digitale completa della tua azienda. Uniamo formazione continua, implementazione e governance strategica, grazie alla presenza del Fractional CIO.",
       duration: "Contratto annuale",
-      price: "Personalizzato",
+      
       features: [
         "Strategia AI annuale con roadmap trimestrale",
         "Formazione completa: tutti i corsi + workshop trimestrali",
@@ -109,7 +109,7 @@ const Servizi = () => {
       subtitle: "La Guida Strategica che Ti Mancava",
       description: "Il tuo Chief Information Officer a tempo parziale: un esperto che ti aiuta a prendere le decisioni giuste, pianificare investimenti e garantire che la tecnologia lavori davvero per il tuo business.",
       duration: "Flessibile",
-      price: "On-demand o annuale",
+      
       features: [
         "On-Demand: interventi spot per assessment e roadmap",
         "Light Annuale: 1 giorno/settimana o 2 mezze giornate/mese",
@@ -179,10 +179,6 @@ const Servizi = () => {
                             <div className="flex items-center space-x-3">
                               <Clock className="h-5 w-5 text-secondary" />
                               <span className="text-sm font-medium">{service.duration}</span>
-                            </div>
-                            <div className="flex items-center space-x-3">
-                              <Euro className="h-5 w-5 text-secondary" />
-                              <span className="text-sm font-medium">{service.price}</span>
                             </div>
                           </div>
 

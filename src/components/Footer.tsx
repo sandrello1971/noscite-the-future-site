@@ -5,7 +5,7 @@ import NewsletterSubscription from "@/components/NewsletterSubscription";
 
 const Footer = () => {
   const services = [
-    { name: "AI Academy", href: "/servizi#academy" },
+    { name: "Athenaeum AI", href: "/servizi#academy" },
     { name: "AI Launchpad", href: "/servizi#launchpad" },
     { name: "AI Sprint", href: "/servizi#sprint" },
     { name: "Evolution Partner", href: "/servizi#evolution" },

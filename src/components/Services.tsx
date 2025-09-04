@@ -7,7 +7,7 @@ const Services = () => {
   const services = [
     {
       icon: BookOpen,
-      title: "AI Academy",
+      title: "Athenaeum AI",
       description: "Formazione completa su intelligenza artificiale, machine learning e automazione aziendale",
       features: ["Corsi certificati", "Follow-up personalizzato", "Community esclusiva"],
       color: "text-primary"
