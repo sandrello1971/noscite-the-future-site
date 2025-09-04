@@ -27,6 +27,7 @@ import BlogEditor from "@/components/BlogEditor";
 import DocumentManager from "@/components/DocumentManager";
 import DocumentsList from "@/components/DocumentsList";
 import UserManager from "@/components/UserManager";
+import NewsletterManager from "@/components/NewsletterManager";
 
 export default function NosciteAdminDashboard() {
   const { user, loading: authLoading, userRole, isAdmin, signOut } = useAuth();
@@ -308,9 +309,10 @@ export default function NosciteAdminDashboard() {
       {/* Main Content */}
       <div className="container mx-auto px-4 lg:px-8 py-8">
         <Tabs defaultValue="blog" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="blog">Gestione Blog</TabsTrigger>
             <TabsTrigger value="documents">Gestione Documenti</TabsTrigger>
+            <TabsTrigger value="newsletter">Newsletter</TabsTrigger>
             <TabsTrigger value="users">Gestione Utenti</TabsTrigger>
           </TabsList>
 
@@ -405,6 +407,11 @@ export default function NosciteAdminDashboard() {
               onDocumentChange={loadDocuments}
               showActions={true}
             />
+          </TabsContent>
+
+          {/* Newsletter Management */}
+          <TabsContent value="newsletter" className="space-y-6">
+            <NewsletterManager />
           </TabsContent>
 
           {/* Users Management */}
