@@ -333,12 +333,27 @@ const BlogEditor = ({ post, onSave, onCancel }: BlogEditorProps) => {
                                 try {
                                   const file = blobInfo.blob();
                                   const fileExt = file.type.split('/')[1];
-                                  const fileName = `${Math.random()}.${fileExt}`;
-                                  const filePath = `blog-images/${fileName}`;
+                                  const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+                                  const filePath = fileName;
+
+                                  // Create bucket if it doesn't exist
+                                  const { data: buckets } = await supabase.storage.listBuckets();
+                                  const bucketExists = buckets?.some(bucket => bucket.name === 'blog-images');
+                                  
+                                  if (!bucketExists) {
+                                    await supabase.storage.createBucket('blog-images', {
+                                      public: true,
+                                      allowedMimeTypes: ['image/*'],
+                                      fileSizeLimit: 5242880 // 5MB
+                                    });
+                                  }
 
                                   const { error: uploadError } = await supabase.storage
                                     .from('blog-images')
-                                    .upload(filePath, file);
+                                    .upload(filePath, file, {
+                                      cacheControl: '3600',
+                                      upsert: false
+                                    });
 
                                   if (uploadError) throw uploadError;
 
@@ -348,7 +363,8 @@ const BlogEditor = ({ post, onSave, onCancel }: BlogEditorProps) => {
 
                                   resolve(publicUrl);
                                 } catch (error) {
-                                  reject(error);
+                                  console.error('Image upload error:', error);
+                                  reject(`Errore upload immagine: ${error.message}`);
                                 }
                               });
                             }
