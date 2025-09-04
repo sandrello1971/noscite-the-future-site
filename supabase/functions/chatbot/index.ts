@@ -32,14 +32,53 @@ serve(async (req) => {
     // Cerca nel knowledge base con filtro per keyword rilevanti
     const keywords = message.toLowerCase().split(' ').filter(word => word.length > 3);
     
-    const { data: knowledgeData, error: knowledgeError } = await supabase
-      .from('knowledge_base')
-      .select('content, title, source_id')
-      .or('content.ilike.%' + (keywords[0] || 'noscite') + '%,title.ilike.%' + (keywords[0] || 'noscite') + '%')
-      .limit(5);
+    // 1) Ricerca semantica su knowledge_base tramite embeddings
+    let semanticMatches: any[] = [];
+    try {
+      const embedRes = await fetch('https://api.openai.com/v1/embeddings', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer ' + Deno.env.get('OPENAI_API_KEY'),
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'text-embedding-3-small',
+          input: message
+        }),
+      });
+      const embedJson = await embedRes.json();
+      const embedding = embedJson?.data?.[0]?.embedding || null;
 
-    if (knowledgeError) {
-      console.error('Error fetching knowledge base:', knowledgeError);
+      if (embedding) {
+        const { data: matches, error: matchError } = await supabase
+          .rpc('match_knowledge_base', {
+            query_embedding: embedding,
+            match_threshold: 0.4,
+            match_count: 6
+          });
+        if (matchError) {
+          console.error('Semantic match error:', matchError);
+        } else {
+          semanticMatches = matches || [];
+        }
+      }
+    } catch (e) {
+      console.error('Embedding search failed:', e);
+    }
+
+    // 2) Fallback: ricerca testuale
+    let knowledgeData: any[] = [];
+    if (semanticMatches.length === 0) {
+      const { data: kbFallback, error: knowledgeError } = await supabase
+        .from('knowledge_base')
+        .select('content, title, source_id')
+        .or('content.ilike.%' + (keywords[0] || 'noscite') + '%,title.ilike.%' + (keywords[0] || 'noscite') + '%')
+        .limit(6);
+      if (knowledgeError) {
+        console.error('Error fetching knowledge base:', knowledgeError);
+      } else {
+        knowledgeData = kbFallback || [];
+      }
     }
 
     // Cerca anche nei documenti caricati
