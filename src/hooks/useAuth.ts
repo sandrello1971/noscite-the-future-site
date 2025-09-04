@@ -51,11 +51,15 @@ export function useAuth() {
         setUser(session?.user ?? null);
         
         if (session?.user) {
-          await fetchUserRole(session.user.id);
+          // Evita richieste ruolo inutili su TOKEN_REFRESHED/USER_UPDATED
+          if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
+            await fetchUserRole(session.user.id);
+          }
         } else {
           setUserRole(null);
         }
         
+        // Non rimettiamo mai loading a true qui
         setLoading(false);
       }
     );
