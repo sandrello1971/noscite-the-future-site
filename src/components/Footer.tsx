@@ -41,8 +41,7 @@ const Footer = () => {
                 className="h-24 w-auto mb-4 brightness-0 invert"
               />
               <p className="text-primary-foreground/80 leading-relaxed">
-                Il tuo partner per l'evoluzione digitale. Trasformiamo le aziende attraverso 
-                l'intelligenza artificiale e la formazione digitale.
+                Innovazione human-centric: consulenza, implementazione e academy integrate per risultati concreti e sostenibili.
               </p>
             </div>
             
