@@ -109,16 +109,16 @@ export default function ContactForm() {
     setLoading(true);
 
     try {
-      // Send email via Supabase edge function
-      const { error } = await supabase.functions.invoke('send-contact-email', {
-        body: {
+      // Save message to database
+      const { error } = await supabase
+        .from('contact_messages')
+        .insert({
           name: formData.name,
           email: formData.email,
-          phone: formData.phone || undefined,
-          company: formData.company || undefined,
+          phone: formData.phone || null,
+          company: formData.company || null,
           message: formData.message,
-        },
-      });
+        });
 
       if (error) {
         throw new Error(error.message);
