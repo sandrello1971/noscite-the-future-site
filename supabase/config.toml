@@ -4,7 +4,10 @@ project_id = "cpopaqguywwaqprrvony"
 verify_jwt = false
 
 [functions.process-content]
-verify_jwt = false
+verify_jwt = true
 
 [functions.init-knowledge-base]
-verify_jwt = false
+verify_jwt = true
+
+[functions.admin-operations]
+verify_jwt = true

@@ -7,10 +7,19 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-const supabase = createClient(
-  'https://cpopaqguywwaqprrvony.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNwb3BhcWd1eXd3YXFwcnJ2b255Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0ODkyMDUsImV4cCI6MjA3MjA2NTIwNX0.PsCw2vuHS3wHTVhRrtB30Txuu6Js1tdjLNw3wBCzCvE'
-);
+// Initialize Supabase client with request auth header
+const getSupabaseClient = (req: Request) => {
+  const authHeader = req.headers.get('Authorization');
+  return createClient(
+    Deno.env.get('SUPABASE_URL') || '',
+    Deno.env.get('SUPABASE_ANON_KEY') || '',
+    {
+      global: {
+        headers: authHeader ? { Authorization: authHeader } : {},
+      },
+    }
+  );
+};
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -18,6 +27,17 @@ serve(async (req) => {
   }
 
   try {
+    const supabase = getSupabaseClient(req);
+
+    // Verify user is admin
+    const { data: userRole, error: roleError } = await supabase.rpc('get_current_user_role');
+    if (roleError || userRole !== 'admin') {
+      return new Response(JSON.stringify({ error: 'Unauthorized - Admin access required' }), {
+        status: 403,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
     console.log('Initializing knowledge base...');
 
     const pageContents = [

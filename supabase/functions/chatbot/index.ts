@@ -9,7 +9,7 @@ const corsHeaders = {
 
 const supabase = createClient(
   Deno.env.get('SUPABASE_URL') || '',
-  Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || ''
+  Deno.env.get('SUPABASE_ANON_KEY') || ''
 );
 
 serve(async (req) => {
@@ -27,7 +27,7 @@ serve(async (req) => {
       });
     }
 
-    console.log('Processing chat message:', message);
+    console.log('Processing chat message for session:', sessionId);
 
     // Cerca nel knowledge base con filtro per keyword rilevanti
     const keywords = message.toLowerCase().split(' ').filter(word => word.length > 3);
@@ -81,16 +81,8 @@ serve(async (req) => {
       }
     }
 
-    // 3) Ricerca nei documenti (specifica per contenuti)
-    const { data: documentsData, error: documentsError } = await supabase
-      .from('documents')
-      .select('title, description, file_url, category')
-      .or('title.ilike.%' + (keywords[0] || '') + '%,description.ilike.%' + (keywords[0] || '') + '%')
-      .limit(10);
-
-    if (documentsError) {
-      console.error('Error fetching documents:', documentsError);
-    }
+    // 3) Skip documents query for security - use only knowledge_base
+    const documentsData: any[] = [];
 
     // 4) Costruisci il contesto completo
     const knowledgeContext = semanticMatches.length > 0 

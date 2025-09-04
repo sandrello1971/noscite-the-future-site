@@ -87,15 +87,16 @@ export default function UserManager() {
     setInviting(true);
 
     try {
-      // Invita l'utente
-      const { error: inviteError } = await supabase.auth.admin.inviteUserByEmail(
-        inviteEmail,
-        {
-          redirectTo: `${window.location.origin}/nosciteadmin/auth`
+      // Use secure admin operations edge function
+      const { data, error } = await supabase.functions.invoke('admin-operations', {
+        body: {
+          action: 'invite',
+          email: inviteEmail,
+          role: inviteRole
         }
-      );
+      });
 
-      if (inviteError) throw inviteError;
+      if (error) throw error;
 
       toast({
         title: "Invito inviato",
@@ -105,7 +106,7 @@ export default function UserManager() {
       setInviteEmail("");
       loadUsers();
     } catch (error: any) {
-      console.error('Errore nell\'invito:', error);
+      console.error("Errore nell'invito:", error);
       toast({
         title: "Errore",
         description: error.message || "Impossibile inviare l'invito",
@@ -118,19 +119,14 @@ export default function UserManager() {
 
   const handleChangeRole = async (userId: string, newRole: 'admin' | 'user') => {
     try {
-      // Prima elimina il ruolo esistente
-      await supabase
-        .from('user_roles')
-        .delete()
-        .eq('user_id', userId);
-
-      // Poi inserisci il nuovo ruolo
-      const { error } = await supabase
-        .from('user_roles')
-        .insert({
-          user_id: userId,
+      // Use secure admin operations edge function
+      const { data, error } = await supabase.functions.invoke('admin-operations', {
+        body: {
+          action: 'changeRole',
+          userId: userId,
           role: newRole
-        });
+        }
+      });
 
       if (error) throw error;
 
@@ -141,7 +137,7 @@ export default function UserManager() {
 
       loadUsers();
     } catch (error: any) {
-      console.error('Errore nel cambio ruolo:', error);
+      console.error("Errore nel cambio ruolo:", error);
       toast({
         title: "Errore",
         description: "Impossibile cambiare il ruolo",
@@ -152,17 +148,15 @@ export default function UserManager() {
 
   const handleDeleteUser = async (userId: string) => {
     try {
-      // Elimina prima i ruoli
-      await supabase
-        .from('user_roles')
-        .delete()
-        .eq('user_id', userId);
+      // Use secure admin operations edge function
+      const { data, error } = await supabase.functions.invoke('admin-operations', {
+        body: {
+          action: 'deleteUser',
+          userId: userId
+        }
+      });
 
-      // Elimina il profilo
-      await supabase
-        .from('profiles')
-        .delete()
-        .eq('user_id', userId);
+      if (error) throw error;
 
       toast({
         title: "Utente eliminato",
@@ -171,7 +165,7 @@ export default function UserManager() {
 
       loadUsers();
     } catch (error: any) {
-      console.error('Errore nell\'eliminazione:', error);
+      console.error("Errore nell'eliminazione:", error);
       toast({
         title: "Errore",
         description: "Impossibile eliminare l'utente",
