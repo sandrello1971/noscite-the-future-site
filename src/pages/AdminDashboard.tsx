@@ -32,6 +32,12 @@ const AdminDashboard = () => {
   const [documents, setDocuments] = useState<Document[]>([]);
   const [showBlogEditor, setShowBlogEditor] = useState(false);
   const [editingPost, setEditingPost] = useState<BlogPost | null>(null);
+  const [newsletters, setNewsletters] = useState<Array<{
+    id: string;
+    email: string;
+    subscribed_at: string;
+    active: boolean;
+  }>>([]);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -59,6 +65,7 @@ const AdminDashboard = () => {
       
       loadBlogPosts();
       loadDocuments();
+      loadNewsletters();
       setLoading(false);
     }
   }, [user, authLoading, isAdmin, navigate, toast]);
@@ -88,6 +95,20 @@ const AdminDashboard = () => {
       setDocuments(data || []);
     } catch (error) {
       console.error('Error loading documents:', error);
+    }
+  };
+
+  const loadNewsletters = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('newsletter_subscriptions')
+        .select('*')
+        .order('subscribed_at', { ascending: false });
+
+      if (error) throw error;
+      setNewsletters(data || []);
+    } catch (error) {
+      console.error('Error loading newsletters:', error);
     }
   };
 
@@ -243,9 +264,10 @@ const AdminDashboard = () => {
       {/* Main Content */}
       <div className="container mx-auto px-4 lg:px-8 py-8">
         <Tabs defaultValue="blog" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="blog">Gestione Blog</TabsTrigger>
             <TabsTrigger value="documents">Gestione Documenti</TabsTrigger>
+            <TabsTrigger value="newsletter">Newsletter</TabsTrigger>
           </TabsList>
 
           {/* Blog Management */}
@@ -318,6 +340,51 @@ const AdminDashboard = () => {
           {/* Documents Management */}
           <TabsContent value="documents" className="space-y-6">
             <DocumentManager onDocumentChange={loadDocuments} />
+          </TabsContent>
+
+          {/* Newsletter Management */}
+          <TabsContent value="newsletter" className="space-y-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-bold">Iscritti alla Newsletter</h2>
+              <Badge variant="secondary">
+                {newsletters.filter(n => n.active).length} iscritti attivi
+              </Badge>
+            </div>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Lista Iscritti</CardTitle>
+                <CardDescription>
+                  Gestisci gli iscritti alla newsletter
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {newsletters.length === 0 ? (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <Users className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                    <p>Nessun iscritto alla newsletter</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {newsletters.map((newsletter) => (
+                      <div key={newsletter.id} className="flex items-center justify-between p-4 border rounded-lg">
+                        <div className="space-y-1">
+                          <p className="font-medium">{newsletter.email}</p>
+                          <p className="text-sm text-muted-foreground">
+                            Iscritto il {new Date(newsletter.subscribed_at).toLocaleDateString('it-IT')}
+                          </p>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Badge variant={newsletter.active ? "default" : "secondary"}>
+                            {newsletter.active ? "Attivo" : "Disattivato"}
+                          </Badge>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
           </TabsContent>
         </Tabs>
       </div>

@@ -29,8 +29,23 @@ const NewsletterSubscription = ({ className = "", variant = 'default' }: Newslet
 
     setLoading(true);
     try {
-      // Per ora salviamo solo localmente
-      console.log('Newsletter subscription:', email);
+      // Save to database
+      const { error } = await supabase
+        .from('newsletter_subscriptions')
+        .insert([{ email }]);
+
+      if (error) {
+        if (error.code === '23505') { // Unique constraint violation
+          toast({
+            title: "Email già registrata",
+            description: "Questa email è già iscritta alla newsletter",
+            variant: "destructive",
+          });
+        } else {
+          throw error;
+        }
+        return;
+      }
 
       toast({
         title: "Iscrizione completata!",
