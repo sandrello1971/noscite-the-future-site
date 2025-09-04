@@ -8,8 +8,8 @@ const corsHeaders = {
 };
 
 const supabase = createClient(
-  'https://cpopaqguywwaqprrvony.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNwb3BhcWd1eXd3YXFwcnJ2b255Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0ODkyMDUsImV4cCI6MjA3MjA2NTIwNX0.PsCw2vuHS3wHTVhRrtB30Txuu6Js1tdjLNw3wBCzCvE'
+  Deno.env.get('SUPABASE_URL') || '',
+  Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || ''
 );
 
 serve(async (req) => {
@@ -80,22 +80,22 @@ serve(async (req) => {
         messages: [
           {
             role: 'system',
-            content: 'Sei un assistente AI per Noscite, un\\'azienda che offre servizi di trasformazione digitale e formazione sull\\'intelligenza artificiale. \n\n' +
-            'Usa le seguenti informazioni per rispondere alle domande sui servizi e sui contenuti di Noscite:\n\n' +
-            context + '\n\n' +
-            'ISTRUZIONI IMPORTANTI:\n' +
-            '- Fornisci sempre risposte dettagliate e specifiche basate sulle informazioni fornite\n' +
-            '- IMPORTANTE: Quando usi informazioni da documenti, indica SEMPRE chiaramente il nome del documento come fonte\n' +
-            '- Quando usi informazioni dal sito web, puoi menzionare "dalle informazioni sul sito Noscite"\n' +
-            '- Formato per citare documenti: "Come indicato nel documento \\'[Nome Documento]\\'..."\n' +
-            '- Quando parli di percorsi formativi, menziona sempre di visitare la pagina /percorsi per maggiori dettagli\n' +
-            '- Quando parli di servizi, rimanda alla pagina /servizi\n' +
-            '- Per informazioni aziendali, rimanda a /chi-siamo\n' +
-            '- Per contatti, rimanda a /contatti\n' +
-            '- Per documenti specifici, suggerisci di consultare la sezione risorse su /risorse\n' +
-            '- Includi sempre link utili nelle tue risposte quando appropriato\n' +
-            '- Solo DOPO aver fornito informazioni specifiche, suggerisci di contattare Noscite per dettagli personalizzati\n\n' +
-            'Rispondi sempre in modo professionale, dettagliato e utile, citando sempre le fonti.'
+            content: "Sei un assistente AI per Noscite, un'azienda che offre servizi di trasformazione digitale e formazione sull'intelligenza artificiale. \n\n" +
+            "Usa le seguenti informazioni per rispondere alle domande sui servizi e sui contenuti di Noscite:\n\n" +
+            context + "\n\n" +
+            "ISTRUZIONI IMPORTANTI:\n" +
+            "- Fornisci sempre risposte dettagliate e specifiche basate sulle informazioni fornite\n" +
+            "- IMPORTANTE: Quando usi informazioni da documenti, indica SEMPRE chiaramente il nome del documento come fonte\n" +
+            "- Quando usi informazioni dal sito web, puoi menzionare \"dalle informazioni sul sito Noscite\"\n" +
+            "- Formato per citare documenti: \"Come indicato nel documento '[Nome Documento]'...\"\n" +
+            "- Quando parli di percorsi formativi, menziona sempre di visitare la pagina /percorsi per maggiori dettagli\n" +
+            "- Quando parli di servizi, rimanda alla pagina /servizi\n" +
+            "- Per informazioni aziendali, rimanda a /chi-siamo\n" +
+            "- Per contatti, rimanda a /contatti\n" +
+            "- Per documenti specifici, suggerisci di consultare la sezione risorse su /risorse\n" +
+            "- Includi sempre link utili nelle tue risposte quando appropriato\n" +
+            "- Solo DOPO aver fornito informazioni specifiche, suggerisci di contattare Noscite per dettagli personalizzati\n\n" +
+            "Rispondi sempre in modo professionale, dettagliato e utile, citando sempre le fonti."
           },
           {
             role: 'user',
@@ -116,7 +116,14 @@ serve(async (req) => {
     const responseData = await openaiResponse.json();
     const aiResponse = responseData.choices[0].message.content;
 
-    console.log('Generated AI response length:', aiResponse.length);
+    // Aggiungi fonti dai documenti trovati
+    let finalResponse = aiResponse;
+    if (documentsData && documentsData.length > 0) {
+      const sources = documentsData.map(d => '- Documento: ' + d.title + (d.file_url ? ' (' + d.file_url + ')' : '')).join('\n');
+      finalResponse = aiResponse + '\n\nFonti:\n' + sources;
+    }
+
+    console.log('Generated AI response length:', finalResponse.length);
 
     // Salva la conversazione
     const { data: existingConversation } = await supabase
@@ -128,7 +135,7 @@ serve(async (req) => {
     const messages = existingConversation?.messages || [];
     messages.push(
       { role: 'user', content: message, timestamp: new Date().toISOString() },
-      { role: 'assistant', content: aiResponse, timestamp: new Date().toISOString() }
+      { role: 'assistant', content: finalResponse, timestamp: new Date().toISOString() }
     );
 
     await supabase
@@ -139,7 +146,7 @@ serve(async (req) => {
       });
 
     return new Response(JSON.stringify({ 
-      response: aiResponse,
+      response: finalResponse,
       sessionId: sessionId 
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
