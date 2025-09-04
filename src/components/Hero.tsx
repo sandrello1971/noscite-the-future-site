@@ -25,8 +25,8 @@ const Hero = () => {
           <div className="space-y-8 animate-fade-in">
             <div className="space-y-4">
               <h1 className="text-4xl lg:text-6xl font-bold text-foreground leading-tight">
-                <span className="text-blue-600">In Digitali</span>
-                <span className="block text-orange-500">Nova Virtus</span>
+                <span className="text-primary">In Digitali</span>
+                <span className="block text-secondary">Nova Virtus</span>
               </h1>
               <p className="text-xl text-muted-foreground leading-relaxed">
                 Innovazione human-centric: consulenza, implementazione e academy integrate per risultati concreti e sostenibili.
