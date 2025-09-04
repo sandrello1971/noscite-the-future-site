@@ -51,7 +51,7 @@ const Hero = () => {
               <div className="space-y-6">
                 <div className="bg-card p-6 rounded-xl shadow-lg hover-lift">
                   <Brain className="h-12 w-12 text-primary mb-4" />
-                  <h3 className="font-semibold text-lg mb-2">AI Academy</h3>
+                  <h3 className="font-semibold text-lg mb-2">Athenaeum AI</h3>
                   <p className="text-sm text-muted-foreground">
                     Formazione completa sull'intelligenza artificiale
                   </p>
