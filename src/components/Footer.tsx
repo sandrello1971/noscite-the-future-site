@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Mail, Phone, MapPin, Linkedin, Twitter, Youtube } from "lucide-react";
+import { Mail, Phone, MapPin, Linkedin, Facebook, Youtube } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import NewsletterSubscription from "@/components/NewsletterSubscription";
 
@@ -150,9 +150,9 @@ const Footer = () => {
               <a 
                 href="#" 
                 className="text-primary-foreground/80 hover:text-secondary transition-colors duration-200"
-                aria-label="Twitter"
+                aria-label="Facebook"
               >
-                <Twitter className="h-5 w-5" />
+                <Facebook className="h-5 w-5" />
               </a>
               <a 
                 href="#" 
