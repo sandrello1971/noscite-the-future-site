@@ -47,6 +47,8 @@ export default function NosciteAdminDashboard() {
       userRole: userRole,
       isAdminCheck: isAdmin()
     });
+    console.log('🔍 Current URL:', window.location.href);
+    console.log('🔍 Current pathname:', window.location.pathname);
     
     if (!authLoading) {
       console.log('📍 Auth loading completed');
