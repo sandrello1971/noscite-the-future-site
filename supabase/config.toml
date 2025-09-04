@@ -1,1 +1,10 @@
 project_id = "cpopaqguywwaqprrvony"
+
+[functions.chatbot]
+verify_jwt = false
+
+[functions.process-content]
+verify_jwt = false
+
+[functions.init-knowledge-base]
+verify_jwt = false
