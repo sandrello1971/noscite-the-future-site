@@ -3,11 +3,23 @@ import Footer from "@/components/Footer";
 import ContactForm from "@/components/ContactForm";
 import Chatbot from "@/components/Chatbot";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { SEO } from "@/components/SEO";
+import { StructuredData, faqSchema } from "@/components/StructuredData";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 const Contatti = () => {
   return (
     <div className="min-h-screen">
+      <SEO 
+        title="Contatti - Richiedi Consulenza AI | Noscite"
+        description="Contattaci per una consulenza personalizzata sulla trasformazione digitale. Scopri come l'intelligenza artificiale può innovare la tua azienda. Consulenza gratuita."
+        keywords="contatti consulenza AI, richiesta informazioni, consulenza gratuita, trasformazione digitale, contatto azienda"
+        canonical="https://noscite.it/contatti"
+        structuredData={faqSchema}
+      />
+      <StructuredData schema={faqSchema} />
       <Header />
+      <Breadcrumbs />
       <main className="pt-16">
         {/* Hero Section */}
         <section className="gradient-hero py-20">

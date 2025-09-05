@@ -12,8 +12,10 @@ const Hero = () => {
         loop 
         playsInline
         className="absolute inset-0 w-full h-full object-cover z-0"
+        aria-label="Video promozionale Noscite per trasformazione digitale e AI"
       >
         <source src="/noscitelogo.mp4" type="video/mp4" />
+        <p>Il tuo browser non supporta i video HTML5. Scopri i nostri servizi di trasformazione digitale e intelligenza artificiale.</p>
       </video>
       
       {/* Overlay for text readability */}

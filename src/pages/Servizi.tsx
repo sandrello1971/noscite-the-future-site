@@ -5,6 +5,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { BookOpen, Rocket, Zap, Users, Settings, ArrowRight, CheckCircle, Clock, Euro } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import { SEO } from "@/components/SEO";
+import { StructuredData, servicesSchema } from "@/components/StructuredData";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 const Servizi = () => {
   const location = useLocation();
@@ -147,7 +150,16 @@ const Servizi = () => {
 
   return (
     <div className="min-h-screen">
+      <SEO 
+        title="Servizi AI e Trasformazione Digitale | Noscite"
+        description="Scopri i nostri servizi di trasformazione digitale: Athenaeum AI Academy, AI Sprint, Launchpad, AI Evolution Partner e Fractional CIO. Soluzioni complete per l'innovazione aziendale."
+        keywords="servizi AI, Athenaeum AI Academy, AI Sprint, Launchpad, fractional CIO, consulenza digitale, trasformazione aziendale, formazione AI"
+        canonical="https://noscite.it/servizi"
+        structuredData={servicesSchema}
+      />
+      <StructuredData schema={servicesSchema} />
       <Header />
+      <Breadcrumbs />
       <main className="pt-16">
         {/* Hero Section */}
         <section className="gradient-hero py-20">

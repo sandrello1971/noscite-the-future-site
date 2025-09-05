@@ -2,6 +2,9 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { Users, Target, Award, Lightbulb } from "lucide-react";
+import { SEO } from "@/components/SEO";
+import { StructuredData, organizationSchema } from "@/components/StructuredData";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 const ChiSiamo = () => {
   const team = [
@@ -34,7 +37,16 @@ const ChiSiamo = () => {
 
   return (
     <div className="min-h-screen">
+      <SEO 
+        title="Chi Siamo - Il Team di Esperti AI | Noscite"
+        description="Scopri il team di Noscite: esperti in trasformazione digitale, intelligenza artificiale e innovazione tecnologica. La nostra mission è rendere l'AI accessibile alle PMI italiane."
+        keywords="team esperti AI, trasformazione digitale, mission aziendale, vision tecnologica, consulenti AI Italia"
+        canonical="https://noscite.it/chi-siamo"
+        structuredData={organizationSchema}
+      />
+      <StructuredData schema={organizationSchema} />
       <Header />
+      <Breadcrumbs />
       <main className="pt-16">
         {/* Hero Section */}
         <section className="gradient-hero py-20">

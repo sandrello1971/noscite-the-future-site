@@ -50,7 +50,7 @@ const Header = () => {
           <Link to="/" className="flex items-center space-x-2">
             <img 
               src="/lovable-uploads/32b5d629-f629-4ffe-a4ec-ccf9154b03ac.png" 
-              alt="Noscite Logo" 
+              alt="Logo Noscite - In Digitali Nova Virtus, azienda di consulenza AI e trasformazione digitale" 
               className="h-16 w-auto"
             />
           </Link>
