@@ -20,7 +20,7 @@ const Index = () => {
       />
       <StructuredData schema={organizationSchema} />
       <Header />
-      <main>
+      <main id="main-content" tabIndex={-1}>
         <Hero />
         <Partners />
         <Services />

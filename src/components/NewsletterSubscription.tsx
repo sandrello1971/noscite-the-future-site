@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { useToast } from '@/components/ui/use-toast';
 import { ArrowRight } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
@@ -90,14 +91,19 @@ const NewsletterSubscription = ({ className = "", variant = 'default' }: Newslet
     return (
       <form onSubmit={handleSubscribe} className={className}>
         <div className="flex flex-col sm:flex-row gap-3">
-          <Input
-            type="email"
-            placeholder="La tua email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            disabled={loading}
-            className="flex-1"
-          />
+                <Label htmlFor="newsletter-footer-email" className="sr-only">
+                  Indirizzo email per newsletter
+                </Label>
+                <Input
+                  id="newsletter-footer-email"
+                  type="email"
+                  placeholder="La tua email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  disabled={loading}
+                  className="flex-1"
+                  aria-describedby="newsletter-footer-description"
+                />
           <Button 
             type="submit" 
             variant="secondary" 

@@ -1,22 +1,19 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Brain, Target, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
+import { AccessibleVideo } from "@/components/AccessibleVideo";
 
 const Hero = () => {
   return (
     <section className="relative min-h-screen flex items-center pt-16 overflow-hidden">
-      {/* Video Background */}
-      <video 
-        autoPlay 
-        muted 
-        loop 
-        playsInline
-        className="absolute inset-0 w-full h-full object-cover z-0"
-        aria-label="Video promozionale Noscite per trasformazione digitale e AI"
+      {/* Accessible Video Background */}
+      <AccessibleVideo
+        src="/noscitelogo.mp4"
+        className="absolute inset-0 w-full h-full z-0"
+        ariaLabel="Video promozionale Noscite - trasformazione digitale e intelligenza artificiale per le aziende"
       >
-        <source src="/noscitelogo.mp4" type="video/mp4" />
-        <p>Il tuo browser non supporta i video HTML5. Scopri i nostri servizi di trasformazione digitale e intelligenza artificiale.</p>
-      </video>
+        Scopri i nostri servizi di trasformazione digitale e intelligenza artificiale.
+      </AccessibleVideo>
       
       {/* Overlay for text readability */}
       <div className="absolute inset-0 bg-background/60 z-10"></div>

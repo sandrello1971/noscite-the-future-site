@@ -4,11 +4,15 @@ import { Button } from "@/components/ui/button";
 import { Menu, X, User, LogOut } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { User as SupabaseUser } from "@supabase/supabase-js";
+import { SkipLink } from "@/components/SkipLink";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [user, setUser] = useState<SupabaseUser | null>(null);
   const navigate = useNavigate();
+
+  // Generate unique ID for mobile menu accessibility
+  const mobileMenuId = 'mobile-navigation-menu';
 
   useEffect(() => {
     // Get initial session
@@ -43,7 +47,12 @@ const Header = () => {
   ];
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
+    <>
+      {/* Skip Links for keyboard navigation */}
+      <SkipLink href="#main-content">Salta al contenuto principale</SkipLink>
+      <SkipLink href="#navigation">Salta alla navigazione</SkipLink>
+      
+      <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -56,7 +65,12 @@ const Header = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-8">
+          <nav 
+            id="navigation" 
+            className="hidden lg:flex items-center space-x-8"
+            role="navigation"
+            aria-label="Navigazione principale"
+          >
             {navigation.map((item) => (
               <Link
                 key={item.name}
@@ -72,25 +86,34 @@ const Header = () => {
           <button
             className="lg:hidden p-2"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label="Toggle menu"
+            aria-label={isMenuOpen ? "Chiudi menu di navigazione" : "Apri menu di navigazione"}
+            aria-expanded={isMenuOpen}
+            aria-controls={mobileMenuId}
+            aria-haspopup="true"
           >
             {isMenuOpen ? (
-              <X className="h-6 w-6" />
+              <X className="h-6 w-6" aria-hidden="true" />
             ) : (
-              <Menu className="h-6 w-6" />
+              <Menu className="h-6 w-6" aria-hidden="true" />
             )}
           </button>
         </div>
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="lg:hidden py-4 border-t border-border">
+          <div 
+            id={mobileMenuId}
+            className="lg:hidden py-4 border-t border-border"
+            role="menu"
+            aria-label="Menu di navigazione mobile"
+          >
             <nav className="flex flex-col space-y-4">
               {navigation.map((item) => (
                 <Link
                   key={item.name}
                   to={item.href}
-                  className="text-foreground hover:text-primary transition-colors duration-200 font-medium"
+                  role="menuitem"
+                  className="text-foreground hover:text-primary transition-colors duration-200 font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-md px-2 py-1"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.name}
@@ -101,6 +124,7 @@ const Header = () => {
         )}
       </div>
     </header>
+    </>
   );
 };
 

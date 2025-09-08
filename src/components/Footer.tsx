@@ -123,7 +123,10 @@ const Footer = () => {
             {/* Newsletter */}
             <div>
               <h4 className="font-semibold text-lg mb-4">Newsletter</h4>
-              <p className="text-primary-foreground/80 text-sm mb-4">
+              <p 
+                id="newsletter-footer-description" 
+                className="text-primary-foreground/80 text-sm mb-4"
+              >
                 Ricevi le ultime novità sull'AI e la trasformazione digitale
               </p>
               <NewsletterSubscription variant="footer" />
@@ -141,25 +144,31 @@ const Footer = () => {
             {/* Social Links */}
             <div className="flex items-center space-x-4">
               <a 
-                href="#" 
-                className="text-primary-foreground/80 hover:text-secondary transition-colors duration-200"
-                aria-label="LinkedIn"
+                href="https://www.linkedin.com/company/noscite" 
+                className="text-primary-foreground/80 hover:text-secondary transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-md p-1"
+                aria-label="Seguici su LinkedIn"
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                <Linkedin className="h-5 w-5" />
+                <Linkedin className="h-5 w-5" aria-hidden="true" />
               </a>
               <a 
-                href="#" 
-                className="text-primary-foreground/80 hover:text-secondary transition-colors duration-200"
-                aria-label="Facebook"
+                href="https://www.facebook.com/noscite" 
+                className="text-primary-foreground/80 hover:text-secondary transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-md p-1"
+                aria-label="Seguici su Facebook"
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                <Facebook className="h-5 w-5" />
+                <Facebook className="h-5 w-5" aria-hidden="true" />
               </a>
               <a 
-                href="#" 
-                className="text-primary-foreground/80 hover:text-secondary transition-colors duration-200"
-                aria-label="YouTube"
+                href="https://www.youtube.com/@noscite" 
+                className="text-primary-foreground/80 hover:text-secondary transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-md p-1"
+                aria-label="Seguici su YouTube"
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                <Youtube className="h-5 w-5" />
+                <Youtube className="h-5 w-5" aria-hidden="true" />
               </a>
             </div>
           </div>
