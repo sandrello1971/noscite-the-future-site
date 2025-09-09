@@ -20,6 +20,7 @@ serve(async (req) => {
   try {
     const { message, sessionId } = await req.json();
     
+    // Enhanced input validation
     if (!message || !sessionId) {
       return new Response(JSON.stringify({ error: 'Message and sessionId are required' }), {
         status: 400,
@@ -27,10 +28,33 @@ serve(async (req) => {
       });
     }
 
+    // Message length validation (prevent abuse)
+    if (typeof message !== 'string' || message.length > 2000) {
+      return new Response(JSON.stringify({ error: 'Message must be a string with max 2000 characters' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    // SessionId validation
+    if (typeof sessionId !== 'string' || sessionId.length > 100 || !/^[a-zA-Z0-9-_]+$/.test(sessionId)) {
+      return new Response(JSON.stringify({ error: 'Invalid sessionId format' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    // Rate limiting logging
+    const userAgent = req.headers.get("user-agent") || "unknown";
+    const forwardedFor = req.headers.get("x-forwarded-for") || "unknown";
+    console.log(`Chatbot request from IP: ${forwardedFor}, UA: ${userAgent}, Session: ${sessionId.slice(0, 8)}...`);
+
+    // Sanitize message input
+    const sanitizedMessage = message.trim().replace(/[<>]/g, '');
     console.log('Processing chat message for session:', sessionId);
 
     // Cerca nel knowledge base con filtro per keyword rilevanti
-    const keywords = message.toLowerCase().split(' ').filter(word => word.length > 3);
+    const keywords = sanitizedMessage.toLowerCase().split(' ').filter(word => word.length > 3);
     
     // 1) Ricerca semantica su knowledge_base tramite embeddings
     let semanticMatches: any[] = [];
@@ -43,7 +67,7 @@ serve(async (req) => {
         },
         body: JSON.stringify({
           model: 'text-embedding-3-small',
-          input: message
+          input: sanitizedMessage
         }),
       });
       const embedJson = await embedRes.json();
@@ -136,7 +160,7 @@ serve(async (req) => {
           },
           {
             role: 'user',
-            content: message
+            content: sanitizedMessage
           }
         ],
         max_tokens: 1000,
@@ -174,7 +198,7 @@ serve(async (req) => {
 
     const messages = existingConversation?.messages || [];
     messages.push(
-      { role: 'user', content: message, timestamp: new Date().toISOString() },
+      { role: 'user', content: sanitizedMessage, timestamp: new Date().toISOString() },
       { role: 'assistant', content: finalResponse, timestamp: new Date().toISOString() }
     );
 

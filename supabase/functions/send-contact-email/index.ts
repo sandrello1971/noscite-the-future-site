@@ -23,7 +23,51 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
+    // Rate limiting check
+    const userAgent = req.headers.get("user-agent") || "unknown";
+    const forwardedFor = req.headers.get("x-forwarded-for") || "unknown";
+    
+    console.log('Contact email request from:', forwardedFor, 'User-Agent:', userAgent);
+
     const { name, email, phone, company, message }: ContactEmailRequest = await req.json();
+
+    // Input validation and sanitization
+    if (!name || !email || !message) {
+      throw new Error("Nome, email e messaggio sono obbligatori");
+    }
+
+    if (name.length < 2 || name.length > 100) {
+      throw new Error("Nome deve essere tra 2 e 100 caratteri");
+    }
+
+    if (message.length < 10 || message.length > 5000) {
+      throw new Error("Messaggio deve essere tra 10 e 5000 caratteri");
+    }
+
+    // Email validation regex
+    const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+    if (!emailRegex.test(email)) {
+      throw new Error("Formato email non valido");
+    }
+
+    // Optional reCAPTCHA verification
+    const recaptchaToken = req.headers.get("x-recaptcha-token");
+    const recaptchaSecret = Deno.env.get("GOOGLE_RECAPTCHA_SECRET");
+    
+    if (recaptchaSecret && recaptchaToken) {
+      console.log('Verifying reCAPTCHA token');
+      const recaptchaResponse = await fetch("https://www.google.com/recaptcha/api/siteverify", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `secret=${recaptchaSecret}&response=${recaptchaToken}&remoteip=${forwardedFor}`,
+      });
+      
+      const recaptchaData = await recaptchaResponse.json();
+      if (!recaptchaData.success) {
+        console.error('reCAPTCHA verification failed:', recaptchaData);
+        throw new Error("Verifica reCAPTCHA fallita");
+      }
+    }
 
     console.log('Sending contact email from:', email, 'to: notitiae@noscite.it');
 
