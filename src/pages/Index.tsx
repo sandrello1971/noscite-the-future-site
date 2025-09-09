@@ -14,7 +14,7 @@ const Index = () => {
     <div className="min-h-screen">
       <SEO 
         title="Noscite - In Digitali Nova Virtus | Metodo di Trasformazione Digitale per PMI"
-        description="Non vendiamo pacchetti. Progettiamo, implementiamo e governiamo trasformazioni digitali misurabili con il Metodo Noscite in 7 fasi. ROI in 30 giorni, KPI chiari."
+        description="Non vendiamo pacchetti. Progettiamo, implementiamo e governiamo trasformazioni digitali misurabili con il Metodo Noscite in 7 fasi. KPI chiari e misurabili."
         keywords="metodo noscite, trasformazione digitale, PMI, discovery, pilot, ROI, KPI, governance digitale, automazione processi, consulenza digitale"
         canonical="https://noscite.it/"
         structuredData={organizationSchema}

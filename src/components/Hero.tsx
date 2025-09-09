@@ -40,9 +40,6 @@ const Hero = () => {
                 Metodo strutturato in 7 fasi
               </Badge>
               <Badge variant="secondary" className="px-4 py-2">
-                ROI in 30 giorni
-              </Badge>
-              <Badge variant="secondary" className="px-4 py-2">
                 KPI misurabili
               </Badge>
             </div>

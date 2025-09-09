@@ -261,7 +261,7 @@ const Servizi = () => {
               </div>
               <div className="flex items-center">
                 <Target className="h-4 w-4 text-primary mr-1" />
-                ROI in 30 giorni
+                KPI misurabili
               </div>
             </div>
           </div>
