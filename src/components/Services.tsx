@@ -116,7 +116,7 @@ const Services = () => {
             <Button variant="cta" size="lg" asChild>
               <Link to="/contatti">
                 <Phone className="mr-2 h-5 w-5" />
-                Prenota Discovery (30')
+                Contattaci
               </Link>
             </Button>
             <Button variant="outline" size="lg" asChild>

@@ -251,7 +251,7 @@ const Servizi = () => {
             <Button variant="cta" size="lg" asChild className="mb-8">
               <Link to="/contatti">
                 <Phone className="mr-2 h-5 w-5" />
-                Prenota Discovery (30')
+                Contattaci
               </Link>
             </Button>
             <div className="flex justify-center items-center space-x-8 text-sm text-muted-foreground">
@@ -519,14 +519,14 @@ const Servizi = () => {
               Pronti a iniziare?
             </h2>
             <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
-              Prenotate una Discovery (30') → allineiamo obiettivi, priorità e KPI del vostro pilot.
+              Contattateci per allineare obiettivi, priorità e KPI del vostro progetto.
               Preferite partire da un assessment? Vi consegniamo Blueprint + Roadmap 90 giorni.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button variant="secondary" size="lg" asChild>
                 <Link to="/contatti">
                   <Phone className="mr-2 h-5 w-5" />
-                  Prenota Discovery (30')
+                  Contattaci
                 </Link>
               </Button>
               <Button variant="outline" size="lg" asChild className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
