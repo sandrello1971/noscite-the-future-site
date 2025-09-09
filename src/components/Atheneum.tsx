@@ -48,10 +48,13 @@ const Atheneum = () => {
       <div className="container mx-auto px-4 lg:px-8">
         <div className="text-center mb-16 animate-fade-in">
           <div className="flex justify-center mb-6">
-            <Badge variant="secondary" className="px-4 py-2 text-sm">
+            <Link 
+              to="/percorsi"
+              className="inline-flex items-center px-4 py-2 text-sm bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors rounded-full cursor-pointer"
+            >
               <GraduationCap className="mr-2 h-4 w-4" />
               Noscite Atheneum
-            </Badge>
+            </Link>
           </div>
           <h2 className="text-3xl lg:text-5xl font-bold text-foreground mb-6">
             La formazione è il <span className="text-primary">cuore</span> della trasformazione
