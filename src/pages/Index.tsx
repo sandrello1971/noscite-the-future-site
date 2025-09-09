@@ -12,9 +12,9 @@ const Index = () => {
   return (
     <div className="min-h-screen">
       <SEO 
-        title="Noscite - In Digitali Nova Virtus | AI Academy e Consulenza Digitale"
-        description="Trasformiamo le aziende attraverso l'intelligenza artificiale e la formazione digitale. Athenaeum AI Academy, AI Sprint, Launchpad e consulenza strategica per risultati concreti."
-        keywords="intelligenza artificiale, AI academy, trasformazione digitale, consulenza AI, formazione aziendale, Athenaeum AI, AI Sprint, Launchpad, fractional CIO"
+        title="Noscite - In Digitali Nova Virtus | Metodo di Trasformazione Digitale per PMI"
+        description="Non vendiamo pacchetti. Progettiamo, implementiamo e governiamo trasformazioni digitali misurabili con il Metodo Noscite in 7 fasi. ROI in 30 giorni, KPI chiari."
+        keywords="metodo noscite, trasformazione digitale, PMI, discovery, pilot, ROI, KPI, governance digitale, automazione processi, consulenza digitale"
         canonical="https://noscite.it/"
         structuredData={organizationSchema}
       />

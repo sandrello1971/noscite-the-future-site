@@ -1,43 +1,58 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { BookOpen, Rocket, Zap, Users, Settings, ArrowRight } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { 
+  ArrowRight, 
+  Clock, 
+  Target, 
+  BarChart3, 
+  CheckCircle, 
+  Zap,
+  Phone
+} from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Services = () => {
-  const services = [
+  const caratteristiche = [
     {
-      icon: BookOpen,
-      title: "Athenaeum AI",
-      description: "Percorso formativo di 68 ore: Initium (AI Operativa), Structura (Second Brain), Communitas (Collaborazione)",
-      features: ["3 Certificazioni incluse", "Ecosistema Obsidian integrato", "ROI misurabile"],
+      title: "Su misura",
+      description: "Ogni azienda ha processi, persone e vincoli diversi.",
+      icon: Target
+    },
+    {
+      title: "Misurabile", 
+      description: "Definiamo KPI prima di iniziare, li monitoriamo lungo il percorso.",
+      icon: BarChart3
+    },
+    {
+      title: "Chiavi in mano",
+      description: "Strategia, implementazione, adozione e governance con un unico team.",
+      icon: CheckCircle
+    },
+    {
+      title: "Risultati rapidi",
+      description: "Pilot funzionante e KPI misurabili in 30 giorni.",
+      icon: Zap
+    }
+  ];
+
+  const timeline = [
+    {
+      giorno: 30,
+      fase: "Pilot",
+      risultati: "1 processo critico automatizzato + dashboard KPI + manuali operativi",
       color: "text-primary"
     },
     {
-      icon: Rocket,
-      title: "AI Launchpad", 
-      description: "Il trampolino perfetto per lanciare la tua trasformazione digitale in modo strutturato",
-      features: ["Assessment iniziale", "Roadmap personalizzata", "Primi progetti pilota"],
+      giorno: 60,
+      fase: "Adoptio", 
+      risultati: "Team formati, metriche di adozione stabili, riduzione errori/tempi",
       color: "text-secondary"
     },
     {
-      icon: Zap,
-      title: "AI Sprint",
-      description: "Implementazione rapida di soluzioni AI con risultati misurabili in tempi ridotti",
-      features: ["Metodologia agile", "KPI definiti", "Moduli formativi"],
-      color: "text-primary"
-    },
-    {
-      icon: Users,
-      title: "AI Evolution Partner",
-      description: "Partnership strategica per una trasformazione digitale completa e sostenibile",
-      features: ["Governance AI", "Formazione continua", "Roadmap evolutiva"],
-      color: "text-secondary"
-    },
-    {
-      icon: Settings,
-      title: "Fractional CIO",
-      description: "Consulenza strategica di alto livello per guidare la tua evoluzione tecnologica",
-      features: ["Strategia IT", "Team building", "Innovation roadmap"],
+      giorno: 90,
+      fase: "Scala",
+      risultati: "Estensione a più reparti, governance attiva, ROI iniziale misurato",
       color: "text-primary"
     }
   ];
@@ -47,54 +62,70 @@ const Services = () => {
       <div className="container mx-auto px-4 lg:px-8">
         <div className="text-center mb-16 animate-fade-in">
           <h2 className="text-3xl lg:text-5xl font-bold text-foreground mb-6">
-            I Nostri Servizi
+            Il Metodo Noscite
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Soluzioni complete per accompagnare la tua azienda nel percorso di trasformazione digitale, 
-            dall'analisi iniziale all'implementazione e governance continua.
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
+            Non vendiamo pacchetti. Progettiamo, implementiamo e governiamo trasformazioni digitali misurabili, 
+            su misura per le PMI.
           </p>
+          <div className="flex justify-center">
+            <Badge variant="outline" className="px-6 py-2 text-lg">
+              Metodo &gt; Pacchetti
+            </Badge>
+          </div>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-          {services.map((service, index) => {
-            const IconComponent = service.icon;
+        {/* Caratteristiche del metodo */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+          {caratteristiche.map((caratteristica, index) => {
+            const IconComponent = caratteristica.icon;
             return (
-              <Card key={service.title} className="hover-lift animate-slide-up" style={{ animationDelay: `${index * 100}ms` }}>
-                <CardHeader>
-                  <div className="flex items-center space-x-4">
-                    <div className={`p-3 rounded-lg bg-muted ${service.color}`}>
-                      <IconComponent className="h-8 w-8" />
-                    </div>
-                    <div>
-                      <CardTitle className="text-xl">{service.title}</CardTitle>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <CardDescription className="text-base leading-relaxed">
-                    {service.description}
-                  </CardDescription>
-                  <ul className="space-y-2">
-                    {service.features.map((feature, featureIndex) => (
-                      <li key={featureIndex} className="flex items-center text-sm text-muted-foreground">
-                        <ArrowRight className="h-4 w-4 text-primary mr-2 flex-shrink-0" />
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
+              <Card key={caratteristica.title} className="text-center hover-lift animate-slide-up" style={{ animationDelay: `${index * 100}ms` }}>
+                <CardContent className="p-6">
+                  <IconComponent className="h-12 w-12 text-primary mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold mb-2">{caratteristica.title}</h3>
+                  <p className="text-sm text-muted-foreground">{caratteristica.description}</p>
                 </CardContent>
               </Card>
             );
           })}
         </div>
 
-        <div className="text-center">
-          <Button variant="hero" size="lg" asChild>
-            <Link to="/servizi">
-              Esplora Tutti i Servizi
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Link>
-          </Button>
+        {/* Timeline 30/60/90 giorni */}
+        <div className="mb-16">
+          <h3 className="text-2xl font-bold text-center mb-12">Cosa ottenete in 30 / 60 / 90 giorni</h3>
+          <div className="grid md:grid-cols-3 gap-8">
+            {timeline.map((milestone, index) => (
+              <Card key={milestone.giorno} className="text-center hover-lift animate-slide-up" style={{ animationDelay: `${index * 150}ms` }}>
+                <CardContent className="p-8">
+                  <div className={`text-4xl font-bold mb-4 ${milestone.color}`}>
+                    Giorno {milestone.giorno}
+                  </div>
+                  <h4 className="text-xl font-semibold mb-4">{milestone.fase}</h4>
+                  <p className="text-muted-foreground">{milestone.risultati}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+
+        {/* Call to Actions */}
+        <div className="text-center space-y-6">
+          <h3 className="text-2xl font-bold mb-6">Pronti a iniziare?</h3>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button variant="cta" size="lg" asChild>
+              <Link to="/contatti">
+                <Phone className="mr-2 h-5 w-5" />
+                Prenota Discovery (30')
+              </Link>
+            </Button>
+            <Button variant="outline" size="lg" asChild>
+              <Link to="/servizi">
+                Scopri il Metodo Completo
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
+            </Button>
+          </div>
         </div>
       </div>
     </section>
