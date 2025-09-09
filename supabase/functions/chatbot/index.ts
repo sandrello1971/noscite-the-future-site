@@ -1,16 +1,70 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.7.1';
+import { validateTextInput, logSecurityEvent } from "../_shared/security-utils.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// Regular client for knowledge base access
 const supabase = createClient(
   Deno.env.get('SUPABASE_URL') || '',
   Deno.env.get('SUPABASE_ANON_KEY') || ''
 );
+
+// Service role client for secure operations and rate limiting
+const supabaseServiceRole = createClient(
+  Deno.env.get('SUPABASE_URL') || '',
+  Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || ''
+);
+
+// Rate limiting function using service role
+async function checkRateLimit(identifier: string, endpoint: string): Promise<boolean> {
+  const windowStart = new Date();
+  windowStart.setHours(windowStart.getHours() - 1); // 1-hour window
+
+  const { data: existingLimit, error } = await supabaseServiceRole
+    .from('api_rate_limits')
+    .select('*')
+    .eq('identifier', identifier)
+    .eq('endpoint', endpoint)
+    .gte('window_start', windowStart.toISOString())
+    .single();
+
+  if (error && error.code !== 'PGRST116') { // Not found is OK
+    console.error('Rate limit check error:', error);
+    return true; // Allow on error to avoid blocking legitimate users
+  }
+
+  if (existingLimit) {
+    if (existingLimit.request_count >= 20) { // 20 requests per hour
+      return false; // Rate limited
+    }
+    
+    // Update count
+    await supabaseServiceRole
+      .from('api_rate_limits')
+      .update({ 
+        request_count: existingLimit.request_count + 1,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', existingLimit.id);
+  } else {
+    // Create new rate limit record
+    await supabaseServiceRole
+      .from('api_rate_limits')
+      .insert({
+        identifier,
+        endpoint,
+        window_start: windowStart.toISOString(),
+        request_count: 1
+      });
+  }
+  
+  return true;
+}
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -18,39 +72,46 @@ serve(async (req) => {
   }
 
   try {
+    // Get client info for rate limiting and security logging
+    const forwardedFor = req.headers.get("x-forwarded-for") || "unknown";
+    const userAgent = req.headers.get("user-agent") || "unknown";
+    
     const { message, sessionId } = await req.json();
     
-    // Enhanced input validation
-    if (!message || !sessionId) {
-      return new Response(JSON.stringify({ error: 'Message and sessionId are required' }), {
-        status: 400,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
-    }
-
-    // Message length validation (prevent abuse)
-    if (typeof message !== 'string' || message.length > 2000) {
-      return new Response(JSON.stringify({ error: 'Message must be a string with max 2000 characters' }), {
+    // Enhanced input validation using security utils
+    const messageValidation = validateTextInput(message, 1, 2000, "Message");
+    if (!messageValidation.isValid) {
+      logSecurityEvent('INVALID_CHAT_MESSAGE', { error: messageValidation.error }, req);
+      return new Response(JSON.stringify({ error: messageValidation.error }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
     // SessionId validation
-    if (typeof sessionId !== 'string' || sessionId.length > 100 || !/^[a-zA-Z0-9-_]+$/.test(sessionId)) {
+    if (!sessionId || typeof sessionId !== 'string' || sessionId.length > 100 || !/^[a-zA-Z0-9-_]+$/.test(sessionId)) {
+      logSecurityEvent('INVALID_SESSION_ID', { sessionId: sessionId?.substring(0, 8) }, req);
       return new Response(JSON.stringify({ error: 'Invalid sessionId format' }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
-    // Rate limiting logging
-    const userAgent = req.headers.get("user-agent") || "unknown";
-    const forwardedFor = req.headers.get("x-forwarded-for") || "unknown";
+    // Rate limiting check
+    const rateLimitIdentifier = `${forwardedFor}_${sessionId}`;
+    const isAllowed = await checkRateLimit(rateLimitIdentifier, 'chatbot');
+    if (!isAllowed) {
+      logSecurityEvent('CHAT_RATE_LIMIT_EXCEEDED', { identifier: rateLimitIdentifier }, req);
+      return new Response(JSON.stringify({ error: "Rate limit exceeded. Please try again later." }), {
+        status: 429,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
     console.log(`Chatbot request from IP: ${forwardedFor}, UA: ${userAgent}, Session: ${sessionId.slice(0, 8)}...`);
 
-    // Sanitize message input
-    const sanitizedMessage = message.trim().replace(/[<>]/g, '');
+    // Use sanitized message
+    const sanitizedMessage = messageValidation.sanitized;
     console.log('Processing chat message for session:', sessionId);
 
     // Cerca nel knowledge base con filtro per keyword rilevanti
@@ -186,11 +247,8 @@ serve(async (req) => {
 
     console.log('Generated AI response length:', finalResponse.length);
 
-    // Set session context for RLS policies
-    await supabase.rpc('set_session_context', { session_id_param: sessionId });
-
-    // Salva la conversazione
-    const { data: existingConversation } = await supabase
+    // Manage conversation using service role for security
+    const { data: existingConversation } = await supabaseServiceRole
       .from('chat_conversations')
       .select('messages')
       .eq('session_id', sessionId)
@@ -202,11 +260,12 @@ serve(async (req) => {
       { role: 'assistant', content: finalResponse, timestamp: new Date().toISOString() }
     );
 
-    await supabase
+    await supabaseServiceRole
       .from('chat_conversations')
       .upsert({
         session_id: sessionId,
-        messages: messages
+        messages: messages,
+        user_id: null // Anonymous conversation
       });
 
     return new Response(JSON.stringify({ 

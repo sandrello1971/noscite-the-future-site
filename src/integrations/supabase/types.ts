@@ -47,6 +47,36 @@ export type Database = {
         }
         Relationships: []
       }
+      api_rate_limits: {
+        Row: {
+          created_at: string
+          endpoint: string
+          id: string
+          identifier: string
+          request_count: number
+          updated_at: string
+          window_start: string
+        }
+        Insert: {
+          created_at?: string
+          endpoint: string
+          id?: string
+          identifier: string
+          request_count?: number
+          updated_at?: string
+          window_start?: string
+        }
+        Update: {
+          created_at?: string
+          endpoint?: string
+          id?: string
+          identifier?: string
+          request_count?: number
+          updated_at?: string
+          window_start?: string
+        }
+        Relationships: []
+      }
       blog_posts: {
         Row: {
           author_id: string | null
@@ -168,6 +198,7 @@ export type Database = {
           title: string
           updated_at: string
           uploaded_by: string | null
+          visibility: string | null
         }
         Insert: {
           category?: string | null
@@ -181,6 +212,7 @@ export type Database = {
           title: string
           updated_at?: string
           uploaded_by?: string | null
+          visibility?: string | null
         }
         Update: {
           category?: string | null
@@ -194,6 +226,7 @@ export type Database = {
           title?: string
           updated_at?: string
           uploaded_by?: string | null
+          visibility?: string | null
         }
         Relationships: []
       }
@@ -389,6 +422,10 @@ export type Database = {
       binary_quantize: {
         Args: { "": string } | { "": unknown }
         Returns: unknown
+      }
+      cleanup_rate_limits: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
       }
       get_current_user_role: {
         Args: Record<PropertyKey, never>

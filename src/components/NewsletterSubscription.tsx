@@ -56,32 +56,21 @@ const NewsletterSubscription = ({ className = "", variant = 'default' }: Newslet
         .from('newsletter_subscriptions')
         .insert([{ email: email.toLowerCase().trim() }]);
 
-      if (error) {
-        if (error.code === '23505') { // Unique constraint violation
-          toast({
-            title: "Email già registrata",
-            description: "Questa email è già iscritta alla newsletter",
-            variant: "destructive",
-          });
-        } else {
-          throw error;
-        }
-        return;
-      }
-
+      // Always show generic success message to prevent subscription enumeration
       toast({
         title: "Iscrizione completata!",
-        description: "Ti sei iscritto con successo alla newsletter",
+        description: "Se l'email non è già iscritta, ti abbiamo aggiunto alla newsletter. Grazie!",
       });
 
       setEmail('');
     } catch (error) {
       console.error('Newsletter subscription error:', error);
+      // Generic success message for security to prevent enumeration
       toast({
-        title: "Errore",
-        description: "Si è verificato un errore durante l'iscrizione",
-        variant: "destructive",
+        title: "Iscrizione completata!",
+        description: "Se l'email non è già iscritta, ti abbiamo aggiunto alla newsletter. Grazie!",
       });
+      setEmail('');
     } finally {
       setLoading(false);
     }
