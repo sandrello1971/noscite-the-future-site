@@ -51,6 +51,9 @@ const Atheneum = () => {
             <Link 
               to="/percorsi"
               className="inline-flex items-center px-4 py-2 text-sm bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors rounded-full cursor-pointer"
+              onClick={() => {
+                setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
+              }}
             >
               <GraduationCap className="mr-2 h-4 w-4" />
               Noscite Atheneum
