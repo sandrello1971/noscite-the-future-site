@@ -41,7 +41,7 @@ const Header = () => {
   const navigation = [
     { name: "Chi Siamo", href: "/chi-siamo" },
     { name: "Servizi", href: "/servizi" },
-    { name: "Percorsi", href: "/percorsi" },
+    { name: "Atheneum", href: "/percorsi" },
     { name: "Risorse", href: "/risorse" },
     { name: "Contatti", href: "/contatti" },
   ];
