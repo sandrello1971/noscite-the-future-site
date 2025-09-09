@@ -2,7 +2,6 @@ import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import Services from "@/components/Services";
 import Atheneum from "@/components/Atheneum";
-import Partners from "@/components/Partners";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -23,7 +22,6 @@ const Index = () => {
       <Header />
       <main id="main-content" tabIndex={-1}>
         <Hero />
-        <Partners />
         <Services />
         <Atheneum />
       </main>
