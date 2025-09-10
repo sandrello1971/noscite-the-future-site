@@ -18,10 +18,11 @@ const Footer = () => {
           {/* Left Column - Logo and Claim */}
           <div className="space-y-6">
             <Link to="/" className="flex items-center space-x-3">
-              <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center">
-                <span className="text-antracite font-bold text-lg">N</span>
-              </div>
-              <span className="font-serif-elegant font-bold text-2xl text-white">Noscite</span>
+              <img 
+                src="/lovable-uploads/420a85c2-3e39-4960-a6fe-edb1cb7efb72.png" 
+                alt="Noscite Logo" 
+                className="h-16 w-auto brightness-0 invert"
+              />
             </Link>
             <p className="text-lg font-serif-elegant font-latin-italic text-white/90">
               In Digitali nova Virtus
