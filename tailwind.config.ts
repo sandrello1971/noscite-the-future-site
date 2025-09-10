@@ -40,6 +40,22 @@ export default {
 					DEFAULT: 'hsl(var(--antracite))',
 					foreground: 'hsl(var(--antracite-foreground))'
 				},
+				beige: {
+					DEFAULT: 'hsl(var(--beige))',
+					foreground: 'hsl(var(--beige-foreground))'
+				},
+				'grigio-chiaro': {
+					DEFAULT: 'hsl(var(--grigio-chiaro))',
+					foreground: 'hsl(var(--grigio-chiaro-foreground))'
+				},
+				turchese: {
+					DEFAULT: 'hsl(var(--turchese))',
+					foreground: 'hsl(var(--turchese-foreground))'
+				},
+				arancio: {
+					DEFAULT: 'hsl(var(--arancio))',
+					foreground: 'hsl(var(--arancio-foreground))'
+				},
 				destructive: {
 					DEFAULT: 'hsl(var(--destructive))',
 					foreground: 'hsl(var(--destructive-foreground))'

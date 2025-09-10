@@ -30,6 +30,22 @@ All colors MUST be HSL.
     --antracite: 0 0% 7%;      /* #121212 */
     --antracite-foreground: 0 0% 100%;
 
+    /* Beige chiaro */
+    --beige: 33 19% 96%;       /* #F5F0E8 */
+    --beige-foreground: 0 0% 7%;
+
+    /* Grigio chiaro */
+    --grigio-chiaro: 0 0% 80%; /* #CCCCCC */
+    --grigio-chiaro-foreground: 0 0% 7%;
+
+    /* Turchese */
+    --turchese: 177 35% 50%;   /* #4AB0AA */
+    --turchese-foreground: 0 0% 100%;
+
+    /* Arancio */
+    --arancio: 22 58% 62%;     /* #E48757 */
+    --arancio-foreground: 0 0% 100%;
+
     --muted: 0 0% 80%;         /* Grigio chiaro #CCCCCC */
     --muted-foreground: 0 0% 29%;
 
@@ -80,6 +96,18 @@ All colors MUST be HSL.
 
     --antracite: 0 0% 7%;
     --antracite-foreground: 0 0% 100%;
+
+    --beige: 33 19% 96%;
+    --beige-foreground: 0 0% 7%;
+
+    --grigio-chiaro: 0 0% 80%;
+    --grigio-chiaro-foreground: 0 0% 7%;
+
+    --turchese: 177 35% 50%;
+    --turchese-foreground: 0 0% 100%;
+
+    --arancio: 22 58% 62%;
+    --arancio-foreground: 0 0% 100%;
 
     --muted: 0 0% 20%;
     --muted-foreground: 0 0% 80%;
