@@ -5,19 +5,19 @@ import { AccessibleVideo } from "@/components/AccessibleVideo";
 
 const Hero = () => {
   return (
-    <section className="relative min-h-screen flex items-center pt-16 overflow-hidden bg-antracite">
-      {/* Pattern Abstract Background */}
-      <div className="absolute inset-0 z-0 opacity-10">
-        <div className="absolute top-20 left-10 w-64 h-64 bg-primary/20 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-20 right-10 w-80 h-80 bg-secondary/20 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 border border-white/10 rounded-full"></div>
-      </div>
-
-      {/* Large Logo in Transparency */}
-      <div className="absolute inset-0 flex items-center justify-center z-5 opacity-5">
-        <div className="w-96 h-96 bg-white rounded-full flex items-center justify-center">
-          <span className="text-antracite font-bold text-9xl">N</span>
-        </div>
+    <section className="relative min-h-screen flex items-center pt-16 overflow-hidden">
+      {/* Video Background */}
+      <div className="absolute inset-0 z-0">
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="w-full h-full object-cover"
+        >
+          <source src="/noscite3.mp4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-black/40"></div>
       </div>
       
       <div className="container mx-auto px-4 lg:px-8 relative z-20">
