@@ -14,7 +14,7 @@ const Hero = () => {
           muted
           playsInline
           preload="auto"
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover opacity-60 blur-sm"
           onError={(e) => console.error('Video error:', e)}
           onLoadStart={() => console.log('Video loading started')}
           onCanPlay={() => console.log('Video can play')}
@@ -22,7 +22,7 @@ const Hero = () => {
           <source src="/Noscite3.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
-        <div className="absolute inset-0 bg-black/40"></div>
+        <div className="absolute inset-0 bg-black/60"></div>
       </div>
       
       <div className="container mx-auto px-4 lg:px-8 relative z-20">
