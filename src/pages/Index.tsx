@@ -1,10 +1,12 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
-import Services from "@/components/Services";
+import Identitas from "@/components/Identitas";
+import Methodus from "@/components/Methodus";
+import Valor from "@/components/Valor";
+import Historiae from "@/components/Historiae";
 import Atheneum from "@/components/Atheneum";
+import Contactus from "@/components/Contactus";
 import Footer from "@/components/Footer";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
 import { SEO } from "@/components/SEO";
 import { StructuredData, organizationSchema } from "@/components/StructuredData";
 
@@ -12,9 +14,9 @@ const Index = () => {
   return (
     <div className="min-h-screen">
       <SEO 
-        title="Noscite - In Digitali Nova Virtus | Metodo di Trasformazione Digitale per PMI"
-        description="Non vendiamo pacchetti. Progettiamo, implementiamo e governiamo trasformazioni digitali misurabili con il Metodo Noscite in 7 fasi. KPI chiari e misurabili."
-        keywords="metodo noscite, trasformazione digitale, PMI, discovery, pilot, ROI, KPI, governance digitale, automazione processi, consulenza digitale"
+        title="Noscite - In Digitali Nova Virtus | Metodo di Trasformazione Digitale"
+        description="Il digitale non è solo tecnologia, ma capacità di creare valore attraverso metodo, visione e innovazione. Scopri il nostro approccio in 5 fasi."
+        keywords="noscite, digitale, trasformazione, metodo, innovazione, consulenza, auditio, analytica, co-creatio, implementatio, evolutio"
         canonical="https://noscite.it/"
         structuredData={organizationSchema}
       />
@@ -22,8 +24,12 @@ const Index = () => {
       <Header />
       <main id="main-content" tabIndex={-1}>
         <Hero />
-        <Services />
+        <Identitas />
+        <Methodus />
+        <Valor />
+        <Historiae />
         <Atheneum />
+        <Contactus />
       </main>
       <Footer />
     </div>
