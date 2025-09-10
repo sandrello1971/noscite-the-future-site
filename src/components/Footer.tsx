@@ -1,175 +1,87 @@
 import { Link } from "react-router-dom";
-import { Mail, Phone, MapPin, Linkedin, Facebook, Youtube } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import NewsletterSubscription from "@/components/NewsletterSubscription";
+import { Linkedin, Mail, Phone, MapPin } from "lucide-react";
 
 const Footer = () => {
-  const services = [
-    { name: "Athenaeum AI", href: "/servizi#academy" },
-    { name: "AI Launchpad", href: "/servizi#launchpad" },
-    { name: "AI Sprint", href: "/servizi#sprint" },
-    { name: "AI Evolution Partner", href: "/servizi#evolution" },
-    { name: "Fractional CIO", href: "/servizi#cio" }
-  ];
-
-  const resources = [
-    { name: "Blog", href: "/risorse#blog" },
-    { name: "Webinar", href: "/risorse#webinar" },
-    { name: "Guide PDF", href: "/risorse#guide" },
-    { name: "Whitepaper", href: "/risorse#whitepaper" },
-    { name: "Case Studies", href: "/risorse#case-studies" }
-  ];
-
-  const company = [
-    { name: "Chi Siamo", href: "/chi-siamo" },
-    { name: "Il Team", href: "/chi-siamo#team" },
-    { name: "Carriere", href: "/carriere" },
-    { name: "Privacy Policy", href: "/privacy-policy" },
-    { name: "Cookie Policy", href: "/cookie-policy" }
+  const menuItems = [
+    { name: "Identitas", path: "/identitas" },
+    { name: "Methodus", path: "/methodus" },
+    { name: "Valor", path: "/valor" },
+    { name: "Historiae", path: "/historiae" },
+    { name: "Atheneum", path: "/atheneum" },
+    { name: "Contactus", path: "/contactus" }
   ];
 
   return (
-    <footer className="bg-primary text-primary-foreground">
-      <div className="container mx-auto px-4 lg:px-8 py-16">
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {/* Company Info */}
+    <footer className="bg-antracite text-white py-16">
+      <div className="container mx-auto px-4 lg:px-8">
+        <div className="grid lg:grid-cols-3 gap-12 items-start">
+          {/* Left Column - Logo and Claim */}
           <div className="space-y-6">
-            <div>
-              <img 
-                src="/lovable-uploads/7f64c294-dc5c-48e4-90c8-f6a2bcc8e1bf.png" 
-                alt="Noscite Logo" 
-                className="h-24 w-auto mb-4 brightness-0 invert"
-              />
-              <h3 className="text-2xl font-bold mb-3 text-white">
-                In Digitali Nova Virtus
-              </h3>
-              <p className="text-primary-foreground/80 leading-relaxed">
-                Innovazione human-centric: consulenza, implementazione e academy integrate per risultati concreti e sostenibili.
-              </p>
-            </div>
-            
+            <Link to="/" className="flex items-center space-x-3">
+              <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center">
+                <span className="text-antracite font-bold text-lg">N</span>
+              </div>
+              <span className="font-serif-elegant font-bold text-2xl text-white">Noscite</span>
+            </Link>
+            <p className="text-lg font-serif-elegant font-latin-italic text-white/90">
+              In Digitali nova Virtus
+            </p>
+          </div>
+
+          {/* Center Column - Quick Menu */}
+          <div className="lg:text-center">
+            <h3 className="font-semibold text-white mb-6">Menu</h3>
+            <nav className="flex flex-wrap lg:justify-center gap-x-6 gap-y-3">
+              {menuItems.map((item) => (
+                <Link
+                  key={item.name}
+                  to={item.path}
+                  className="text-white/80 hover:text-secondary transition-colors duration-300 relative group"
+                >
+                  {item.name}
+                  <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-secondary transition-all duration-300 group-hover:w-full"></span>
+                </Link>
+              ))}
+            </nav>
+          </div>
+
+          {/* Right Column - Contacts */}
+          <div className="lg:text-right space-y-4">
+            <h3 className="font-semibold text-white mb-6">Contatti</h3>
             <div className="space-y-3">
-              <div className="flex items-center space-x-3">
-                <Mail className="h-5 w-5 text-white" />
-                <a href="mailto:notitiae@noscite.it" className="hover:text-secondary transition-colors">
-                  notitiae@noscite.it
-                </a>
+              <a href="mailto:info@noscite.it" className="flex items-center space-x-3 lg:justify-end text-white/80 hover:text-secondary transition-colors group">
+                <Mail className="h-4 w-4" />
+                <span>info@noscite.it</span>
+              </a>
+              <a href="tel:+39000000000" className="flex items-center space-x-3 lg:justify-end text-white/80 hover:text-secondary transition-colors group">
+                <Phone className="h-4 w-4" />
+                <span>+39 000 000 0000</span>
+              </a>
+              <div className="flex items-center space-x-3 lg:justify-end text-white/80">
+                <MapPin className="h-4 w-4" />
+                <span>Via Example, 123<br />00000 Roma, Italia</span>
               </div>
-              <div className="flex items-center space-x-3">
-                <Phone className="h-5 w-5 text-white" />
-                <a href="tel:+393476859801" className="hover:text-secondary transition-colors">
-                  +39 347 6859801
-                </a>
-              </div>
-              <div className="flex items-center space-x-3">
-                <MapPin className="h-5 w-5 text-white" />
-                <span>Milano, Italia</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Services */}
-          <div>
-            <h4 className="font-semibold text-lg mb-6">Servizi</h4>
-            <ul className="space-y-3">
-              {services.map((service) => (
-                <li key={service.name}>
-                  <Link 
-                    to={service.href}
-                    className="text-primary-foreground/80 hover:text-secondary transition-colors duration-200"
-                  >
-                    {service.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Resources */}
-          <div>
-            <h4 className="font-semibold text-lg mb-6">Risorse</h4>
-            <ul className="space-y-3">
-              {resources.map((resource) => (
-                <li key={resource.name}>
-                  <Link 
-                    to={resource.href}
-                    className="text-primary-foreground/80 hover:text-secondary transition-colors duration-200"
-                  >
-                    {resource.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Company & Newsletter */}
-          <div className="space-y-6">
-            <div>
-              <h4 className="font-semibold text-lg mb-6">Azienda</h4>
-              <ul className="space-y-3">
-                {company.map((item) => (
-                  <li key={item.name}>
-                    <Link 
-                      to={item.href}
-                      className="text-primary-foreground/80 hover:text-secondary transition-colors duration-200"
-                    >
-                      {item.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Newsletter */}
-            <div>
-              <h4 className="font-semibold text-lg mb-4">Newsletter</h4>
-              <p 
-                id="newsletter-footer-description" 
-                className="text-primary-foreground/80 text-sm mb-4"
-              >
-                Ricevi le ultime novità sull'AI e la trasformazione digitale
-              </p>
-              <NewsletterSubscription variant="footer" />
+              <a href="https://linkedin.com/company/noscite" className="flex items-center space-x-3 lg:justify-end text-white/80 hover:text-secondary transition-colors group">
+                <Linkedin className="h-4 w-4" />
+                <span>linkedin.com/company/noscite</span>
+              </a>
             </div>
           </div>
         </div>
 
-        {/* Bottom Section */}
-        <div className="border-t border-primary-foreground/20 mt-12 pt-8">
+        {/* Bottom Section - Legal */}
+        <div className="border-t border-white/20 mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <div className="text-primary-foreground/80 text-sm">
-              © 2024 Noscite. Tutti i diritti riservati.
-            </div>
-            
-            {/* Social Links */}
-            <div className="flex items-center space-x-4">
-              <a 
-                href="https://www.linkedin.com/company/noscite" 
-                className="text-primary-foreground/80 hover:text-secondary transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-md p-1"
-                aria-label="Seguici su LinkedIn"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Linkedin className="h-5 w-5" aria-hidden="true" />
-              </a>
-              <a 
-                href="https://www.facebook.com/noscite" 
-                className="text-primary-foreground/80 hover:text-secondary transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-md p-1"
-                aria-label="Seguici su Facebook"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Facebook className="h-5 w-5" aria-hidden="true" />
-              </a>
-              <a 
-                href="https://www.youtube.com/@noscite" 
-                className="text-primary-foreground/80 hover:text-secondary transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-md p-1"
-                aria-label="Seguici su YouTube"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Youtube className="h-5 w-5" aria-hidden="true" />
-              </a>
+            <p className="text-white/60 text-sm">
+              © Noscite – tutti i diritti riservati
+            </p>
+            <div className="flex space-x-6">
+              <Link to="/privacy-policy" className="text-white/60 hover:text-secondary transition-colors text-sm">
+                Privacy
+              </Link>
+              <Link to="/cookie-policy" className="text-white/60 hover:text-secondary transition-colors text-sm">
+                Cookie policy
+              </Link>
             </div>
           </div>
         </div>

@@ -1,103 +1,51 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Search, BarChart3, Zap, Phone, Users, TrendingUp, Settings } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { AccessibleVideo } from "@/components/AccessibleVideo";
-import { Badge } from "@/components/ui/badge";
 
 const Hero = () => {
   return (
     <section className="relative min-h-screen flex items-center pt-16 overflow-hidden bg-antracite">
-      {/* Accessible Video Background */}
-      <AccessibleVideo
-        src="/noscitelogo.mp4"
-        className="absolute inset-0 w-full h-full z-0 opacity-30"
-        ariaLabel="Video promozionale Noscite - trasformazione digitale e intelligenza artificiale per le aziende"
-      >
-        Scopri i nostri servizi di trasformazione digitale e intelligenza artificiale.
-      </AccessibleVideo>
-      
-      {/* Overlay for text readability */}
-      <div className="absolute inset-0 bg-antracite/40 z-10"></div>
+      {/* Pattern Abstract Background */}
+      <div className="absolute inset-0 z-0 opacity-10">
+        <div className="absolute top-20 left-10 w-64 h-64 bg-primary/20 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-20 right-10 w-80 h-80 bg-secondary/20 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 border border-white/10 rounded-full"></div>
+      </div>
+
+      {/* Large Logo in Transparency */}
+      <div className="absolute inset-0 flex items-center justify-center z-5 opacity-5">
+        <div className="w-96 h-96 bg-white rounded-full flex items-center justify-center">
+          <span className="text-antracite font-bold text-9xl">N</span>
+        </div>
+      </div>
       
       <div className="container mx-auto px-4 lg:px-8 relative z-20">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Left Column - Content */}
+        <div className="max-w-4xl mx-auto text-center">
           <div className="space-y-8 animate-fade-in">
-            <div className="space-y-4">
-              <h1 className="text-4xl lg:text-6xl font-serif-elegant font-bold text-white leading-tight">
+            <div className="space-y-6">
+              <h1 className="text-5xl lg:text-7xl font-serif-elegant font-bold text-white leading-tight">
                 <span className="font-latin-italic text-primary">In Digitali</span>
-                <span className="block font-latin-italic text-secondary">nova Virtus</span>
+                <br />
+                <span className="font-latin-italic text-secondary">nova Virtus</span>
               </h1>
-              <p className="text-xl text-white/90 leading-relaxed max-w-xl">
+              <p className="text-xl lg:text-2xl text-white/90 leading-relaxed max-w-3xl mx-auto">
                 Il digitale non è solo tecnologia, ma capacità di creare valore attraverso metodo, visione e innovazione.
               </p>
             </div>
             
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Button variant="secondary" size="lg" asChild className="hover:bg-primary hover:border-primary transition-colors duration-300">
-                <Link to="/servizi">
+            <div className="pt-8">
+              <Button 
+                variant="secondary" 
+                size="lg" 
+                asChild 
+                className="bg-secondary text-white hover:bg-primary border-secondary hover:border-primary transition-all duration-300 text-lg px-8 py-6"
+              >
+                <Link to="/methodus">
                   Scopri il nostro approccio
-                  <ArrowRight className="ml-2 h-5 w-5" />
+                  <ArrowRight className="ml-2 h-6 w-6" />
                 </Link>
               </Button>
-              <Button variant="outline" size="lg" asChild className="border-white text-white hover:bg-white hover:text-antracite">
-                <Link to="/contatti">
-                  <Phone className="mr-2 h-5 w-5" />
-                  Contattaci
-                </Link>
-              </Button>
-            </div>
-          </div>
-
-          {/* Right Column - Methodus Preview */}
-          <div className="relative animate-slide-up">
-            <div className="grid grid-cols-1 gap-4">
-              <div className="space-y-4">
-                <div className="bg-card/10 backdrop-blur-sm p-4 rounded-xl shadow-lg hover-lift border border-white/20">
-                  <div className="flex items-center space-x-3 mb-3">
-                    <div className="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
-                    <Search className="h-6 w-6 text-primary" />
-                  </div>
-                  <h3 className="font-serif-elegant font-semibold text-white mb-1 font-latin-italic">Auditio</h3>
-                  <p className="text-sm text-white/80">Ascolto e comprensione</p>
-                </div>
-                
-                <div className="bg-card/10 backdrop-blur-sm p-4 rounded-xl shadow-lg hover-lift border border-white/20">
-                  <div className="flex items-center space-x-3 mb-3">
-                    <div className="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center text-sm font-bold">2</div>
-                    <BarChart3 className="h-6 w-6 text-primary" />
-                  </div>
-                  <h3 className="font-serif-elegant font-semibold text-white mb-1 font-latin-italic">Analytica</h3>
-                  <p className="text-sm text-white/80">Analisi approfondita</p>
-                </div>
-
-                <div className="bg-card/10 backdrop-blur-sm p-4 rounded-xl shadow-lg hover-lift border border-white/20">
-                  <div className="flex items-center space-x-3 mb-3">
-                    <div className="w-8 h-8 bg-secondary text-white rounded-full flex items-center justify-center text-sm font-bold">3</div>
-                    <Users className="h-6 w-6 text-secondary" />
-                  </div>
-                  <h3 className="font-serif-elegant font-semibold text-white mb-1 font-latin-italic">Co-creatio</h3>
-                  <p className="text-sm text-white/80">Progettazione condivisa</p>
-                </div>
-
-                <div className="bg-card/10 backdrop-blur-sm p-4 rounded-xl shadow-lg hover-lift border border-white/20">
-                  <div className="flex items-center space-x-3 mb-3">
-                    <div className="w-8 h-8 bg-secondary text-white rounded-full flex items-center justify-center text-sm font-bold">4</div>
-                    <Zap className="h-6 w-6 text-secondary" />
-                  </div>
-                  <h3 className="font-serif-elegant font-semibold text-white mb-1 font-latin-italic">Implementatio</h3>
-                  <p className="text-sm text-white/80">Realizzazione concreta</p>
-                </div>
-
-                <div className="bg-card/10 backdrop-blur-sm p-4 rounded-xl shadow-lg hover-lift border border-white/20">
-                  <div className="flex items-center space-x-3 mb-3">
-                    <div className="w-8 h-8 bg-secondary text-white rounded-full flex items-center justify-center text-sm font-bold">5</div>
-                    <TrendingUp className="h-6 w-6 text-secondary" />
-                  </div>
-                  <h3 className="font-serif-elegant font-semibold text-white mb-1 font-latin-italic">Evolutio</h3>
-                  <p className="text-sm text-white/80">Miglioramento continuo</p>
-                </div>
-              </div>
             </div>
           </div>
         </div>

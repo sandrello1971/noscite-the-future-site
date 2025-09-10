@@ -168,6 +168,16 @@ All colors MUST be HSL.
     }
   }
 
+  /* Timeline progress animation */
+  @keyframes timeline-progress {
+    from {
+      height: 0%;
+    }
+    to {
+      height: 100%;
+    }
+  }
+
   /* Hover effects */
   .hover-lift {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -176,5 +186,29 @@ All colors MUST be HSL.
   .hover-lift:hover {
     transform: translateY(-4px);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Link underline animation */
+  .story-link {
+    position: relative;
+    display: inline-block;
+  }
+
+  .story-link::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    transform: scaleX(0);
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: hsl(var(--secondary));
+    transform-origin: bottom right;
+    transition: transform 0.3s ease-out;
+  }
+
+  .story-link:hover::after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
   }
 }

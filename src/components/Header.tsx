@@ -1,119 +1,70 @@
-import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, User, LogOut } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
-import { User as SupabaseUser } from "@supabase/supabase-js";
-import { SkipLink } from "@/components/SkipLink";
+import { Menu, X } from "lucide-react";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [user, setUser] = useState<SupabaseUser | null>(null);
-  const navigate = useNavigate();
 
-  // Generate unique ID for mobile menu accessibility
-  const mobileMenuId = 'mobile-navigation-menu';
-
-  useEffect(() => {
-    // Get initial session
-    const getSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      setUser(session?.user ?? null);
-    };
-    
-    getSession();
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setUser(session?.user ?? null);
-      }
-    );
-
-    return () => subscription.unsubscribe();
-  }, []);
-
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    navigate("/");
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
   };
 
-  const navigation = [
-    { name: "Chi Siamo", href: "/chi-siamo" },
-    { name: "Servizi", href: "/servizi" },
-    { name: "Atheneum", href: "/percorsi" },
-    { name: "Risorse", href: "/risorse" },
-    { name: "Contatti", href: "/contatti" },
+  const menuItems = [
+    { name: "Identitas", path: "/identitas" },
+    { name: "Methodus", path: "/methodus" },
+    { name: "Valor", path: "/valor" },
+    { name: "Historiae", path: "/historiae" },
+    { name: "Atheneum", path: "/atheneum" },
+    { name: "Contactus", path: "/contactus" }
   ];
 
   return (
-    <>
-      {/* Skip Links for keyboard navigation */}
-      <SkipLink href="#main-content">Salta al contenuto principale</SkipLink>
-      <SkipLink href="#navigation">Salta alla navigazione</SkipLink>
-      
-      <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-antracite border-b border-white/20">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            <img 
-              src="/lovable-uploads/32b5d629-f629-4ffe-a4ec-ccf9154b03ac.png" 
-              alt="Logo Noscite - In Digitali Nova Virtus, azienda di consulenza AI e trasformazione digitale" 
-              className="h-16 w-auto"
-            />
+            <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+              <span className="text-white font-bold text-sm">N</span>
+            </div>
+            <span className="font-serif-elegant font-bold text-xl text-white">Noscite</span>
           </Link>
 
           {/* Desktop Navigation */}
-          <nav 
-            id="navigation" 
-            className="hidden lg:flex items-center space-x-8"
-            role="navigation"
-            aria-label="Navigazione principale"
-          >
-            {navigation.map((item) => (
+          <nav className="hidden md:flex items-center space-x-8">
+            {menuItems.map((item) => (
               <Link
                 key={item.name}
-                to={item.href}
-                className="text-foreground hover:text-primary transition-colors duration-200 font-medium"
+                to={item.path}
+                className="text-white hover:text-secondary transition-colors duration-300 font-medium relative group"
               >
                 {item.name}
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-secondary transition-all duration-300 group-hover:w-full"></span>
               </Link>
             ))}
           </nav>
 
-          {/* Mobile menu button */}
-          <button
-            className="lg:hidden p-2"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label={isMenuOpen ? "Chiudi menu di navigazione" : "Apri menu di navigazione"}
-            aria-expanded={isMenuOpen}
-            aria-controls={mobileMenuId}
-            aria-haspopup="true"
+          {/* Mobile Menu Button */}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={toggleMenu}
+            className="md:hidden text-white hover:text-secondary"
           >
-            {isMenuOpen ? (
-              <X className="h-6 w-6" aria-hidden="true" />
-            ) : (
-              <Menu className="h-6 w-6" aria-hidden="true" />
-            )}
-          </button>
+            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </Button>
         </div>
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div 
-            id={mobileMenuId}
-            className="lg:hidden py-4 border-t border-border"
-            role="menu"
-            aria-label="Menu di navigazione mobile"
-          >
+          <div className="md:hidden py-4 border-t border-white/20">
             <nav className="flex flex-col space-y-4">
-              {navigation.map((item) => (
+              {menuItems.map((item) => (
                 <Link
                   key={item.name}
-                  to={item.href}
-                  role="menuitem"
-                  className="text-foreground hover:text-primary transition-colors duration-200 font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-md px-2 py-1"
+                  to={item.path}
+                  className="text-white hover:text-secondary transition-colors duration-300 font-medium"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.name}
@@ -124,8 +75,6 @@ const Header = () => {
         )}
       </div>
     </header>
-    </>
-  );
 };
 
 export default Header;
