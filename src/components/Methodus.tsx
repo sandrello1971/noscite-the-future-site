@@ -92,6 +92,7 @@ const Methodus = () => {
         </div>
       </div>
     </section>
+  );
 };
 
 export default Methodus;

@@ -62,6 +62,7 @@ const Valor = () => {
         </div>
       </div>
     </section>
+  );
 };
 
 export default Valor;

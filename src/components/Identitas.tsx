@@ -62,6 +62,7 @@ const Identitas = () => {
         </div>
       </div>
     </section>
+  );
 };
 
 export default Identitas;

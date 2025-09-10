@@ -90,6 +90,7 @@ const Historiae = () => {
         </div>
       </div>
     </section>
+  );
 };
 
 export default Historiae;
