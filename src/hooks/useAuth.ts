@@ -5,14 +5,14 @@ import { supabase } from '@/integrations/supabase/client';
 export interface UserRole {
   id: string;
   user_id: string;
-  role: 'admin' | 'user';
+  role: 'admin' | 'user' | 'moderator';
   created_at: string;
 }
 
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
-  const [userRole, setUserRole] = useState<'admin' | 'user' | null>(null);
+  const [userRole, setUserRole] = useState<'admin' | 'user' | 'moderator' | null>(null);
   const [loading, setLoading] = useState(true);
   const [roleLoading, setRoleLoading] = useState(false);
 

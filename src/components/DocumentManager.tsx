@@ -74,11 +74,12 @@ const DocumentManager = ({ onDocumentChange }: DocumentManagerProps) => {
         .insert([{
           title: formData.title,
           description: formData.description,
-          file_url: publicUrl,
+          file_name: selectedFile.name,
+          file_url: publicUrl,        
           file_type: selectedFile.type || 'application/octet-stream',
-          category: formData.category,
-          tags,
-          uploaded_by: user.id
+          file_size: selectedFile.size,
+          mime_type: selectedFile.type || 'application/octet-stream',
+          uploaded_by: user.id,
         }])
         .select();
 

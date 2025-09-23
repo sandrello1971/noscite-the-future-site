@@ -17,15 +17,27 @@ export interface BlogPost {
 export interface Document {
   id?: string;
   title: string;
-  description: string;
+  description?: string;
+  file_name: string;
   file_url: string;
   file_type: string;
-  category: string;
-  tags: string[];
-  download_count?: number;
-  uploaded_by?: string;
+  file_size: number;
+  mime_type: string;
+  document_type?: 'invoice' | 'contract' | 'receipt' | 'report' | 'other';
+  category_id?: string;
+  supplier_id?: string;
+  document_date?: string;
+  amount?: number;
+  currency?: string;
+  invoice_number?: string;
+  notes?: string;
+  status?: 'pending' | 'processed' | 'archived' | 'approved' | 'rejected';
+  uploaded_by: string;
   created_at?: string;
   updated_at?: string;
+  // Computed fields for backward compatibility
+  category?: string;
+  tags?: string[];
 }
 
 export interface KnowledgeBase {
