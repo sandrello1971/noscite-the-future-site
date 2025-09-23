@@ -3,7 +3,7 @@ import Footer from "@/components/Footer";
 import { SEO } from "@/components/SEO";
 import { StructuredData } from "@/components/StructuredData";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
-import { Users, Target, Lightbulb, ArrowRight, Heart, Brain, Zap } from "lucide-react";
+import { ArrowRight, Heart, Brain, Zap, Target } from "lucide-react";
 
 const Identitas = () => {
   const teamValues = [
@@ -24,27 +24,6 @@ const Identitas = () => {
       title: "Virtus",
       subtitle: "L'eccellenza nell'agire", 
       description: "La virtù come ricerca continua dell'eccellenza. Non ci accontentiamo del 'buono abbastanza': puntiamo sempre al risultato migliore possibile, con integrità, passione e dedizione assoluta verso i nostri partner."
-    }
-  ];
-
-  const teamMembers = [
-    {
-      name: "Marco Fondatore",
-      role: "CEO & Digital Strategist", 
-      description: "15+ anni nell'innovazione digitale. Filosofia antica, visione contemporanea.",
-      expertise: ["Digital Strategy", "AI Implementation", "Change Management"]
-    },
-    {
-      name: "Laura Technologia",
-      role: "CTO & AI Specialist",
-      description: "Esperta in intelligenza artificiale e architetture digitali scalabili.",
-      expertise: ["Machine Learning", "Cloud Architecture", "Data Science"]
-    },
-    {
-      name: "Alessandro Consultans", 
-      role: "Senior Consultant",
-      description: "Specialista in trasformazione dei processi aziendali e adoption digitale.",
-      expertise: ["Process Optimization", "Training & Adoption", "Project Management"]
     }
   ];
 
@@ -158,61 +137,6 @@ const Identitas = () => {
           </div>
         </section>
 
-        {/* Team Section */}
-        <section className="py-20 bg-beige">
-          <div className="container mx-auto px-4 lg:px-8">
-            <div className="max-w-6xl mx-auto">
-              <div className="text-center mb-16">
-                <h2 className="text-3xl lg:text-4xl font-serif-elegant font-bold text-antracite mb-6">
-                  Il Nostro Team
-                </h2>
-                <p className="text-xl text-antracite/80 leading-relaxed max-w-4xl mx-auto">
-                  Un gruppo di professionisti accomunati dalla passione per l'innovazione 
-                  e dalla convinzione che il futuro si costruisce insieme.
-                </p>
-              </div>
-
-              <div className="grid lg:grid-cols-3 gap-8">
-                {teamMembers.map((member, index) => (
-                  <div 
-                    key={member.name}
-                    className="bg-white rounded-xl p-8 shadow-sm hover:shadow-md transition-shadow duration-300 text-center"
-                  >
-                    <div className="w-24 h-24 bg-gradient-to-br from-turchese to-arancio rounded-full mx-auto mb-6 flex items-center justify-center">
-                      <span className="text-2xl font-bold text-white">
-                        {member.name.split(' ').map(n => n[0]).join('')}
-                      </span>
-                    </div>
-                    
-                    <h3 className="text-xl font-bold text-antracite mb-2">
-                      {member.name}
-                    </h3>
-                    
-                    <p className="text-arancio font-medium mb-4">
-                      {member.role}
-                    </p>
-                    
-                    <p className="text-antracite/80 leading-relaxed mb-6">
-                      {member.description}
-                    </p>
-                    
-                    <div className="flex flex-wrap gap-2 justify-center">
-                      {member.expertise.map((skill) => (
-                        <span 
-                          key={skill}
-                          className="px-3 py-1 bg-turchese/10 text-turchese text-sm font-medium rounded-full"
-                        >
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
         {/* Approach Section */}
         <section className="py-20 bg-white">
           <div className="container mx-auto px-4 lg:px-8">
@@ -316,9 +240,6 @@ const Identitas = () => {
       <Footer />
     </div>
   );
-};
-
-export default Identitas;
 };
 
 export default Identitas;
