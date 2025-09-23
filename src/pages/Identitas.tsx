@@ -319,3 +319,6 @@ const Identitas = () => {
 };
 
 export default Identitas;
+};
+
+export default Identitas;
