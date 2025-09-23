@@ -54,7 +54,7 @@ const Footer = () => {
                 <Mail className="h-4 w-4" />
                 <span>info@noscite.it</span>
               </a>
-              <a href="tel:+39000000000" className="flex items-center space-x-3 lg:justify-end text-white/80 hover:text-secondary transition-colors group">
+              <a href="tel:+393476859801" className="flex items-center space-x-3 lg:justify-end text-white/80 hover:text-secondary transition-colors group">
                 <Phone className="h-4 w-4" />
                 <span>+39 000 000 0000</span>
               </a>
