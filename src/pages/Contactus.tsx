@@ -14,13 +14,13 @@ const Contactus = () => {
     {
       icon: Phone,
       label: "Telefono", 
-      value: "+39 02 1234 5678",
-      href: "tel:+390212345678"
+      value: "+39 347 6859 801",
+      href: "tel:+3934769859801"
     },
     {
       icon: MapPin,
       label: "Indirizzo",
-      value: "Via Roma 123, 20121 Milano",
+      value: " Milano",
       href: "https://maps.google.com"
     },
     {
