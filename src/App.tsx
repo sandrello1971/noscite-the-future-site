@@ -43,6 +43,11 @@ const App = () => (
             <Route path="/historiae" element={<Historiae />} />
             <Route path="/atheneum" element={<Atheneum />} />
             <Route path="/contactus" element={<Contactus />} />
+            <Route path="/chi-siamo" element={<ChiSiamo />} />
+            <Route path="/servizi" element={<Servizi />} />
+            <Route path="/percorsi" element={<Percorsi />} />
+            <Route path="/risorse" element={<Risorse />} />
+            <Route path="/contatti" element={<Contatti />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/cookie-policy" element={<CookiePolicy />} />
             <Route path="/nosciteadmin" element={<NosciteAdminDashboard />} />

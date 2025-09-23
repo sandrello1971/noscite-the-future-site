@@ -208,13 +208,13 @@ serve(async (req) => {
             "- IMPORTANTE: Quando usi informazioni da documenti, indica SEMPRE chiaramente il nome del documento come fonte\n" +
             "- Quando usi informazioni dal sito web, puoi menzionare \"dalle informazioni sul sito Noscite\"\n" +
             "- Formato per citare documenti: \"Come indicato nel documento '[Nome Documento]'...\"\n" +
-            "- Quando parli di percorsi formativi, menziona sempre di visitare [Percorsi Noscite](https://noscite.it/percorsi) per maggiori dettagli\n" +
-            "- Quando parli di servizi, rimanda a [Servizi Noscite](https://noscite.it/servizi)\n" +
-            "- Per informazioni aziendali, rimanda a [Chi Siamo](https://noscite.it/chi-siamo)\n" +
-            "- Per contatti, rimanda a [Contatti Noscite](https://noscite.it/contatti)\n" +
-            "- Per documenti specifici, suggerisci di consultare [Risorse Noscite](https://noscite.it/risorse)\n" +
-            "- USA SEMPRE link completi HTTPS con formato markdown [Testo](https://noscite.it/pagina)\n" +
-            "- Non usare MAI link relativi come /percorsi ma sempre https://noscite.it/percorsi\n" +
+            "- Quando parli di percorsi formativi, menziona sempre di visitare [Percorsi Noscite](/percorsi) per maggiori dettagli\n" +
+            "- Quando parli di servizi, rimanda a [Servizi Noscite](/servizi)\n" +
+            "- Per informazioni aziendali, rimanda a [Chi Siamo](/chi-siamo)\n" +
+            "- Per contatti, rimanda a [Contatti Noscite](/contatti)\n" +
+            "- Per documenti specifici, suggerisci di consultare [Risorse Noscite](/risorse)\n" +
+            "- USA link relativi del sito con formato markdown [Testo](/pagina)\n" +
+            "- I link devono essere relativi al dominio corrente (es. /percorsi, /servizi, /contatti)\n" +
             "- Includi sempre link utili nelle tue risposte quando appropriato\n" +
             "- Solo DOPO aver fornito informazioni specifiche, suggerisci di contattare Noscite per dettagli personalizzati\n\n" +
             "Rispondi sempre in modo professionale, dettagliato e utile, citando sempre le fonti."
