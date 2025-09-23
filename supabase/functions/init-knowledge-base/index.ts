@@ -60,15 +60,75 @@ serve(async (req) => {
       {
         title: "Percorsi Formativi",
         content: `
-        Digital Productivity Transformation per PMI - 68 ore totali divise in 3 corsi:
+        PERCORSI FORMATIVI NOSCITE - Digital Productivity
+        Target: PMI 5-50 dipendenti | Modalità: In presenza o online | Max 12 partecipanti per corso | Totale: 68 ore
+
+        1. INITIUM – FONDAMENTA AI OPERATIVA
+        Durata: 20 ore (5 moduli)
+        Certificazione: Certified AI Productivity User
+        Descrizione: Acquisire competenze pratiche per usare ChatGPT e Copilot 365 nelle attività quotidiane e introdurre il concetto di Second Brain
         
-        Initium – Fondamenta AI Operativa (20 ore, 5 moduli) - Acquisire competenze pratiche per usare ChatGPT e Copilot 365 nelle attività quotidiane e introdurre il concetto di Second Brain. Certificazione: Certified AI Productivity User. Moduli: Intro AI e Prompt Engineering Base, AI per il Business Quotidiano, Copilot 365 – Produttività immediata, Copilot 365 – Funzionalità Avanzate, Introduzione al Second Brain. Riduzione 40-60% tempo stesura documenti.
+        Moduli principali:
+        • Intro AI e Prompt Engineering Base
+        • AI per il Business Quotidiano  
+        • Copilot 365 – Produttività immediata
+        • Copilot 365 – Funzionalità Avanzate
+        • Introduzione al Second Brain
         
-        Structura – Second Brain Aziendale (24 ore, 6 moduli) - Creare un sistema scalabile di gestione della conoscenza con Obsidian, integrato con AI e processi aziendali. Certificazione: Certified Second Brain Implementer. Prerequisito: Initium. Moduli: Metodo CODE e fondamenti, Setup Vault Aziendale, Template e Organizzazione Avanzata, AI & Automazioni, Collaborazione e Governance, Certificazione e Piano d'Azione. Riduzione 70% tempo ricerca informazioni.
+        Benefici: Riduzione 40-60% tempo stesura documenti, struttura prompt efficaci, integrazione AI in Word/Excel/Outlook
         
-        Communitas – Collaborazione Intelligente (24 ore, 6 moduli) - Creare un sistema di collaborazione e project management integrato, basato su Obsidian come Collaboration Hub. Certificazione: Certified Collaboration Hub User. Prerequisito: Initium (consigliato Structura). Moduli: Fondamenti di Collaborazione e Governance, Obsidian come Collaboration Hub, Gestione Progetti con Bases, Task Management e Automazioni, Comunicazione e Integrazione Esterna, Certificazione e Roadmap. Riduzione tool-fatigue.
+        2. STRUCTURA – SECOND BRAIN AZIENDALE
+        Durata: 24 ore (6 moduli)
+        Prerequisito: Initium completato
+        Certificazione: Certified Second Brain Implementer
+        Descrizione: Creare sistema scalabile di gestione conoscenza con Obsidian, integrato con AI e processi aziendali
         
-        Transforma – Percorso Integrato: tutti e tre i corsi per 68 ore totali. Target: PMI 5-50 dipendenti. Max 12 partecipanti per corso. Modalità: In presenza o online. Implementazione consigliata: Mese 1 Initium, Mese 3-4 Structura, Mese 6-7 Communitas, Mese 12 Revisione completa e ROI.
+        Moduli principali:
+        • Metodo CODE e fondamenti
+        • Setup Vault Aziendale
+        • Template e Organizzazione Avanzata
+        • AI & Automazioni
+        • Collaborazione e Governance
+        • Certificazione e Piano d'Azione
+        
+        Benefici: Riduzione 70% tempo ricerca informazioni, tassonomie intelligenti, plugin AI per Obsidian
+        
+        3. COMMUNITAS – COLLABORAZIONE INTELLIGENTE
+        Durata: 24 ore (6 moduli)
+        Prerequisito: Initium (consigliato Structura)
+        Certificazione: Certified Collaboration Hub User
+        Descrizione: Sistema di collaborazione e project management integrato, basato su Obsidian come Collaboration Hub
+        
+        Moduli principali:
+        • Fondamenti Collaborazione e Governance
+        • Obsidian come Collaboration Hub
+        • Gestione Progetti con Bases
+        • Task Management e Automazioni
+        • Comunicazione e Integrazione Esterna
+        • Certificazione e Roadmap
+        
+        Benefici: Riduzione tool-fatigue, dashboard team con Dataview, task management integrato
+        
+        IMPLEMENTAZIONE:
+        
+        Approccio Sequenziale (consigliato):
+        • Mese 1: Initium (Fondamenta AI)
+        • Mese 3-4: Structura (Second Brain)  
+        • Mese 6-7: Communitas (Collaborazione)
+        
+        Approccio Accelerato:
+        • Initium+Structura consecutivi per team tech-savvy
+        • Communitas dopo consolidamento
+        
+        ROI MISURABILI:
+        • Tempo risposta email: -50%
+        • Preparazione riunioni: -60%
+        • Ricerca informazioni: -70%
+        • Qualità documentazione: +80%
+        • Soddisfazione team: +40%
+        • Produttività generale: +25-35%
+        
+        Per maggiori dettagli visita /percorsi o contatta Noscite per una valutazione gratuita.
         `,
         sourceId: "percorsi",
         contentType: "page"
