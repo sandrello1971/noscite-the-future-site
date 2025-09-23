@@ -14,7 +14,6 @@ const Header = () => {
     { name: "Identitas", path: "/identitas" },
     { name: "Methodus", path: "/methodus" },
     { name: "Valor", path: "/valor" },
-    { name: "Historiae", path: "/historiae" },
     { name: "Atheneum", path: "/atheneum" },
     { name: "Contactus", path: "/contactus" }
   ];
