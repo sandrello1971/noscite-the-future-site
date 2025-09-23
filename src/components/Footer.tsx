@@ -56,11 +56,11 @@ const Footer = () => {
               </a>
               <a href="tel:+393476859801" className="flex items-center space-x-3 lg:justify-end text-white/80 hover:text-secondary transition-colors group">
                 <Phone className="h-4 w-4" />
-                <span>+39 000 000 0000</span>
+                <span>+39 347 685 9801</span>
               </a>
               <div className="flex items-center space-x-3 lg:justify-end text-white/80">
                 <MapPin className="h-4 w-4" />
-                <span>Via Example, 123<br />00000 Roma, Italia</span>
+                <span>Via , <br />Milano, Italia</span>
               </div>
               <a href="https://linkedin.com/company/noscite" className="flex items-center space-x-3 lg:justify-end text-white/80 hover:text-secondary transition-colors group">
                 <Linkedin className="h-4 w-4" />
