@@ -8,20 +8,20 @@ const Contactus = () => {
     {
       icon: Mail,
       label: "Email",
-      value: "info@noscite.it",
-      href: "mailto:info@noscite.it"
+      value: "notitiae@noscite.it",
+      href: "mailto:notitiae@noscite.it"
     },
     {
       icon: Phone,
       label: "Telefono", 
-      value: "+39 000 000 0000",
-      href: "tel:+39000000000"
+      value: "+39 347 6859 801",
+      href: "tel:+3934769859801"
     },
     {
       icon: MapPin,
       label: "Indirizzo",
-      value: "Via Example, 123\n00000 Roma, Italia",
-      href: null
+      value: "Via Monte Grappa 13, Corsico (MI)",
+      href: "https://maps.google.com"
     },
     {
       icon: Linkedin,
