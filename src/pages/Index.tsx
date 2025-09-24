@@ -27,7 +27,6 @@ const Index = () => {
         <Identitas />
         <Methodus />
         <Valor />
-        <Historiae />
         <Atheneum />
         <Contactus />
       </main>
