@@ -49,9 +49,9 @@ const Footer = () => {
           <div className="lg:text-right space-y-4">
             <h3 className="font-semibold text-white mb-6">Contatti</h3>
             <div className="space-y-3">
-              <a href="mailto:info@noscite.it" className="flex items-center space-x-3 lg:justify-end text-white/80 hover:text-secondary transition-colors group">
+              <a href="mailto:notitiae@noscite.it" className="flex items-center space-x-3 lg:justify-end text-white/80 hover:text-secondary transition-colors group">
                 <Mail className="h-4 w-4" />
-                <span>info@noscite.it</span>
+                <span>notitiae@noscite.it</span>
               </a>
               <a href="tel:+393476859801" className="flex items-center space-x-3 lg:justify-end text-white/80 hover:text-secondary transition-colors group">
                 <Phone className="h-4 w-4" />
@@ -59,7 +59,7 @@ const Footer = () => {
               </a>
               <div className="flex items-center space-x-3 lg:justify-end text-white/80">
                 <MapPin className="h-4 w-4" />
-                <span>Via , <br />Milano, Italia</span>
+                <span>Via Monte Grappa 13 <br />Corsico (MI), Italia</span>
               </div>
               <a href="https://linkedin.com/company/noscite" className="flex items-center space-x-3 lg:justify-end text-white/80 hover:text-secondary transition-colors group">
                 <Linkedin className="h-4 w-4" />
