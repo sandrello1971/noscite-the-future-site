@@ -8,8 +8,8 @@ const Contactus = () => {
     {
       icon: Mail,
       label: "Email",
-      value: "info@noscite.it",
-      href: "mailto:info@noscite.it"
+      value: "notitiae@noscite.it",
+      href: "mailto:notitiae@noscite.it"
     },
     {
       icon: Phone,
@@ -20,7 +20,7 @@ const Contactus = () => {
     {
       icon: MapPin,
       label: "Indirizzo",
-      value: " Milano",
+      value: " Via Monte Grappa 13, Corsico (MI)",
       href: "https://maps.google.com"
     },
     {
@@ -159,7 +159,7 @@ const Contactus = () => {
                   <Mail className="ml-2 h-5 w-5" />
                 </a>
                 <a 
-                  href="tel:+390212345678"
+                  href="tel:+393476859801"
                   className="inline-flex items-center justify-center px-8 py-4 bg-transparent border-2 border-white text-white font-medium rounded-lg hover:bg-white hover:text-antracite transition-colors duration-300"
                 >
                   Chiamaci
