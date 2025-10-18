@@ -146,41 +146,41 @@ const Atheneum = () => {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="font-bold text-antracite">Percorso</TableHead>
-                      <TableHead className="font-bold text-antracite">Focus</TableHead>
-                      <TableHead className="font-bold text-antracite">Output finale</TableHead>
-                      <TableHead className="font-bold text-antracite">Modalità</TableHead>
-                      <TableHead className="font-bold text-antracite">Certificazione</TableHead>
+                      <TableHead className="font-bold text-antracite w-[15%]">Percorso</TableHead>
+                      <TableHead className="font-bold text-antracite w-[22%]">Focus</TableHead>
+                      <TableHead className="font-bold text-antracite w-[23%]">Output finale</TableHead>
+                      <TableHead className="font-bold text-antracite w-[18%]">Modalità</TableHead>
+                      <TableHead className="font-bold text-antracite w-[22%]">Certificazione</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     <TableRow>
-                      <TableCell className="font-semibold text-turchese">Initium</TableCell>
-                      <TableCell>AI operativa, ChatGPT, Copilot</TableCell>
-                      <TableCell>Produttività + Second Brain</TableCell>
-                      <TableCell>Online/In presenza</TableCell>
-                      <TableCell>Certified AI Productivity</TableCell>
+                      <TableCell className="font-semibold text-turchese w-[15%]">Initium</TableCell>
+                      <TableCell className="w-[22%]">AI operativa, ChatGPT, Copilot</TableCell>
+                      <TableCell className="w-[23%]">Produttività + Second Brain</TableCell>
+                      <TableCell className="w-[18%]">Online/In presenza</TableCell>
+                      <TableCell className="w-[22%]">Certified AI Productivity</TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell className="font-semibold text-arancio">Structura</TableCell>
-                      <TableCell>Second Brain aziendale</TableCell>
-                      <TableCell>Knowledge management scalabile</TableCell>
-                      <TableCell>Online/In presenza</TableCell>
-                      <TableCell>Certified Second Brain Impl.</TableCell>
+                      <TableCell className="font-semibold text-arancio w-[15%]">Structura</TableCell>
+                      <TableCell className="w-[22%]">Second Brain aziendale</TableCell>
+                      <TableCell className="w-[23%]">Knowledge management scalabile</TableCell>
+                      <TableCell className="w-[18%]">Online/In presenza</TableCell>
+                      <TableCell className="w-[22%]">Certified Second Brain Impl.</TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell className="font-semibold text-turchese">Communitas</TableCell>
-                      <TableCell>Collaborazione intelligente</TableCell>
-                      <TableCell>Project & team management</TableCell>
-                      <TableCell>Online/In presenza</TableCell>
-                      <TableCell>Certified Collaboration Hub</TableCell>
+                      <TableCell className="font-semibold text-turchese w-[15%]">Communitas</TableCell>
+                      <TableCell className="w-[22%]">Collaborazione intelligente</TableCell>
+                      <TableCell className="w-[23%]">Project & team management</TableCell>
+                      <TableCell className="w-[18%]">Online/In presenza</TableCell>
+                      <TableCell className="w-[22%]">Certified Collaboration Hub</TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell className="font-semibold text-antracite">Transforma</TableCell>
-                      <TableCell>Ecosistema integrato</TableCell>
-                      <TableCell>Roadmap personalizzata, ROI</TableCell>
-                      <TableCell>Su misura</TableCell>
-                      <TableCell>Ecosistema digitale Noscite</TableCell>
+                      <TableCell className="font-semibold text-antracite w-[15%]">Transforma</TableCell>
+                      <TableCell className="w-[22%]">Ecosistema integrato</TableCell>
+                      <TableCell className="w-[23%]">Roadmap personalizzata, ROI</TableCell>
+                      <TableCell className="w-[18%]">Su misura</TableCell>
+                      <TableCell className="w-[22%]">Ecosistema digitale Noscite</TableCell>
                     </TableRow>
                   </TableBody>
                 </Table>
