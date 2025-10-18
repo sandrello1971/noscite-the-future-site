@@ -1,7 +1,30 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { SEO } from "@/components/SEO";
-import { Lightbulb, Users, Target, ArrowRight, BookOpen } from "lucide-react";
+import { Lightbulb, Users, Target, ArrowRight, BookOpen, CheckCircle2, TrendingUp, Link2, Map, Award, ChevronDown } from "lucide-react";
+import { useState } from "react";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+
+const FAQItem = ({ question, answer }: { question: string; answer: string }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <div className="mb-4">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full flex items-center justify-between p-6 bg-beige rounded-lg hover:bg-beige/80 transition-colors"
+      >
+        <span className="text-lg font-semibold text-antracite text-left">{question}</span>
+        <ChevronDown className={`h-5 w-5 text-turchese transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+      </button>
+      {isOpen && (
+        <div className="p-6 bg-white border-l-4 border-turchese mt-2 rounded-lg">
+          <p className="text-antracite/80 leading-relaxed">{answer}</p>
+        </div>
+      )}
+    </div>
+  );
+};
 
 const Atheneum = () => {
   const percorsi = [
@@ -39,18 +62,30 @@ const Atheneum = () => {
       
       <main className="pt-16">
         {/* Hero Section */}
-        <section className="py-20 bg-antracite">
-          <div className="container mx-auto px-4 lg:px-8">
+        <section className="relative py-32 bg-gradient-to-br from-antracite via-antracite to-turchese/20 overflow-hidden">
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute inset-0" style={{
+              backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)',
+              backgroundSize: '40px 40px'
+            }}></div>
+          </div>
+          <div className="container mx-auto px-4 lg:px-8 relative z-10">
             <div className="max-w-4xl mx-auto text-center">
-              <h1 className="text-5xl lg:text-7xl font-serif-elegant font-bold text-white mb-8">
+              <h1 className="text-5xl lg:text-7xl font-serif-elegant font-bold text-white mb-8 animate-fade-in">
                 <span className="font-latin-italic">Atheneum</span>
               </h1>
-              <p className="text-2xl text-arancio font-latin-italic mb-6">
-                Scientia potentia est
+              <p className="text-2xl lg:text-3xl text-white leading-relaxed mb-8 animate-fade-in font-medium">
+                Trasforma la tua PMI con la conoscenza digitale. Scopri i percorsi Noscite per innovare, semplificare e crescere.
               </p>
-              <p className="text-xl text-grigio-chiaro leading-relaxed">
-                La conoscenza è potere, soprattutto quando condivisa. L'Atheneum di Noscite è lo spazio dove sapere e pratica si incontrano.
-              </p>
+              <div className="flex justify-center gap-4 animate-fade-in">
+                <a 
+                  href="#percorsi"
+                  className="inline-flex items-center px-8 py-4 bg-arancio text-white font-medium rounded-lg hover:bg-arancio/90 transition-colors duration-300"
+                >
+                  Scopri i percorsi
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </a>
+              </div>
             </div>
           </div>
         </section>
@@ -70,40 +105,92 @@ const Atheneum = () => {
           </div>
         </section>
 
-        {/* Overview Section */}
+        {/* Infografica Vantaggi */}
         <section className="py-16 bg-beige">
           <div className="container mx-auto px-4 lg:px-8">
             <div className="max-w-6xl mx-auto">
-              <div className="bg-white rounded-xl p-8 lg:p-12">
-                <div className="grid lg:grid-cols-3 gap-8 mb-12">
-                  <div className="text-center">
-                    <div className="text-4xl font-bold text-turchese mb-2">68h</div>
-                    <p className="text-antracite font-medium">Durata complessiva</p>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-4xl font-bold text-arancio mb-2">12</div>
-                    <p className="text-antracite font-medium">Max partecipanti per corso</p>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-4xl font-bold text-turchese mb-2">3</div>
-                    <p className="text-antracite font-medium">Corsi specialistici</p>
-                  </div>
+              <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-6">
+                <div className="bg-white rounded-xl p-6 text-center hover-lift">
+                  <CheckCircle2 className="h-12 w-12 text-turchese mx-auto mb-4" />
+                  <p className="text-antracite font-medium">Meno tool, più efficienza</p>
                 </div>
-                <div className="text-center">
-                  <p className="text-lg text-antracite/80 mb-4">
-                    <strong>Target:</strong> Imprenditori, manager, responsabili di funzione, personale operativo PMI (5-50 dipendenti)
-                  </p>
-                  <p className="text-lg text-antracite/80">
-                    <strong>Modalità:</strong> In presenza o online
-                  </p>
+                <div className="bg-white rounded-xl p-6 text-center hover-lift">
+                  <TrendingUp className="h-12 w-12 text-arancio mx-auto mb-4" />
+                  <p className="text-antracite font-medium">Crescita del know-how digitale</p>
+                </div>
+                <div className="bg-white rounded-xl p-6 text-center hover-lift">
+                  <Link2 className="h-12 w-12 text-turchese mx-auto mb-4" />
+                  <p className="text-antracite font-medium">Collaborazione potenziata</p>
+                </div>
+                <div className="bg-white rounded-xl p-6 text-center hover-lift">
+                  <Map className="h-12 w-12 text-arancio mx-auto mb-4" />
+                  <p className="text-antracite font-medium">Roadmap personalizzata</p>
+                </div>
+                <div className="bg-white rounded-xl p-6 text-center hover-lift">
+                  <Award className="h-12 w-12 text-turchese mx-auto mb-4" />
+                  <p className="text-antracite font-medium">Certificazione finale</p>
                 </div>
               </div>
             </div>
           </div>
         </section>
 
+        {/* Tabella Comparativa */}
+        <section className="py-16 bg-white">
+          <div className="container mx-auto px-4 lg:px-8">
+            <div className="max-w-6xl mx-auto">
+              <h2 className="text-3xl lg:text-4xl font-serif-elegant font-bold text-antracite mb-12 text-center">
+                Confronta i percorsi
+              </h2>
+              <div className="bg-beige rounded-xl p-8 overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="font-bold text-antracite">Percorso</TableHead>
+                      <TableHead className="font-bold text-antracite">Focus</TableHead>
+                      <TableHead className="font-bold text-antracite">Output finale</TableHead>
+                      <TableHead className="font-bold text-antracite">Modalità</TableHead>
+                      <TableHead className="font-bold text-antracite">Certificazione</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell className="font-semibold text-turchese">Initium</TableCell>
+                      <TableCell>AI operativa, ChatGPT, Copilot</TableCell>
+                      <TableCell>Produttività + Second Brain</TableCell>
+                      <TableCell>Online/In presenza</TableCell>
+                      <TableCell>Certified AI Productivity</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell className="font-semibold text-arancio">Structura</TableCell>
+                      <TableCell>Second Brain aziendale</TableCell>
+                      <TableCell>Knowledge management scalabile</TableCell>
+                      <TableCell>Online/In presenza</TableCell>
+                      <TableCell>Certified Second Brain Impl.</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell className="font-semibold text-turchese">Communitas</TableCell>
+                      <TableCell>Collaborazione intelligente</TableCell>
+                      <TableCell>Project & team management</TableCell>
+                      <TableCell>Online/In presenza</TableCell>
+                      <TableCell>Certified Collaboration Hub</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell className="font-semibold text-antracite">Transforma</TableCell>
+                      <TableCell>Ecosistema integrato</TableCell>
+                      <TableCell>Roadmap personalizzata, ROI</TableCell>
+                      <TableCell>Su misura</TableCell>
+                      <TableCell>Ecosistema digitale Noscite</TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Percorsi Section */}
-        <section className="py-20 bg-white">
+        <section id="percorsi" className="py-20 bg-beige">
           <div className="container mx-auto px-4 lg:px-8">
             <div className="max-w-6xl mx-auto">
               <h2 className="text-3xl lg:text-4xl font-serif-elegant font-bold text-antracite mb-16 text-center">
@@ -376,20 +463,134 @@ const Atheneum = () => {
           </div>
         </section>
 
-        {/* Philosophy Section */}
-        <section className="py-20 bg-beige">
+        {/* Timeline Grafica */}
+        <section className="py-20 bg-white">
           <div className="container mx-auto px-4 lg:px-8">
-            <div className="max-w-4xl mx-auto text-center">
-              <div className="bg-white p-12 rounded-xl">
-                <h2 className="text-2xl font-serif-elegant font-bold text-antracite mb-8">
-                  La nostra filosofia
-                </h2>
-                <div className="space-y-6 text-lg text-antracite/80 leading-relaxed">
-                  <p><em>Atheneum è la casa del sapere digitale.</em></p>
-                  <p><em>Ogni percorso è un invito a riflettere e a trasformare.</em></p>
-                  <p><strong>Conoscenza, metodo, visione:</strong> le tre virtù che guidano la nostra formazione.</p>
+            <div className="max-w-6xl mx-auto">
+              <h2 className="text-3xl lg:text-4xl font-serif-elegant font-bold text-antracite mb-12 text-center">
+                Il percorso del cambiamento
+              </h2>
+              <div className="relative">
+                <div className="absolute top-1/2 left-0 right-0 h-1 bg-turchese/20 -translate-y-1/2 hidden lg:block"></div>
+                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 relative">
+                  <div className="bg-beige rounded-xl p-8 text-center hover-lift">
+                    <div className="w-16 h-16 bg-turchese rounded-full flex items-center justify-center mx-auto mb-4 relative z-10">
+                      <span className="text-white font-bold text-xl">1</span>
+                    </div>
+                    <h3 className="text-xl font-bold text-antracite mb-2">Mese 1</h3>
+                    <p className="text-turchese font-semibold mb-2">AI operativa per tutti</p>
+                    <p className="text-antracite/70 text-sm">Initium</p>
+                  </div>
+                  <div className="bg-beige rounded-xl p-8 text-center hover-lift">
+                    <div className="w-16 h-16 bg-arancio rounded-full flex items-center justify-center mx-auto mb-4 relative z-10">
+                      <span className="text-white font-bold text-xl">2</span>
+                    </div>
+                    <h3 className="text-xl font-bold text-antracite mb-2">Mesi 3-4</h3>
+                    <p className="text-arancio font-semibold mb-2">Second Brain aziendale</p>
+                    <p className="text-antracite/70 text-sm">Structura</p>
+                  </div>
+                  <div className="bg-beige rounded-xl p-8 text-center hover-lift">
+                    <div className="w-16 h-16 bg-turchese rounded-full flex items-center justify-center mx-auto mb-4 relative z-10">
+                      <span className="text-white font-bold text-xl">3</span>
+                    </div>
+                    <h3 className="text-xl font-bold text-antracite mb-2">Mesi 6-7</h3>
+                    <p className="text-turchese font-semibold mb-2">Hub di collaborazione</p>
+                    <p className="text-antracite/70 text-sm">Communitas</p>
+                  </div>
+                  <div className="bg-beige rounded-xl p-8 text-center hover-lift">
+                    <div className="w-16 h-16 bg-arancio rounded-full flex items-center justify-center mx-auto mb-4 relative z-10">
+                      <span className="text-white font-bold text-xl">12</span>
+                    </div>
+                    <h3 className="text-xl font-bold text-antracite mb-2">Mese 12</h3>
+                    <p className="text-arancio font-semibold mb-2">ROI e crescita misurabile</p>
+                    <p className="text-antracite/70 text-sm">Transforma</p>
+                  </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Second Brain Section */}
+        <section className="py-20 bg-gradient-to-br from-turchese/10 to-beige">
+          <div className="container mx-auto px-4 lg:px-8">
+            <div className="max-w-4xl mx-auto text-center">
+              <div className="bg-white rounded-xl p-12 shadow-lg">
+                <BookOpen className="h-16 w-16 text-turchese mx-auto mb-6" />
+                <h2 className="text-3xl font-serif-elegant font-bold text-antracite mb-6">
+                  Il Second Brain aziendale: l'asset strategico
+                </h2>
+                <p className="text-lg text-antracite/80 leading-relaxed">
+                  Il Second Brain aziendale è il sistema che trasforma il know-how disperso in una risorsa accessibile e scalabile, 
+                  permettendo alle PMI di innovare, semplificare e crescere con il supporto dell'AI.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Note di rassicurazione */}
+        <section className="py-16 bg-beige">
+          <div className="container mx-auto px-4 lg:px-8">
+            <div className="max-w-4xl mx-auto">
+              <div className="bg-gradient-to-r from-arancio/10 to-turchese/10 rounded-xl p-8 border-l-4 border-arancio">
+                <p className="text-lg text-antracite leading-relaxed text-center">
+                  <strong>Ogni percorso è modulabile e adattabile</strong> alle esigenze specifiche della tua organizzazione. 
+                  Nessun prezzo fisso: costruiamo insieme la soluzione più efficace.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* FAQ Section */}
+        <section className="py-20 bg-white">
+          <div className="container mx-auto px-4 lg:px-8">
+            <div className="max-w-4xl mx-auto">
+              <h2 className="text-3xl lg:text-4xl font-serif-elegant font-bold text-antracite mb-12 text-center">
+                Domande frequenti
+              </h2>
+              <FAQItem 
+                question="Quanto dura ogni percorso?"
+                answer="Initium: 20h, Structura/Communitas: 24h ciascuno, Transforma: 68h se completo."
+              />
+              <FAQItem 
+                question="I corsi sono personalizzabili?"
+                answer="Sì, costruiamo percorsi su misura per ogni realtà aziendale."
+              />
+              <FAQItem 
+                question="È prevista la formazione in gruppo?"
+                answer="Certo, massima efficacia per team fino a 12 partecipanti."
+              />
+              <FAQItem 
+                question="Serve esperienza tecnica?"
+                answer="No, i percorsi sono pensati per manager e responsabili senza background digitale."
+              />
+              <FAQItem 
+                question="Come posso avere una demo?"
+                answer="Basta compilare il form di contatto o richiedere una call gratuita."
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Intermedia */}
+        <section className="py-16 bg-gradient-to-r from-turchese to-arancio">
+          <div className="container mx-auto px-4 lg:px-8">
+            <div className="max-w-3xl mx-auto text-center">
+              <h3 className="text-3xl font-bold text-white mb-6">
+                Vuoi saperne di più?
+              </h3>
+              <p className="text-xl text-white/90 mb-8">
+                Prenota una consulenza gratuita e scopri il percorso su misura per te e la tua azienda.
+              </p>
+              <a 
+                href="/contactus"
+                className="inline-flex items-center px-8 py-4 bg-white text-turchese font-medium rounded-lg hover:bg-beige transition-colors duration-300"
+              >
+                Prenota ora
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </a>
             </div>
           </div>
         </section>
