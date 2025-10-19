@@ -109,19 +109,29 @@ export default function ContactForm() {
     setLoading(true);
 
     try {
-      // Save message to database
-      const { error } = await supabase
-        .from('contact_messages')
-        .insert({
+      // Use secure edge function with rate limiting and validation
+      const { data, error } = await supabase.functions.invoke('send-contact-email', {
+        body: {
           name: formData.name,
           email: formData.email,
           phone: formData.phone || null,
           company: formData.company || null,
           message: formData.message,
-        });
+        },
+      });
 
       if (error) {
-        throw new Error(error.message);
+        // Handle specific error cases
+        if (error.message?.includes('Rate limit exceeded')) {
+          toast({
+            title: "Troppi tentativi",
+            description: "Hai raggiunto il limite di invii. Riprova più tardi.",
+            variant: "destructive",
+          });
+        } else {
+          throw error;
+        }
+        return;
       }
       
       toast({
@@ -139,6 +149,7 @@ export default function ContactForm() {
       });
       setErrors({});
     } catch (error) {
+      console.error('Contact form error:', error);
       toast({
         title: "Errore nell'invio",
         description: "Si è verificato un errore. Riprova più tardi.",

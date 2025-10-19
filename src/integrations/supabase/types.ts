@@ -667,6 +667,66 @@ export type Database = {
         }
         Relationships: []
       }
+      business_card_scans: {
+        Row: {
+          company_id: string | null
+          contact_id: string | null
+          corrected_data: Json | null
+          created_at: string
+          extracted_data: Json
+          id: string
+          image_url: string
+          ocr_confidence: number | null
+          original_file_name: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          company_id?: string | null
+          contact_id?: string | null
+          corrected_data?: Json | null
+          created_at?: string
+          extracted_data?: Json
+          id?: string
+          image_url: string
+          ocr_confidence?: number | null
+          original_file_name?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          company_id?: string | null
+          contact_id?: string | null
+          corrected_data?: Json | null
+          created_at?: string
+          extracted_data?: Json
+          id?: string
+          image_url?: string
+          ocr_confidence?: number | null
+          original_file_name?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "business_card_scans_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "crm_companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "business_card_scans_contact_id_fkey"
+            columns: ["contact_id"]
+            isOneToOne: false
+            referencedRelation: "crm_contacts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       business_targets: {
         Row: {
           company_id: string
@@ -1516,6 +1576,45 @@ export type Database = {
           },
         ]
       }
+      expense_categories: {
+        Row: {
+          created_at: string
+          created_by: string
+          description: string | null
+          eligible_expenses: string[] | null
+          id: string
+          is_active: boolean
+          max_amount: number | null
+          max_percentage: number | null
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          description?: string | null
+          eligible_expenses?: string[] | null
+          id?: string
+          is_active?: boolean
+          max_amount?: number | null
+          max_percentage?: number | null
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          description?: string | null
+          eligible_expenses?: string[] | null
+          id?: string
+          is_active?: boolean
+          max_amount?: number | null
+          max_percentage?: number | null
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       integration_sync_logs: {
         Row: {
           created_at: string
@@ -1873,6 +1972,42 @@ export type Database = {
           read_at?: string | null
           title?: string
           type?: Database["public"]["Enums"]["notification_type"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      ocr_settings: {
+        Row: {
+          auto_create_company: boolean | null
+          auto_create_contact: boolean | null
+          created_at: string
+          field_mappings: Json | null
+          id: string
+          preferred_language: string
+          quality_threshold: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          auto_create_company?: boolean | null
+          auto_create_contact?: boolean | null
+          created_at?: string
+          field_mappings?: Json | null
+          id?: string
+          preferred_language?: string
+          quality_threshold?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          auto_create_company?: boolean | null
+          auto_create_contact?: boolean | null
+          created_at?: string
+          field_mappings?: Json | null
+          id?: string
+          preferred_language?: string
+          quality_threshold?: number | null
           updated_at?: string
           user_id?: string
         }
@@ -2308,10 +2443,12 @@ export type Database = {
           bando_id: string | null
           created_at: string | null
           created_by: string
+          cup_code: string | null
           description: string | null
           end_date: string | null
           id: string
           notes: string | null
+          parsed_data: Json | null
           progress_percentage: number | null
           project_documents: string[] | null
           project_manager: string | null
@@ -2332,10 +2469,12 @@ export type Database = {
           bando_id?: string | null
           created_at?: string | null
           created_by: string
+          cup_code?: string | null
           description?: string | null
           end_date?: string | null
           id?: string
           notes?: string | null
+          parsed_data?: Json | null
           progress_percentage?: number | null
           project_documents?: string[] | null
           project_manager?: string | null
@@ -2356,10 +2495,12 @@ export type Database = {
           bando_id?: string | null
           created_at?: string | null
           created_by?: string
+          cup_code?: string | null
           description?: string | null
           end_date?: string | null
           id?: string
           notes?: string | null
+          parsed_data?: Json | null
           progress_percentage?: number | null
           project_documents?: string[] | null
           project_manager?: string | null
@@ -2923,7 +3064,7 @@ export type Database = {
       }
       l2_normalize: {
         Args: { "": string } | { "": unknown } | { "": unknown }
-        Returns: string
+        Returns: unknown
       }
       log_admin_access: {
         Args: { p_action: string; p_record_id?: string; p_table_name: string }
