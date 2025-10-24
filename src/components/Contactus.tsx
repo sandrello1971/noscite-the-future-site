@@ -51,13 +51,13 @@ const Contactus = () => {
             {contatti.map((contatto, index) => {
               const IconComponent = contatto.icon;
               const content = (
-                <Card className="bg-card/10 backdrop-blur-sm border-white/20 hover-lift animate-slide-up h-full" style={{ animationDelay: `${index * 100}ms` }}>
+                <Card className="bg-secondary backdrop-blur-sm border-secondary hover-lift animate-slide-up h-full" style={{ animationDelay: `${index * 100}ms` }}>
                   <CardContent className="p-6 text-center">
-                    <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <IconComponent className="h-6 w-6 text-primary" />
+                    <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <IconComponent className="h-6 w-6 text-white" />
                     </div>
                     <h3 className="font-semibold text-white mb-2">{contatto.label}</h3>
-                    <p className="text-white/80 whitespace-pre-line">{contatto.value}</p>
+                    <p className="text-white/90 whitespace-pre-line">{contatto.value}</p>
                   </CardContent>
                 </Card>
               );
