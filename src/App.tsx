@@ -11,7 +11,7 @@ import Valor from "./pages/Valor";
 import Historiae from "./pages/Historiae";
 import Atheneum from "./pages/Atheneum";
 import Contactus from "./pages/Contactus";
-import QuiSumus from "./pages/QuiSumus";
+import ProfilumSocietatis from "./pages/ProfilumSocietatis";
 import ChiSiamo from "./pages/ChiSiamo";
 import Servizi from "./pages/Servizi";
 import Percorsi from "./pages/Percorsi";
@@ -44,7 +44,7 @@ const App = () => (
             <Route path="/historiae" element={<Historiae />} />
             <Route path="/atheneum" element={<Atheneum />} />
             <Route path="/contactus" element={<Contactus />} />
-            <Route path="/qui-sumus" element={<QuiSumus />} />
+            <Route path="/profilum-societatis" element={<ProfilumSocietatis />} />
             <Route path="/chi-siamo" element={<ChiSiamo />} />
             <Route path="/servizi" element={<Servizi />} />
             <Route path="/percorsi" element={<Percorsi />} />

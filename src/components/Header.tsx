@@ -11,8 +11,7 @@ const Header = () => {
   };
 
   const menuItems = [
-    { name: "Qui sumus", path: "/qui-sumus" },
-    { name: "Identitas", path: "/identitas" },
+    { name: "Profilum Societatis", path: "/profilum-societatis" },
     { name: "Methodus", path: "/methodus" },
     { name: "Valor", path: "/valor" },
     { name: "Atheneum", path: "/atheneum" },
