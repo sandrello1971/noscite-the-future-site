@@ -59,7 +59,7 @@ const Contactus = () => {
         </section>
 
         {/* Contact Info Section */}
-        <section className="py-20 bg-beige">
+        <section className="py-20 bg-secondary">
           <div className="container mx-auto px-4 lg:px-8">
             <div className="max-w-4xl mx-auto">
               <div className="grid md:grid-cols-2 gap-8">
@@ -70,23 +70,23 @@ const Contactus = () => {
                     <div key={contatto.label} className="animate-slide-up" style={{ animationDelay: `${index * 100}ms` }}>
                       <a 
                         href={contatto.href}
-                        className="block bg-white p-8 rounded-xl hover:shadow-lg transition-all duration-300 group"
+                        className="block bg-secondary/80 backdrop-blur-sm p-8 rounded-xl hover:shadow-lg transition-all duration-300 group border border-white/20"
                         target={contatto.href.startsWith('http') ? '_blank' : undefined}
                         rel={contatto.href.startsWith('http') ? 'noopener noreferrer' : undefined}
                       >
                         <div className="flex items-center">
-                          <div className="w-16 h-16 bg-turchese/10 rounded-full flex items-center justify-center mr-6 group-hover:bg-arancio/10 transition-colors duration-300">
-                            <IconComponent className="h-8 w-8 text-turchese group-hover:text-arancio transition-colors duration-300" />
+                          <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mr-6 group-hover:bg-white/20 transition-colors duration-300">
+                            <IconComponent className="h-8 w-8 text-white" />
                           </div>
                           <div className="flex-1">
-                            <h3 className="text-lg font-bold text-antracite mb-2">
+                            <h3 className="text-lg font-bold text-white mb-2">
                               {contatto.label}
                             </h3>
-                            <p className="text-antracite/80 group-hover:text-arancio transition-colors duration-300">
+                            <p className="text-white/90 group-hover:text-white transition-colors duration-300">
                               {contatto.value}
                             </p>
                           </div>
-                          <ArrowRight className="h-5 w-5 text-turchese/60 group-hover:text-arancio group-hover:translate-x-1 transition-all duration-300" />
+                          <ArrowRight className="h-5 w-5 text-white/60 group-hover:text-white group-hover:translate-x-1 transition-all duration-300" />
                         </div>
                       </a>
                     </div>
