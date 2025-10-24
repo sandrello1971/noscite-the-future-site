@@ -8,8 +8,8 @@ const Contactus = () => {
     {
       icon: Mail,
       label: "Email",
-      value: "notitiae@noscite.it",
-      href: "mailto:notitiae@noscite.it"
+      value: "info@noscite.it",
+      href: "mailto:info@noscite.it"
     },
     {
       icon: Phone,

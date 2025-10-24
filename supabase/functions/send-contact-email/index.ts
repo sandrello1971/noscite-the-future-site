@@ -156,7 +156,7 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error("Verifica reCAPTCHA fallita");
     }
 
-    console.log('Sending contact email from:', emailValidation.sanitized, 'to: notitiae@noscite.it');
+    console.log('Sending contact email from:', emailValidation.sanitized, 'to: info@noscite.it');
 
     // Escape all user input for HTML safety
     const escapedName = escapeHtml(nameValidation.sanitized);
@@ -165,10 +165,10 @@ const handler = async (req: Request): Promise<Response> => {
     const escapedCompany = company ? escapeHtml(company.trim()) : null;
     const escapedMessage = escapeHtml(messageValidation.sanitized).replace(/\n/g, '<br>');
 
-    // Send email to notitiae@noscite.it
+    // Send email to info@noscite.it
     const emailResponse = await resend.emails.send({
       from: "Noscite Contact Form <onboarding@resend.dev>",
-      to: ["notitiae@noscite.it"],
+      to: ["info@noscite.it"],
       subject: `Nuova richiesta di contatto da ${escapedName}`,
       html: `
         <h2>Nuova richiesta di contatto</h2>

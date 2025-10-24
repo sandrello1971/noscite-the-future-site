@@ -183,7 +183,7 @@ export default function ContactForm() {
                     <Mail className="h-6 w-6 text-primary mt-1" />
                     <div>
                       <h4 className="font-medium">Email</h4>
-                      <p className="text-muted-foreground">notitiae@noscite.it</p>
+                      <p className="text-muted-foreground">info@noscite.it</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-4">
