@@ -33,7 +33,7 @@ const Hero = () => {
                 <br />
                 <span className="font-latin-italic text-secondary">nova Virtus</span>
               </h1>
-              <p className="text-xl lg:text-2xl text-white/90 leading-relaxed max-w-3xl mx-auto">
+              <p className="text-xl lg:text-2xl text-foreground leading-relaxed max-w-3xl mx-auto">
                 Il digitale non è solo tecnologia, ma capacità di creare valore attraverso metodo, visione e innovazione.
               </p>
             </div>
