@@ -2,6 +2,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { SEO } from "@/components/SEO";
 import { Mail, Phone, MapPin, Linkedin, ArrowRight } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 
 const Contactus = () => {
   const contatti = [
@@ -62,33 +63,28 @@ const Contactus = () => {
         <section className="py-20 bg-primary">
           <div className="container mx-auto px-4 lg:px-8">
             <div className="max-w-4xl mx-auto">
-              <div className="grid md:grid-cols-2 gap-8">
+              <div className="grid md:grid-cols-2 gap-6">
                 {contatti.map((contatto, index) => {
                   const IconComponent = contatto.icon;
-                  
-                  return (
-                    <div key={contatto.label} className="animate-slide-up" style={{ animationDelay: `${index * 100}ms` }}>
-                      <a 
-                        href={contatto.href}
-                        className="block bg-secondary p-8 rounded-xl hover:bg-secondary/80 hover:shadow-lg transition-all duration-300 group border border-secondary"
-                        target={contatto.href.startsWith('http') ? '_blank' : undefined}
-                        rel={contatto.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                      >
-                        <div className="flex items-center">
-                          <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mr-6 group-hover:bg-white/30 transition-colors duration-300">
-                            <IconComponent className="h-8 w-8 text-white" />
-                          </div>
-                          <div className="flex-1">
-                            <h3 className="text-lg font-bold text-white mb-2">
-                              {contatto.label}
-                            </h3>
-                            <p className="text-white/90 group-hover:text-white transition-colors duration-300">
-                              {contatto.value}
-                            </p>
-                          </div>
-                          <ArrowRight className="h-5 w-5 text-white/60 group-hover:text-white group-hover:translate-x-1 transition-all duration-300" />
+                  const content = (
+                    <Card className="bg-secondary backdrop-blur-sm border-secondary hover-lift animate-slide-up h-full" style={{ animationDelay: `${index * 100}ms` }}>
+                      <CardContent className="p-6 text-center">
+                        <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                          <IconComponent className="h-6 w-6 text-white" />
                         </div>
-                      </a>
+                        <h3 className="font-semibold text-white mb-2">{contatto.label}</h3>
+                        <p className="text-white/90 whitespace-pre-line">{contatto.value}</p>
+                      </CardContent>
+                    </Card>
+                  );
+
+                  return contatto.href ? (
+                    <a key={contatto.label} href={contatto.href} className="block">
+                      {content}
+                    </a>
+                  ) : (
+                    <div key={contatto.label}>
+                      {content}
                     </div>
                   );
                 })}
