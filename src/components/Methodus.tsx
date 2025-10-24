@@ -76,10 +76,10 @@ const Methodus = () => {
                       </div>
                     </div>
                     
-                    {/* Timeline Node with Golden Color */}
+                    {/* Timeline Node with Orange Color */}
                     <div className="hidden lg:block relative z-10">
-                      <div className="w-8 h-8 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center shadow-lg animate-pulse">
-                        <span className="text-antracite font-bold text-sm">{step.number}</span>
+                      <div className="w-8 h-8 bg-gradient-to-br from-secondary to-secondary/80 rounded-full flex items-center justify-center shadow-lg animate-pulse">
+                        <span className="text-white font-bold text-sm">{step.number}</span>
                       </div>
                     </div>
                     

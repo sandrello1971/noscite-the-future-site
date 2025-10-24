@@ -57,8 +57,8 @@ const ProfilumSocietatis = () => {
               <h1 className="text-5xl lg:text-7xl font-serif-elegant font-bold text-white mb-8">
                 <span className="font-latin-italic">Profilum Societatis</span>
               </h1>
-              <p className="text-2xl text-secondary font-medium mb-8">
-                Chi siamo
+              <p className="text-2xl text-white font-medium mb-8">
+                Company Profile
               </p>
             </div>
           </div>
