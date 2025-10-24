@@ -11,6 +11,7 @@ const Header = () => {
   };
 
   const menuItems = [
+    { name: "Qui sumus", path: "/qui-sumus" },
     { name: "Identitas", path: "/identitas" },
     { name: "Methodus", path: "/methodus" },
     { name: "Valor", path: "/valor" },
