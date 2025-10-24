@@ -26,8 +26,8 @@ All colors MUST be HSL.
     --secondary: 23 71% 61%;   /* #E28A53 */
     --secondary-foreground: 0 0% 100%;
 
-    /* Antracite for backgrounds and emphasis */
-    --antracite: 0 0% 7%;      /* #121212 */
+    /* Antracite cambiato a turchese */
+    --antracite: 178 35% 51%;  /* #55B1AE - Turchese */
     --antracite-foreground: 0 0% 100%;
 
     /* Beige chiaro - sfondo alternativo */
@@ -79,13 +79,13 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 0 0% 7%;     /* Antracite scuro */
+    --background: 178 35% 51%; /* Turchese */
     --foreground: 0 0% 100%;   /* Bianco puro */
 
-    --card: 0 0% 7%;
+    --card: 178 35% 51%;
     --card-foreground: 0 0% 100%;
 
-    --popover: 0 0% 7%;
+    --popover: 178 35% 51%;
     --popover-foreground: 0 0% 100%;
 
     --primary: 178 35% 51%;    /* Turchese del logo */
@@ -94,7 +94,7 @@ All colors MUST be HSL.
     --secondary: 23 71% 61%;   /* Arancio del logo */
     --secondary-foreground: 0 0% 100%;
 
-    --antracite: 0 0% 7%;
+    --antracite: 178 35% 51%;  /* Turchese invece di nero */
     --antracite-foreground: 0 0% 100%;
 
     --beige: 0 0% 91%;
