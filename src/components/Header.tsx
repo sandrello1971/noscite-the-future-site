@@ -19,7 +19,7 @@ const Header = () => {
   ];
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-sm border-b border-white/10">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white/20 backdrop-blur-sm border-b border-foreground/10">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -37,7 +37,7 @@ const Header = () => {
               <Link
                 key={item.name}
                 to={item.path}
-                className="text-white hover:text-secondary transition-colors duration-300 font-medium relative group"
+                className="text-foreground hover:text-secondary transition-colors duration-300 font-medium relative group"
               >
                 {item.name}
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-secondary transition-all duration-300 group-hover:w-full"></span>
@@ -50,7 +50,7 @@ const Header = () => {
             variant="ghost"
             size="sm"
             onClick={toggleMenu}
-            className="md:hidden text-white hover:text-secondary"
+            className="md:hidden text-foreground hover:text-secondary"
           >
             {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </Button>
@@ -58,13 +58,13 @@ const Header = () => {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden py-4 border-t border-white/20">
+          <div className="md:hidden py-4 border-t border-foreground/20">
             <nav className="flex flex-col space-y-4">
               {menuItems.map((item) => (
                 <Link
                   key={item.name}
                   to={item.path}
-                  className="text-white hover:text-secondary transition-colors duration-300 font-medium"
+                  className="text-foreground hover:text-secondary transition-colors duration-300 font-medium"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.name}
