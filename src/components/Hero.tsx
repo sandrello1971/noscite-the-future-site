@@ -14,7 +14,7 @@ const Hero = () => {
           muted
           playsInline
           preload="auto"
-          className="w-full h-full object-cover opacity-70"
+          className="w-full h-full object-cover"
           onError={(e) => console.error('Video error:', e)}
           onLoadStart={() => console.log('Video loading started')}
           onCanPlay={() => console.log('Video can play')}
@@ -22,7 +22,6 @@ const Hero = () => {
           <source src="/noscitelogo.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/30 via-primary/50 to-primary/70"></div>
       </div>
       
       <div className="container mx-auto px-4 lg:px-8 relative z-20">
