@@ -8,8 +8,8 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Noscite Brand Identity - New Color Palette */
-    --background: 33 19% 96%;  /* Beige chiaro #F5F0E8 */
+    /* Noscite Brand Identity - Colori Istituzionali */
+    --background: 0 0% 100%;   /* Bianco #FFFFFF */
     --foreground: 0 0% 7%;     /* Antracite scuro #121212 */
 
     --card: 0 0% 100%;         /* Bianco puro #FFFFFF */
@@ -18,46 +18,46 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 7%;
 
-    /* Primary - Turchese-azzurro */
-    --primary: 177 35% 50%;    /* #4AB0AA */
+    /* Primary - Turchese del logo */
+    --primary: 178 35% 51%;    /* #55B1AE */
     --primary-foreground: 0 0% 100%;
 
-    /* Secondary - Arancio-ramato */
-    --secondary: 22 58% 62%;   /* #E48757 */
+    /* Secondary - Arancio del logo */
+    --secondary: 23 71% 61%;   /* #E28A53 */
     --secondary-foreground: 0 0% 100%;
 
     /* Antracite for backgrounds and emphasis */
     --antracite: 0 0% 7%;      /* #121212 */
     --antracite-foreground: 0 0% 100%;
 
-    /* Beige chiaro */
-    --beige: 33 19% 96%;       /* #F5F0E8 */
+    /* Beige chiaro - sfondo alternativo */
+    --beige: 0 0% 91%;         /* #E8E8E8 */
     --beige-foreground: 0 0% 7%;
 
     /* Grigio chiaro */
-    --grigio-chiaro: 0 0% 80%; /* #CCCCCC */
+    --grigio-chiaro: 0 0% 91%; /* #E8E8E8 */
     --grigio-chiaro-foreground: 0 0% 7%;
 
     /* Turchese */
-    --turchese: 177 35% 50%;   /* #4AB0AA */
+    --turchese: 178 35% 51%;   /* #55B1AE */
     --turchese-foreground: 0 0% 100%;
 
     /* Arancio */
-    --arancio: 22 58% 62%;     /* #E48757 */
+    --arancio: 23 71% 61%;     /* #E28A53 */
     --arancio-foreground: 0 0% 100%;
 
-    --muted: 0 0% 80%;         /* Grigio chiaro #CCCCCC */
+    --muted: 0 0% 91%;         /* Grigio chiaro #E8E8E8 */
     --muted-foreground: 0 0% 29%;
 
-    --accent: 177 35% 50%;
+    --accent: 178 35% 51%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 90%;
-    --input: 0 0% 95%;
-    --ring: 177 35% 50%;
+    --border: 0 0% 91%;
+    --input: 0 0% 96%;
+    --ring: 178 35% 51%;
 
     --radius: 0.5rem;
 
@@ -88,31 +88,31 @@ All colors MUST be HSL.
     --popover: 0 0% 7%;
     --popover-foreground: 0 0% 100%;
 
-    --primary: 177 35% 50%;    /* Turchese-azzurro */
+    --primary: 178 35% 51%;    /* Turchese del logo */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 22 58% 62%;   /* Arancio-ramato */
+    --secondary: 23 71% 61%;   /* Arancio del logo */
     --secondary-foreground: 0 0% 100%;
 
     --antracite: 0 0% 7%;
     --antracite-foreground: 0 0% 100%;
 
-    --beige: 33 19% 96%;
+    --beige: 0 0% 91%;
     --beige-foreground: 0 0% 7%;
 
-    --grigio-chiaro: 0 0% 80%;
+    --grigio-chiaro: 0 0% 91%;
     --grigio-chiaro-foreground: 0 0% 7%;
 
-    --turchese: 177 35% 50%;
+    --turchese: 178 35% 51%;
     --turchese-foreground: 0 0% 100%;
 
-    --arancio: 22 58% 62%;
+    --arancio: 23 71% 61%;
     --arancio-foreground: 0 0% 100%;
 
     --muted: 0 0% 20%;
     --muted-foreground: 0 0% 80%;
 
-    --accent: 177 35% 50%;
+    --accent: 178 35% 51%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 62.8% 30.6%;
@@ -120,7 +120,7 @@ All colors MUST be HSL.
 
     --border: 0 0% 20%;
     --input: 0 0% 20%;
-    --ring: 177 35% 50%;
+    --ring: 178 35% 51%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
