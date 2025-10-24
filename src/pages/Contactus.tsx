@@ -70,7 +70,7 @@ const Contactus = () => {
                     <div key={contatto.label} className="animate-slide-up" style={{ animationDelay: `${index * 100}ms` }}>
                       <a 
                         href={contatto.href}
-                        className="block bg-secondary p-8 rounded-xl hover:shadow-lg transition-all duration-300 group border border-secondary"
+                        className="block bg-secondary p-8 rounded-xl hover:bg-secondary/80 hover:shadow-lg transition-all duration-300 group border border-secondary"
                         target={contatto.href.startsWith('http') ? '_blank' : undefined}
                         rel={contatto.href.startsWith('http') ? 'noopener noreferrer' : undefined}
                       >
@@ -153,7 +153,7 @@ const Contactus = () => {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <a 
                   href="mailto:info@noscite.it"
-                  className="inline-flex items-center justify-center px-8 py-4 bg-arancio text-white font-medium rounded-lg hover:bg-turchese transition-colors duration-300"
+                  className="inline-flex items-center justify-center px-8 py-4 bg-secondary text-white font-medium rounded-lg hover:bg-secondary/80 transition-colors duration-300"
                 >
                   Scrivi una email
                   <Mail className="ml-2 h-5 w-5" />

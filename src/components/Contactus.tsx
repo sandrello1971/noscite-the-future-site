@@ -75,7 +75,7 @@ const Contactus = () => {
           </div>
 
           <div className="animate-fade-in">
-            <Button variant="secondary" size="lg" asChild className="hover:bg-primary hover:border-primary transition-colors duration-300">
+            <Button variant="secondary" size="lg" asChild className="hover:bg-secondary/80 hover:border-secondary transition-colors duration-300">
               <Link to="/contatti">
                 <Mail className="mr-2 h-5 w-5" />
                 Inizia la conversazione

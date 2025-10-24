@@ -43,7 +43,7 @@ const Hero = () => {
                 variant="secondary" 
                 size="lg" 
                 asChild 
-                className="bg-secondary text-white hover:bg-primary border-secondary hover:border-primary transition-all duration-300 text-lg px-8 py-6"
+                className="bg-secondary text-white hover:bg-secondary/80 border-secondary hover:border-secondary transition-all duration-300 text-lg px-8 py-6"
               >
                 <Link to="/methodus">
                   Scopri il nostro approccio
