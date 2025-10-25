@@ -18,7 +18,10 @@ import {
   Calendar,
   Users,
   Shield,
-  AlertTriangle
+  AlertTriangle,
+  RefreshCw,
+  Database,
+  CheckCircle2
 } from "lucide-react";
 import BlogEditor from "@/components/BlogEditor";
 import DocumentManager from "@/components/DocumentManager";
@@ -38,6 +41,7 @@ const AdminDashboard = () => {
     subscribed_at: string;
     active: boolean;
   }>>([]);
+  const [isSyncing, setIsSyncing] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -147,6 +151,43 @@ const AdminDashboard = () => {
       loadBlogPosts();
     } catch (error) {
       console.error('Error updating post:', error);
+    }
+  };
+
+  const handleSyncKnowledgeBase = async () => {
+    if (!confirm('Vuoi sincronizzare il knowledge base con i contenuti aggiornati del sito? Questa operazione potrebbe richiedere alcuni minuti.')) {
+      return;
+    }
+
+    setIsSyncing(true);
+    
+    try {
+      const { data, error } = await supabase.functions.invoke('sync-knowledge-base');
+
+      if (error) throw error;
+
+      toast({
+        title: "Sincronizzazione completata",
+        description: `${data.synced} contenuti sincronizzati su ${data.total} totali.`,
+      });
+
+      if (data.errors && data.errors.length > 0) {
+        console.error('Sync errors:', data.errors);
+        toast({
+          title: "Alcuni errori durante la sincronizzazione",
+          description: `${data.errors.length} contenuti non sono stati sincronizzati.`,
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error('Error syncing knowledge base:', error);
+      toast({
+        title: "Errore durante la sincronizzazione",
+        description: error instanceof Error ? error.message : "Errore sconosciuto",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSyncing(false);
     }
   };
 
@@ -264,10 +305,11 @@ const AdminDashboard = () => {
       {/* Main Content */}
       <div className="container mx-auto px-4 lg:px-8 py-8">
         <Tabs defaultValue="blog" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="blog">Gestione Blog</TabsTrigger>
             <TabsTrigger value="documents">Gestione Documenti</TabsTrigger>
             <TabsTrigger value="newsletter">Newsletter</TabsTrigger>
+            <TabsTrigger value="knowledge">Knowledge Base</TabsTrigger>
           </TabsList>
 
           {/* Blog Management */}
@@ -383,6 +425,90 @@ const AdminDashboard = () => {
                     ))}
                   </div>
                 )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Knowledge Base Management */}
+          <TabsContent value="knowledge" className="space-y-6">
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-bold">Knowledge Base Chatbot</h2>
+            </div>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Database className="h-5 w-5" />
+                  <span>Sincronizzazione Automatica</span>
+                </CardTitle>
+                <CardDescription>
+                  Aggiorna il knowledge base del chatbot con i contenuti più recenti del sito
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <Alert>
+                  <AlertDescription>
+                    La sincronizzazione estrae automaticamente i contenuti dalle pagine principali del sito (Atheneum, Profilum Societatis, Servizi, Contatti) 
+                    e aggiorna il knowledge base utilizzato dal chatbot per rispondere alle domande degli utenti.
+                  </AlertDescription>
+                </Alert>
+
+                <div className="bg-muted p-6 rounded-lg space-y-4">
+                  <h3 className="font-semibold text-lg">Contenuti sincronizzati:</h3>
+                  <ul className="space-y-2 text-sm">
+                    <li className="flex items-start">
+                      <CheckCircle2 className="h-4 w-4 text-primary mr-2 mt-0.5" />
+                      <span><strong>Atheneum:</strong> Tutti i percorsi formativi (Initium, Structura, Communitas, Transforma)</span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle2 className="h-4 w-4 text-primary mr-2 mt-0.5" />
+                      <span><strong>Profilum Societatis:</strong> Informazioni aziendali, mission, vision, valori</span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle2 className="h-4 w-4 text-primary mr-2 mt-0.5" />
+                      <span><strong>Servizi:</strong> Consulenza, formazione, implementazione, supporto</span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle2 className="h-4 w-4 text-primary mr-2 mt-0.5" />
+                      <span><strong>Contatti:</strong> Informazioni di contatto e modalità</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="flex items-center justify-between pt-4 border-t">
+                  <div className="space-y-1">
+                    <p className="text-sm font-medium">Sincronizza ora</p>
+                    <p className="text-sm text-muted-foreground">L'operazione richiede circa 1-2 minuti</p>
+                  </div>
+                  <Button
+                    onClick={handleSyncKnowledgeBase}
+                    disabled={isSyncing}
+                    className="flex items-center space-x-2"
+                  >
+                    <RefreshCw className={`h-4 w-4 ${isSyncing ? 'animate-spin' : ''}`} />
+                    <span>{isSyncing ? 'Sincronizzazione...' : 'Sincronizza Knowledge Base'}</span>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Come funziona</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <ol className="space-y-3 list-decimal list-inside text-sm">
+                  <li>Il sistema estrae il contenuto testuale dalle pagine principali del sito</li>
+                  <li>Genera embeddings AI per ogni contenuto usando OpenAI</li>
+                  <li>Salva i contenuti nel database knowledge_base</li>
+                  <li>Il chatbot usa questi contenuti per rispondere alle domande in modo preciso</li>
+                </ol>
+                <Alert>
+                  <AlertDescription>
+                    <strong>Quando sincronizzare:</strong> Esegui la sincronizzazione ogni volta che aggiorni contenuti importanti 
+                    sulle pagine del sito (nuovi percorsi formativi, modifiche ai servizi, aggiornamenti aziendali, ecc.).
+                  </AlertDescription>
+                </Alert>
               </CardContent>
             </Card>
           </TabsContent>
