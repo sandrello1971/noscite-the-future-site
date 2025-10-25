@@ -21,7 +21,10 @@ import {
   Shield,
   AlertTriangle,
   LogOut,
-  ArrowLeft
+  ArrowLeft,
+  RefreshCw,
+  Database,
+  CheckCircle2
 } from "lucide-react";
 import BlogEditor from "@/components/BlogEditor";
 import DocumentManager from "@/components/DocumentManager";
@@ -37,6 +40,7 @@ export default function NosciteAdminDashboard() {
   const [documents, setDocuments] = useState<Document[]>([]);
   const [showBlogEditor, setShowBlogEditor] = useState(false);
   const [editingPost, setEditingPost] = useState<BlogPost | null>(null);
+  const [isSyncing, setIsSyncing] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -189,6 +193,29 @@ export default function NosciteAdminDashboard() {
     }
   };
 
+  const handleSyncKnowledgeBase = async () => {
+    setIsSyncing(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('sync-knowledge-base');
+      
+      if (error) throw error;
+      
+      toast({
+        title: "Sincronizzazione completata",
+        description: "La knowledge base è stata aggiornata con i contenuti più recenti del sito.",
+      });
+    } catch (error) {
+      console.error('Error syncing knowledge base:', error);
+      toast({
+        title: "Errore",
+        description: "Impossibile sincronizzare la knowledge base",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSyncing(false);
+    }
+  };
+
   if (authLoading || loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -310,12 +337,13 @@ export default function NosciteAdminDashboard() {
       {/* Main Content */}
       <div className="container mx-auto px-4 lg:px-8 py-8">
         <Tabs defaultValue="blog" className="w-full">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="blog">Gestione Blog</TabsTrigger>
             <TabsTrigger value="documents">Gestione Documenti</TabsTrigger>
             <TabsTrigger value="newsletter">Newsletter</TabsTrigger>
             <TabsTrigger value="users">Gestione Utenti</TabsTrigger>
             <TabsTrigger value="security">Sicurezza</TabsTrigger>
+            <TabsTrigger value="knowledge">Knowledge Base</TabsTrigger>
           </TabsList>
 
           {/* Blog Management */}
@@ -430,6 +458,47 @@ export default function NosciteAdminDashboard() {
               <h2 className="text-2xl font-bold">Pannello di Sicurezza</h2>
             </div>
             <SecurityDashboard />
+          </TabsContent>
+
+          {/* Knowledge Base Management */}
+          <TabsContent value="knowledge" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Database className="h-5 w-5" />
+                  <span>Gestione Knowledge Base</span>
+                </CardTitle>
+                <CardDescription>
+                  Sincronizza automaticamente i contenuti del sito con la knowledge base del chatbot
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <Alert>
+                  <AlertDescription>
+                    La sincronizzazione aggiornerà la knowledge base con i contenuti più recenti da:
+                    Atheneum, Profilum Societatis, Servizi e Contatti.
+                  </AlertDescription>
+                </Alert>
+                
+                <Button 
+                  onClick={handleSyncKnowledgeBase} 
+                  disabled={isSyncing}
+                  className="w-full"
+                >
+                  {isSyncing ? (
+                    <>
+                      <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                      Sincronizzazione in corso...
+                    </>
+                  ) : (
+                    <>
+                      <CheckCircle2 className="h-4 w-4 mr-2" />
+                      Sincronizza Knowledge Base
+                    </>
+                  )}
+                </Button>
+              </CardContent>
+            </Card>
           </TabsContent>
         </Tabs>
       </div>
