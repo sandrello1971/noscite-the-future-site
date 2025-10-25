@@ -208,13 +208,13 @@ serve(async (req) => {
             "- IMPORTANTE: Quando usi informazioni da documenti, indica SEMPRE chiaramente il nome del documento come fonte\n" +
             "- Quando usi informazioni dal sito web, puoi menzionare \"dalle informazioni sul sito Noscite\"\n" +
             "- Formato per citare documenti: \"Come indicato nel documento '[Nome Documento]'...\"\n" +
-            "- Quando parli di percorsi formativi, menziona sempre di visitare [Percorsi Noscite](/percorsi) per maggiori dettagli\n" +
+            "- Quando parli di percorsi formativi, menziona sempre di visitare [Atheneum](/atheneum) per maggiori dettagli\n" +
             "- Quando parli di servizi, rimanda a [Servizi Noscite](/servizi)\n" +
-            "- Per informazioni aziendali, rimanda a [Chi Siamo](/chi-siamo)\n" +
+            "- Per informazioni aziendali, rimanda a [Profilum Societatis](/profilum-societatis)\n" +
             "- Per contatti, rimanda a [Contatti Noscite](/contatti)\n" +
             "- Per documenti specifici, suggerisci di consultare [Risorse Noscite](/risorse)\n" +
             "- USA link relativi del sito con formato markdown [Testo](/pagina)\n" +
-            "- I link devono essere relativi al dominio corrente (es. /percorsi, /servizi, /contatti)\n" +
+            "- I link devono essere relativi al dominio corrente (es. /atheneum, /servizi, /contatti)\n" +
             "- Includi sempre link utili nelle tue risposte quando appropriato\n" +
             "- Solo DOPO aver fornito informazioni specifiche, suggerisci di contattare Noscite per dettagli personalizzati\n\n" +
             "Rispondi sempre in modo professionale, dettagliato e utile, citando sempre le fonti."
