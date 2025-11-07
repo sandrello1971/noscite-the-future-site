@@ -19,6 +19,8 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import NewsletterSubscription from "@/components/NewsletterSubscription";
+import { SEO } from "@/components/SEO";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 const Risorse = () => {
   const blogPosts: any[] = [];
@@ -29,9 +31,28 @@ const Risorse = () => {
 
   const whitepapers: any[] = [];
 
+  const risorseSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Centro Risorse Digitali - Noscite",
+    "description": "Guide pratiche, video formativi e contenuti esclusivi per accelerare la tua trasformazione digitale e padroneggiare l'intelligenza artificiale.",
+    "publisher": {
+      "@type": "Organization",
+      "name": "Noscite"
+    }
+  };
+
   return (
     <div className="min-h-screen">
+      <SEO 
+        title="Centro Risorse Digitali | Blog, Guide e Whitepaper AI"
+        description="Guide pratiche, video formativi e contenuti esclusivi per accelerare la tua trasformazione digitale e padroneggiare l'intelligenza artificiale."
+        keywords="risorse AI, guide intelligenza artificiale, blog trasformazione digitale, whitepaper AI, tutorial PMI, formazione digitale"
+        canonical="https://noscite.it/risorse"
+        structuredData={risorseSchema}
+      />
       <Header />
+      <Breadcrumbs />
       
       <main className="pt-16">
         {/* Hero Section */}

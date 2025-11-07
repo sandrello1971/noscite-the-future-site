@@ -1,6 +1,8 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { SEO } from "@/components/SEO";
+import { StructuredData } from "@/components/StructuredData";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 const ProfilumSocietatis = () => {
   const areeIntervento = [
@@ -40,14 +42,30 @@ const ProfilumSocietatis = () => {
     }
   ];
 
+  const aboutSchema = {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    "name": "Profilum Societatis - Company Profile Noscite",
+    "description": "Noscite è una startup innovativa che accompagna le imprese nella trasformazione digitale consapevole, integrando l'intelligenza artificiale come leva di crescita.",
+    "mainEntity": {
+      "@type": "Organization",
+      "name": "Noscite",
+      "description": "Startup innovativa per la trasformazione digitale delle PMI attraverso AI, formazione e governance."
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <SEO 
-        title="Profilum Societatis - Noscite | Chi Siamo"
+        title="Profilum Societatis | Company Profile Noscite"
         description="Noscite è una startup innovativa che accompagna le imprese nella trasformazione digitale consapevole, integrando l'intelligenza artificiale come leva di crescita."
+        keywords="company profile, chi siamo, startup innovativa, trasformazione digitale, AI per PMI, accompagnamento digitale"
         canonical="https://noscite.it/profilum-societatis"
+        structuredData={aboutSchema}
       />
+      <StructuredData schema={aboutSchema} />
       <Header />
+      <Breadcrumbs />
       
       <main className="pt-16">
         {/* Hero Section */}

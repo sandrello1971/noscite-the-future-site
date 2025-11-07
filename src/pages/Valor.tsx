@@ -2,6 +2,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { SEO } from "@/components/SEO";
 import { Sparkles, Lightbulb, Handshake } from "lucide-react";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 const Valor = () => {
   const values = [
@@ -25,14 +26,29 @@ const Valor = () => {
     }
   ];
 
+  const valorSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Valor - I Nostri Valori",
+    "description": "I valori che guidano Noscite: Unicitas, Innovatio, Societas. Personalizzazione, innovazione e partnership durature.",
+    "mainEntity": {
+      "@type": "Organization",
+      "name": "Noscite",
+      "values": ["Unicitas - Personalizzazione assoluta", "Innovatio - Ricerca e sperimentazione", "Societas - Partnership durature"]
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white">
       <SEO 
-        title="Valor - Noscite | Il Nostro Valore"
-        description="Il nostro valore è fatto di principi che ci distinguono: Unicitas, Innovatio, Societas. Non si tratta solo di strumenti, ma di come trasformiamo insieme sfide in opportunità."
+        title="Valor | I Nostri Valori - Unicitas, Innovatio, Societas"
+        description="I valori che ci distinguono: Unicitas (personalizzazione), Innovatio (ricerca), Societas (partnership). Trasformiamo insieme sfide in opportunità."
+        keywords="valori aziendali, unicitas, innovatio, societas, personalizzazione, innovazione, partnership, trasformazione digitale"
         canonical="https://noscite.it/valor"
+        structuredData={valorSchema}
       />
       <Header />
+      <Breadcrumbs />
       
       <main className="pt-16">
         {/* Hero Section */}

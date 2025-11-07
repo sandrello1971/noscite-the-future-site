@@ -1,14 +1,44 @@
+# Noscite.it - robots.txt
+# https://noscite.it/robots.txt
+
+# Allow all bots
+User-agent: *
+Allow: /
+
+# Disallow admin areas (if any)
+Disallow: /admin
+Disallow: /api/
+
+# Crawl delay for good citizenship
+Crawl-delay: 0
+
+# Sitemap
+Sitemap: https://noscite.it/sitemap.xml
+
+# Specific bot rules
 User-agent: Googlebot
 Allow: /
 
 User-agent: Bingbot
 Allow: /
 
-User-agent: Twitterbot
+User-agent: Slurp
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+User-agent: YandexBot
 Allow: /
 
 User-agent: facebookexternalhit
 Allow: /
 
-User-agent: *
+User-agent: Twitterbot
+Allow: /
+
+User-agent: LinkedInBot
 Allow: /

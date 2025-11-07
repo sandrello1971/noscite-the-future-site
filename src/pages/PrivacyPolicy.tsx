@@ -2,11 +2,20 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Shield, Eye, Lock, Database, Mail, Phone } from "lucide-react";
+import { SEO } from "@/components/SEO";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 const PrivacyPolicy = () => {
   return (
     <div className="min-h-screen bg-background">
+      <SEO 
+        title="Privacy Policy | Noscite - Protezione dei Tuoi Dati"
+        description="Informativa sulla privacy di Noscite. Scopri come proteggiamo i tuoi dati personali e rispettiamo la normativa GDPR."
+        keywords="privacy policy, GDPR, protezione dati, informativa privacy, trattamento dati personali"
+        canonical="https://noscite.it/privacy-policy"
+      />
       <Header />
+      <Breadcrumbs />
       
       <main className="pt-20">
         <section className="py-16 bg-gradient-to-br from-primary/5 to-secondary/5">

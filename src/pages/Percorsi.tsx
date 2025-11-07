@@ -21,6 +21,9 @@ import {
   Zap
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { SEO } from "@/components/SEO";
+import { StructuredData, courseSchema } from "@/components/StructuredData";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 const Percorsi = () => {
   const corsi = [
@@ -116,7 +119,16 @@ const Percorsi = () => {
 
   return (
     <div className="min-h-screen">
+      <SEO 
+        title="Percorsi Formativi Athenaeum AI | 68 Ore di Formazione Digitale"
+        description="68 ore di formazione completa su AI, knowledge management e collaborazione digitale. Initium, Structura e Communitas per PMI con risultati misurabili."
+        keywords="formazione AI, corsi intelligenza artificiale, digital productivity, Obsidian, Second Brain, Copilot 365, ChatGPT, formazione PMI"
+        canonical="https://noscite.it/percorsi"
+        structuredData={courseSchema}
+      />
+      <StructuredData schema={courseSchema} />
       <Header />
+      <Breadcrumbs />
       
       <main className="pt-16">
         {/* Hero Section */}

@@ -2,11 +2,20 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Cookie, Settings, BarChart3, Target, Wrench } from "lucide-react";
+import { SEO } from "@/components/SEO";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 const CookiePolicy = () => {
   return (
     <div className="min-h-screen bg-background">
+      <SEO 
+        title="Cookie Policy | Noscite - Informativa sui Cookie"
+        description="Informativa dettagliata sui cookie utilizzati dal sito Noscite. Scopri come gestiamo i cookie e le tue preferenze."
+        keywords="cookie policy, informativa cookie, gestione cookie, privacy web, consenso cookie"
+        canonical="https://noscite.it/cookie-policy"
+      />
       <Header />
+      <Breadcrumbs />
       
       <main className="pt-20">
         <section className="py-16 bg-gradient-to-br from-primary/5 to-secondary/5">
