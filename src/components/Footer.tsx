@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Linkedin, Mail, Phone, MapPin } from "lucide-react";
+import { Linkedin, Mail, Phone, MapPin, Shield, Cookie } from "lucide-react";
 
 const Footer = () => {
   const menuItems = [
@@ -75,12 +75,20 @@ const Footer = () => {
             <p className="text-white/60 text-sm">
               © Noscite – tutti i diritti riservati
             </p>
-            <div className="flex space-x-6">
-              <Link to="/privacy-policy" className="text-white/60 hover:text-secondary transition-colors text-sm">
-                Privacy
+            <div className="flex flex-wrap gap-4 justify-center">
+              <Link 
+                to="/privacy-policy" 
+                className="flex items-center space-x-2 text-white/60 hover:text-secondary transition-colors text-sm group"
+              >
+                <Shield className="h-4 w-4 group-hover:scale-110 transition-transform" />
+                <span>Privacy Policy</span>
               </Link>
-              <Link to="/cookie-policy" className="text-white/60 hover:text-secondary transition-colors text-sm">
-                Cookie policy
+              <Link 
+                to="/cookie-policy" 
+                className="flex items-center space-x-2 text-white/60 hover:text-secondary transition-colors text-sm group"
+              >
+                <Cookie className="h-4 w-4 group-hover:scale-110 transition-transform" />
+                <span>Cookie Policy</span>
               </Link>
             </div>
           </div>
