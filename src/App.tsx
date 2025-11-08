@@ -25,6 +25,7 @@ import Auth from "./pages/Auth";
 import NosciteAdminAuth from "./pages/NosciteAdminAuth";
 import NotFound from "./pages/NotFound";
 import Chatbot from "./components/Chatbot";
+import IubendaCookieBadge from "./components/IubendaCookieBadge";
 
 const queryClient = new QueryClient();
 
@@ -58,6 +59,9 @@ const App = () => (
             <Route path="*" element={<NotFound />} />
           </Routes>
           <Chatbot />
+          <div className="fixed bottom-4 left-4 z-40">
+            <IubendaCookieBadge />
+          </div>
         </BrowserRouter>
       </TooltipProvider>
     </HelmetProvider>
