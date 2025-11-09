@@ -80,6 +80,8 @@ const Footer = () => {
                 href="https://www.iubenda.com/privacy-policy/63014802" 
                 className="iubenda-white iubenda-noiframe iubenda-embed iubenda-noiframe flex items-center space-x-2 text-white/60 hover:text-secondary transition-colors text-sm group"
                 title="Privacy Policy"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 <Shield className="h-4 w-4 group-hover:scale-110 transition-transform" />
                 <span>Privacy Policy</span>
@@ -88,6 +90,8 @@ const Footer = () => {
                 href="https://www.iubenda.com/privacy-policy/63014802/cookie-policy" 
                 className="iubenda-white iubenda-noiframe iubenda-embed iubenda-noiframe flex items-center space-x-2 text-white/60 hover:text-secondary transition-colors text-sm group"
                 title="Cookie Policy"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 <Cookie className="h-4 w-4 group-hover:scale-110 transition-transform" />
                 <span>Cookie Policy</span>

@@ -16,6 +16,8 @@ const IubendaCookieBadge = () => {
       href="https://www.iubenda.com/privacy-policy/63014802/cookie-policy"
       className="iubenda-cs-preferences-link"
       title="Cookie Policy"
+      target="_blank"
+      rel="noopener noreferrer"
     >
       Cookie Policy
     </a>
