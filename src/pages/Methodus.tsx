@@ -42,6 +42,7 @@ const Methodus = () => {
       <SEO 
         title="Methodus - Noscite | Il Nostro Metodo"
         description="Il nostro approccio in 5 fasi: Auditio, Analytica, Co-creatio, Implementatio, Evolutio. Un percorso strutturato verso la trasformazione digitale."
+        keywords="metodologia trasformazione digitale, approccio consulenza innovazione, Auditio Analytica, metodo strutturato digitale, processo innovazione PMI, consulenza metodo digitale, framework trasformazione"
         canonical="https://noscite.it/methodus"
       />
       <Header />

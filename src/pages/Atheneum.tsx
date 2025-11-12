@@ -56,6 +56,7 @@ const Atheneum = () => {
       <SEO 
         title="Atheneum - Noscite | Percorsi di Conoscenza"
         description="Scientia potentia est. L'Atheneum di Noscite è lo spazio dove sapere e pratica si incontrano. Percorsi di apprendimento: Innovatio, Strategia, Humanitas."
+        keywords="formazione digitale AI, corsi trasformazione digitale, percorsi innovazione PMI, training intelligenza artificiale, Initium Structura Communitas, academy digitale, certificazione AI"
         canonical="https://noscite.it/atheneum"
       />
       <Header />

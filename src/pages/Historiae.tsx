@@ -36,6 +36,7 @@ const Historiae = () => {
       <SEO 
         title="Historiae - Noscite | Le Nostre Storie"
         description="Ogni progetto racconta un percorso di cambiamento. Scopri le storie di trasformazione: sfida, percorso, risultato."
+        keywords="case study trasformazione digitale, storie successo innovazione, risultati consulenza digitale, esempi progetti AI, testimonianze PMI digitali, casi successo tecnologia"
         canonical="https://noscite.it/historiae"
       />
       <Header />

@@ -37,6 +37,7 @@ const Contactus = () => {
       <SEO 
         title="Contactus - Noscite | Contatti"
         description="Ogni trasformazione inizia da un dialogo. Contattaci per iniziare il tuo percorso di trasformazione digitale."
+        keywords="contatti consulenza digitale, richiesta informazioni AI, consulenza trasformazione PMI, contatta Noscite, preventivo innovazione digitale, consulenza strategica"
         canonical="https://noscite.it/contactus"
       />
       <Header />
