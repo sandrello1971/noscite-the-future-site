@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Linkedin, Mail, Phone, MapPin, Shield, Cookie } from "lucide-react";
+import { Linkedin, Mail, Phone, MapPin, Shield, Cookie, Facebook, Instagram } from "lucide-react";
 
 const Footer = () => {
   const menuItems = [
@@ -61,9 +61,17 @@ const Footer = () => {
                 <MapPin className="h-4 w-4" />
                 <span>Via Monte Grappa 13 <br />Corsico (MI), Italia</span>
               </div>
-              <a href="https://linkedin.com/company/noscite" className="flex items-center space-x-3 lg:justify-end text-white/80 hover:text-secondary transition-colors group">
+              <a href="https://linkedin.com/company/noscite" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-3 lg:justify-end text-white/80 hover:text-secondary transition-colors group">
                 <Linkedin className="h-4 w-4" />
                 <span>linkedin.com/company/noscite</span>
+              </a>
+              <a href="https://www.facebook.com/Noscite/" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-3 lg:justify-end text-white/80 hover:text-secondary transition-colors group">
+                <Facebook className="h-4 w-4" />
+                <span>facebook.com/Noscite</span>
+              </a>
+              <a href="https://www.instagram.com/noscite" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-3 lg:justify-end text-white/80 hover:text-secondary transition-colors group">
+                <Instagram className="h-4 w-4" />
+                <span>instagram.com/noscite</span>
               </a>
             </div>
           </div>
