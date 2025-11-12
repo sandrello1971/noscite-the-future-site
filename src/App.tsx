@@ -26,6 +26,7 @@ import NosciteAdminAuth from "./pages/NosciteAdminAuth";
 import NotFound from "./pages/NotFound";
 import Chatbot from "./components/Chatbot";
 import IubendaCookieBadge from "./components/IubendaCookieBadge";
+import { GoogleAnalytics } from "./components/GoogleAnalytics";
 
 const queryClient = new QueryClient();
 
@@ -36,6 +37,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <GoogleAnalytics />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/identitas" element={<Identitas />} />
