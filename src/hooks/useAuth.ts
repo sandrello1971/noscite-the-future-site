@@ -70,10 +70,7 @@ export function useAuth() {
         setSession(session);
         setUser(session?.user ?? null);
 
-        if (session?.user) {
-          console.log('✅ Initial session found, fetching user role');
-          await fetchUserRole(session.user.id);
-        } else {
+        if (!session?.user) {
           setLoading(false);
         }
       } catch (error) {
@@ -117,6 +114,7 @@ export function useAuth() {
     } finally {
       console.log('🏁 fetchUserRole completed, setting roleLoading to false');
       setRoleLoading(false);
+      setLoading(false);
     }
   };
 
