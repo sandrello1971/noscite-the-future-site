@@ -121,9 +121,15 @@ const CommentariumEditor = ({ post, onSave, onCancel }: CommentariumEditorProps)
       if (imageUrl) {
         setGeneratedImageUrl(imageUrl);
         setFormData(prev => ({ ...prev, featured_image_url: imageUrl }));
+        
+        // Inserisci automaticamente l'immagine nell'editor
+        if (editorRef.current) {
+          editorRef.current.insertImage(imageUrl, imagePrompt.trim() || 'Immagine generata');
+        }
+        
         toast({
-          title: "Immagine generata",
-          description: "Immagine in primo piano aggiornata",
+          title: "Immagine generata e inserita",
+          description: "Ora puoi ridimensionarla e spostarla nell'editor",
         });
       }
     } catch (error) {
