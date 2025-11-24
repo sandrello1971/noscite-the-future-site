@@ -83,33 +83,26 @@ export function useAuth() {
     console.log('🔄 Starting fetchUserRole for:', userId);
     setRoleLoading(true);
     try {
-      console.log('📡 Making role query request...');
-      
-      const { data, error } = await supabase
-        .from('user_roles')
-        .select('role')
-        .eq('user_id', userId)
-        .single();
+      console.log('📡 Calling get_current_user_role RPC...');
 
-      console.log('📋 Role query completed:', { data, error });
+      const { data, error } = await supabase.rpc('get_current_user_role');
+
+      console.log('📋 RPC role result:', { data, error });
 
       if (error) {
-        if (error.code === 'PGRST116') { 
-          console.log('🔍 No role found for user, defaulting to user');
-          setUserRole('user');
-        } else {
-          console.error('❌ Error fetching user role:', error);
-          console.error('❌ Error details:', error.message, error.code);
-          setUserRole('user'); // Default to user role if error
-        }
-      } else {
-        const role = data?.role || 'user';
+        console.error('❌ Error fetching user role via RPC:', error);
+        setUserRole('user');
+      } else if (data) {
+        const role = data as 'admin' | 'user' | 'moderator';
         console.log('✅ Setting user role to:', role);
         setUserRole(role);
+      } else {
+        console.log('ℹ️ No role returned from RPC, defaulting to user');
+        setUserRole('user');
       }
     } catch (error) {
       console.error('💥 Exception in fetchUserRole:', error);
-      setUserRole('user'); // Default to user role
+      setUserRole('user');
     } finally {
       console.log('🏁 fetchUserRole completed, setting roleLoading to false');
       setRoleLoading(false);

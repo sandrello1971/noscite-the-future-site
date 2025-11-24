@@ -25,17 +25,13 @@ export default function NosciteAdminAuth() {
     const checkUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        console.log("🔍 Found existing session, checking admin role...");
-        // Check if user has admin role before redirecting
-        const { data: userRole } = await supabase
-          .from('user_roles')
-          .select('role')
-          .eq('user_id', session.user.id)
-          .single();
+        console.log("🔍 Found existing session, checking admin role via RPC...");
+
+        const { data: role, error } = await supabase.rpc('get_current_user_role');
+
+        console.log("👤 User role (RPC) check result:", { role, error });
         
-        console.log("👤 User role check result:", userRole);
-        
-        if (userRole?.role === 'admin') {
+        if (!error && role === 'admin') {
           console.log("✅ Existing admin session found, redirecting...");
           navigate("/nosciteadmin");
         }
@@ -91,43 +87,30 @@ export default function NosciteAdminAuth() {
         console.log('✅ User logged in successfully:', data.user.email);
         console.log('🔍 Starting role check for user ID:', data.user.id);
         
-        // Check if user has admin role
-        const { data: userRole, error: roleError } = await supabase
-          .from('user_roles')
-          .select('role')
-          .eq('user_id', data.user.id)
-          .single();
+        // Check if user has admin role via RPC
+        const { data: role, error: roleError } = await supabase.rpc('get_current_user_role');
 
-        console.log('📋 Role query result:', { 
-          userRole, 
+        console.log('📋 Role RPC result:', { 
+          role,
           roleError,
-          roleValue: userRole?.role,
-          hasRole: !!userRole,
-          isAdmin: userRole?.role === 'admin'
+          isAdmin: role === 'admin'
         });
 
         if (roleError) {
-          console.log('❌ Role error occurred:', roleError);
-          // If role error but user exists, check if no role found (PGRST116)
-          if (roleError.code === 'PGRST116') {
-            console.log('⚠️ No role found for user - access denied');
-            setError("Accesso negato. Non hai i permessi di amministratore.");
-            await supabase.auth.signOut();
-            return;
-          }
+          console.log('❌ Role RPC error occurred:', roleError);
           setError("Errore nel controllo dei permessi. Contatta l'amministratore.");
           await supabase.auth.signOut();
           return;
         }
 
-        if (userRole?.role !== 'admin') {
-          console.log('🚫 Access denied - user role is:', userRole?.role);
+        if (role !== 'admin') {
+          console.log('🚫 Access denied - user role is:', role);
           setError("Accesso negato. Non hai i permessi di amministratore.");
           await supabase.auth.signOut();
           return;
         }
 
-        console.log('✅ Admin access granted! Role:', userRole.role);
+        console.log('✅ Admin access granted! Role:', role);
         console.log('🔄 Attempting navigation to /nosciteadmin');
         
         toast({

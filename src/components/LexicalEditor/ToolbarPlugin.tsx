@@ -51,6 +51,8 @@ import { INSERT_IMAGE_COMMAND } from './ImagePlugin';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 const LowPriority = 1;
 
@@ -60,6 +62,7 @@ function Divider() {
 
 export default function ToolbarPlugin() {
   const [editor] = useLexicalComposerContext();
+  const { toast } = useToast();
   const [canUndo, setCanUndo] = useState(false);
   const [canRedo, setCanRedo] = useState(false);
   const [isBold, setIsBold] = useState(false);
@@ -72,6 +75,7 @@ export default function ToolbarPlugin() {
   const [isImageDialogOpen, setIsImageDialogOpen] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
   const [imageAlt, setImageAlt] = useState('');
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   const updateToolbar = useCallback(() => {
     const selection = $getSelection();
@@ -204,6 +208,45 @@ export default function ToolbarPlugin() {
       editor.dispatchCommand(TOGGLE_LINK_COMMAND, 'https://');
     } else {
       editor.dispatchCommand(TOGGLE_LINK_COMMAND, null);
+    }
+  };
+
+  const handleImageFileChange = async (event: any) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setUploadingImage(true);
+    try {
+      const ext = file.name.split('.').pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      const filePath = `blog/${fileName}.${ext}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('blog-images')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data } = supabase.storage.from('blog-images').getPublicUrl(filePath);
+
+      setImageUrl(data.publicUrl);
+      if (!imageAlt) {
+        setImageAlt(file.name);
+      }
+
+      toast({
+        title: 'Immagine caricata',
+        description: "L'immagine è stata caricata. Puoi ora inserirla nell'articolo.",
+      });
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      toast({
+        title: 'Errore caricamento immagine',
+        description: 'Non è stato possibile caricare l\'immagine. Riprova.',
+        variant: 'destructive',
+      });
+    } finally {
+      setUploadingImage(false);
     }
   };
 
@@ -343,6 +386,21 @@ export default function ToolbarPlugin() {
           </DialogHeader>
           <div className="space-y-4">
             <div>
+              <Label htmlFor="image-file">Carica immagine</Label>
+              <Input
+                id="image-file"
+                type="file"
+                accept="image/*"
+                onChange={handleImageFileChange}
+                disabled={uploadingImage}
+              />
+              {uploadingImage && (
+                <p className="text-xs text-muted-foreground mt-1">
+                  Caricamento in corso...
+                </p>
+              )}
+            </div>
+            <div>
               <Label htmlFor="image-url">URL immagine</Label>
               <Input
                 id="image-url"
@@ -360,7 +418,7 @@ export default function ToolbarPlugin() {
                 onChange={(e) => setImageAlt(e.target.value)}
               />
             </div>
-            <Button onClick={insertImage} disabled={!imageUrl}>
+            <Button onClick={insertImage} disabled={!imageUrl || uploadingImage}>
               Inserisci
             </Button>
           </div>
