@@ -44,8 +44,13 @@ import {
   Heading1,
   Heading2,
   Heading3,
+  Image as ImageIcon,
 } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
+import { INSERT_IMAGE_COMMAND } from './ImagePlugin';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 const LowPriority = 1;
 
@@ -64,6 +69,9 @@ export default function ToolbarPlugin() {
   const [isCode, setIsCode] = useState(false);
   const [isLink, setIsLink] = useState(false);
   const [blockType, setBlockType] = useState('paragraph');
+  const [isImageDialogOpen, setIsImageDialogOpen] = useState(false);
+  const [imageUrl, setImageUrl] = useState('');
+  const [imageAlt, setImageAlt] = useState('');
 
   const updateToolbar = useCallback(() => {
     const selection = $getSelection();
@@ -199,6 +207,18 @@ export default function ToolbarPlugin() {
     }
   };
 
+  const insertImage = () => {
+    if (imageUrl) {
+      editor.dispatchCommand(INSERT_IMAGE_COMMAND, {
+        altText: imageAlt || 'Immagine',
+        src: imageUrl,
+      });
+      setImageUrl('');
+      setImageAlt('');
+      setIsImageDialogOpen(false);
+    }
+  };
+
   return (
     <div className="flex flex-wrap items-center gap-1 p-2 border-b bg-muted/50">
       <Button
@@ -306,6 +326,46 @@ export default function ToolbarPlugin() {
       >
         <Link className="h-4 w-4" />
       </Button>
+      
+      <Dialog open={isImageDialogOpen} onOpenChange={setIsImageDialogOpen}>
+        <DialogTrigger asChild>
+          <Button
+            variant="ghost"
+            size="sm"
+            aria-label="Inserisci immagine"
+          >
+            <ImageIcon className="h-4 w-4" />
+          </Button>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Inserisci immagine</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="image-url">URL immagine</Label>
+              <Input
+                id="image-url"
+                placeholder="https://esempio.com/immagine.jpg"
+                value={imageUrl}
+                onChange={(e) => setImageUrl(e.target.value)}
+              />
+            </div>
+            <div>
+              <Label htmlFor="image-alt">Testo alternativo</Label>
+              <Input
+                id="image-alt"
+                placeholder="Descrizione immagine"
+                value={imageAlt}
+                onChange={(e) => setImageAlt(e.target.value)}
+              />
+            </div>
+            <Button onClick={insertImage} disabled={!imageUrl}>
+              Inserisci
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <Divider />
 
