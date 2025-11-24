@@ -15,6 +15,7 @@ export function useAuth() {
   const [userRole, setUserRole] = useState<'admin' | 'user' | 'moderator' | null>(null);
   const [loading, setLoading] = useState(true);
   const [roleLoading, setRoleLoading] = useState(false);
+  const [hasFetchedRole, setHasFetchedRole] = useState(false);
 
   console.log('🔍 useAuth state:', { 
     hasUser: !!user, 
@@ -62,18 +63,19 @@ export function useAuth() {
         setUser(session?.user ?? null);
         
         if (session?.user) {
-          // Fetch role SOLO su login o sessione iniziale, MAI su refresh token
-          if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
-            console.log('✅ Fetching user role for event:', event);
+          // Fetch role solo alla prima autenticazione esplicita
+          if (!hasFetchedRole && event === 'SIGNED_IN') {
+            console.log('✅ Fetching user role for first SIGNED_IN event');
             await fetchUserRole(session.user.id);
           } else {
-            console.log('⏭️ Skipping role fetch for event:', event);
-            // Mantieni il ruolo esistente per eventi come TOKEN_REFRESHED
+            console.log('⏭️ Skipping role fetch for event:', event, 'hasFetchedRole:', hasFetchedRole);
+            // Mantieni il ruolo esistente per eventi come TOKEN_REFRESHED o SIGNED_IN ripetuti
           }
         } else {
           setUserRole(null);
+          setHasFetchedRole(false);
         }
-        
+
         setLoading(false);
       }
     );
@@ -111,6 +113,7 @@ export function useAuth() {
     } finally {
       console.log('🏁 fetchUserRole completed, setting roleLoading to false');
       setRoleLoading(false);
+      setHasFetchedRole(true);
     }
   };
 
