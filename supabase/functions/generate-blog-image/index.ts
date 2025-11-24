@@ -34,13 +34,20 @@ serve(async (req) => {
         size: '1024x1024',
         quality: 'auto',
         output_format: 'png',
+        moderation: 'low', // Use lower moderation level
       }),
     });
 
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error('OpenAI Image API error:', response.status, errorText);
-      throw new Error(`OpenAI Image API error: ${response.status}`);
+      const errorData = await response.json();
+      console.error('OpenAI Image API error:', response.status, JSON.stringify(errorData, null, 2));
+      
+      // Handle moderation errors specifically
+      if (errorData?.error?.code === 'moderation_blocked') {
+        throw new Error(`Il prompt è stato bloccato dal sistema di moderazione. Prova a riformulare la descrizione dell'immagine in modo più neutro.`);
+      }
+      
+      throw new Error(`OpenAI API error: ${errorData?.error?.message || response.status}`);
     }
 
     const data = await response.json();

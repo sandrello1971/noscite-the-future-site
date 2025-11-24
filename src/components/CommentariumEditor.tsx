@@ -193,7 +193,10 @@ const CommentariumEditor = ({ post, onSave, onCancel }: CommentariumEditorProps)
         body: { prompt: imagePrompt.trim() }
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error generating image:', error);
+        throw new Error(error.message || 'Errore durante la generazione');
+      }
 
       const imageUrl = data?.imageUrl;
       if (imageUrl) {
@@ -212,9 +215,10 @@ const CommentariumEditor = ({ post, onSave, onCancel }: CommentariumEditorProps)
       }
     } catch (error) {
       console.error('Error generating image:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Impossibile generare l\'immagine';
       toast({
         title: "Errore",
-        description: "Impossibile generare l'immagine",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
