@@ -56,19 +56,24 @@ export function useAuth() {
       async (event, session) => {
         if (!mounted) return;
         
+        console.log('🔔 Auth state changed:', event);
+        
         setSession(session);
         setUser(session?.user ?? null);
         
         if (session?.user) {
-          // Evita richieste ruolo inutili su TOKEN_REFRESHED/USER_UPDATED
+          // Fetch role SOLO su login o sessione iniziale, MAI su refresh token
           if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
+            console.log('✅ Fetching user role for event:', event);
             await fetchUserRole(session.user.id);
+          } else {
+            console.log('⏭️ Skipping role fetch for event:', event);
+            // Mantieni il ruolo esistente per eventi come TOKEN_REFRESHED
           }
         } else {
           setUserRole(null);
         }
         
-        // Non rimettiamo mai loading a true qui
         setLoading(false);
       }
     );
