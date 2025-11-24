@@ -323,7 +323,9 @@ function ImageComponent({
       
       if (index > 0) {
         const previousSibling = siblings[index - 1];
-        node.insertBefore(previousSibling);
+        // Remove node and insert it before the previous sibling
+        node.remove();
+        previousSibling.insertBefore(node);
       }
     });
   };
@@ -341,7 +343,9 @@ function ImageComponent({
       
       if (index < siblings.length - 1) {
         const nextSibling = siblings[index + 1];
-        node.insertAfter(nextSibling);
+        // Remove node and insert it after the next sibling
+        node.remove();
+        nextSibling.insertAfter(node);
       }
     });
   };
