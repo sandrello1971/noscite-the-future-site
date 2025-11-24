@@ -54,6 +54,7 @@ serve(async (req) => {
       throw new Error(`OpenAI API error: ${response.status}`);
     }
 
+    const data = await response.json();
     const rawContent = data.choices[0].message.content as string;
 
     console.log('Content generated successfully');
