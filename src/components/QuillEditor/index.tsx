@@ -143,7 +143,7 @@ const QuillEditor = forwardRef<QuillEditorRef, QuillEditorProps>(
         <ReactQuill
           ref={quillRef}
           theme="snow"
-          defaultValue={initialContent}
+          value={initialContent}
           onChange={onChange}
           modules={modules}
           formats={formats}
