@@ -24,8 +24,8 @@ import NosciteAdminDashboard from "./pages/NosciteAdminDashboard";
 import Auth from "./pages/Auth";
 import NosciteAdminAuth from "./pages/NosciteAdminAuth";
 import NotFound from "./pages/NotFound";
-import Blog from "./pages/Blog";
-import BlogPost from "./pages/BlogPost";
+import Commentarium from "./pages/Commentarium";
+import CommentariumPost from "./pages/CommentariumPost";
 import Chatbot from "./components/Chatbot";
 import IubendaCookieBadge from "./components/IubendaCookieBadge";
 import { GoogleAnalytics } from "./components/GoogleAnalytics";
@@ -56,8 +56,8 @@ const App = () => (
             <Route path="/contatti" element={<Contatti />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/cookie-policy" element={<CookiePolicy />} />
-            <Route path="/blog" element={<Blog />} />
-            <Route path="/blog/:slug" element={<BlogPost />} />
+            <Route path="/commentarium" element={<Commentarium />} />
+            <Route path="/commentarium/:slug" element={<CommentariumPost />} />
             <Route path="/nosciteadmin" element={<NosciteAdminDashboard />} />
             <Route path="/nosciteadmin/auth" element={<NosciteAdminAuth />} />
             <Route path="/auth" element={<Auth />} />
