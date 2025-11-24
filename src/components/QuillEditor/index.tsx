@@ -149,37 +149,21 @@ const QuillEditor = forwardRef<QuillEditorRef, QuillEditorProps>(
     const alignImage = (alignment: 'left' | 'right' | 'center' | 'full') => {
       if (!selectedImage) return;
 
-      // Preserve current dimensions
-      const currentWidth = selectedImage.style.width || selectedImage.getAttribute('width') || 'auto';
-      const currentHeight = selectedImage.style.height || selectedImage.getAttribute('height') || 'auto';
-
-      // Remove all float and display styles but keep dimensions
+      // Reset only positioning styles, don't touch dimensions
       selectedImage.style.float = '';
       selectedImage.style.display = '';
       selectedImage.style.margin = '';
-      
-      // Only reset maxWidth if going full width
-      if (alignment !== 'full') {
-        selectedImage.style.width = currentWidth;
-        selectedImage.style.height = currentHeight;
-      }
 
       switch (alignment) {
         case 'left':
           selectedImage.style.float = 'left';
           selectedImage.style.marginRight = '1rem';
           selectedImage.style.marginBottom = '1rem';
-          if (!selectedImage.style.width || selectedImage.style.width === 'auto') {
-            selectedImage.style.maxWidth = '50%';
-          }
           break;
         case 'right':
           selectedImage.style.float = 'right';
           selectedImage.style.marginLeft = '1rem';
           selectedImage.style.marginBottom = '1rem';
-          if (!selectedImage.style.width || selectedImage.style.width === 'auto') {
-            selectedImage.style.maxWidth = '50%';
-          }
           break;
         case 'center':
           selectedImage.style.display = 'block';
@@ -190,7 +174,6 @@ const QuillEditor = forwardRef<QuillEditorRef, QuillEditorProps>(
           selectedImage.style.margin = '1rem 0';
           selectedImage.style.width = '100%';
           selectedImage.style.height = 'auto';
-          selectedImage.style.maxWidth = '100%';
           break;
       }
 
