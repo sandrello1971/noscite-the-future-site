@@ -315,16 +315,8 @@ function ImageComponent({
       const node = $getNodeByKey(nodeKey);
       if (!node) return;
       
-      const parent = node.getParent();
-      if (!parent) return;
-      
-      const siblings = parent.getChildren();
-      const index = siblings.indexOf(node);
-      
-      if (index > 0) {
-        const previousSibling = siblings[index - 1];
-        // Remove node and insert it before the previous sibling
-        node.remove();
+      const previousSibling = node.getPreviousSibling();
+      if (previousSibling) {
         previousSibling.insertBefore(node);
       }
     });
@@ -335,16 +327,8 @@ function ImageComponent({
       const node = $getNodeByKey(nodeKey);
       if (!node) return;
       
-      const parent = node.getParent();
-      if (!parent) return;
-      
-      const siblings = parent.getChildren();
-      const index = siblings.indexOf(node);
-      
-      if (index < siblings.length - 1) {
-        const nextSibling = siblings[index + 1];
-        // Remove node and insert it after the next sibling
-        node.remove();
+      const nextSibling = node.getNextSibling();
+      if (nextSibling) {
         nextSibling.insertAfter(node);
       }
     });
