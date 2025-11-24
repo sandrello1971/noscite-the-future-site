@@ -1,6 +1,7 @@
-import { forwardRef, useImperativeHandle, useRef } from 'react';
+import { forwardRef, useImperativeHandle, useRef, useState, useEffect } from 'react';
 import ReactQuill from 'react-quill';
 import ImageResize from 'quill-image-resize-module-react';
+import { AlignLeft, AlignRight, AlignCenter, Maximize } from 'lucide-react';
 import './quill-custom.css';
 
 // Register the image resize module
@@ -23,6 +24,7 @@ interface QuillEditorProps {
 const QuillEditor = forwardRef<QuillEditorRef, QuillEditorProps>(
   ({ initialContent, onChange, onImageUpload }, ref) => {
     const quillRef = useRef<ReactQuill>(null);
+    const [selectedImage, setSelectedImage] = useState<HTMLImageElement | null>(null);
 
     useImperativeHandle(ref, () => ({
       insertImage: (imageUrl: string, altText = 'Image') => {
@@ -38,6 +40,34 @@ const QuillEditor = forwardRef<QuillEditorRef, QuillEditorProps>(
         return quillRef.current?.getEditor().root.innerHTML || '';
       },
     }));
+
+    // Track selected image
+    useEffect(() => {
+      const editor = quillRef.current?.getEditor();
+      if (!editor) return;
+
+      const handleSelection = () => {
+        const selection = window.getSelection();
+        const node = selection?.focusNode;
+        
+        if (node instanceof HTMLImageElement) {
+          setSelectedImage(node);
+        } else if (node?.parentElement instanceof HTMLImageElement) {
+          setSelectedImage(node.parentElement);
+        } else {
+          setSelectedImage(null);
+        }
+      };
+
+      const editorElement = editor.root;
+      editorElement.addEventListener('click', handleSelection);
+      editorElement.addEventListener('keyup', handleSelection);
+
+      return () => {
+        editorElement.removeEventListener('click', handleSelection);
+        editorElement.removeEventListener('keyup', handleSelection);
+      };
+    }, []);
 
     const imageHandler = async () => {
       const input = document.createElement('input');
@@ -94,6 +124,48 @@ const QuillEditor = forwardRef<QuillEditorRef, QuillEditorProps>(
       quill.format(format, value ?? true);
     };
 
+    const alignImage = (alignment: 'left' | 'right' | 'center' | 'full') => {
+      if (!selectedImage) return;
+
+      // Remove all float and display styles
+      selectedImage.style.float = '';
+      selectedImage.style.display = '';
+      selectedImage.style.margin = '';
+      selectedImage.style.maxWidth = '';
+
+      switch (alignment) {
+        case 'left':
+          selectedImage.style.float = 'left';
+          selectedImage.style.marginRight = '1rem';
+          selectedImage.style.marginBottom = '1rem';
+          selectedImage.style.maxWidth = '50%';
+          break;
+        case 'right':
+          selectedImage.style.float = 'right';
+          selectedImage.style.marginLeft = '1rem';
+          selectedImage.style.marginBottom = '1rem';
+          selectedImage.style.maxWidth = '50%';
+          break;
+        case 'center':
+          selectedImage.style.display = 'block';
+          selectedImage.style.margin = '1rem auto';
+          selectedImage.style.maxWidth = '100%';
+          break;
+        case 'full':
+          selectedImage.style.display = 'block';
+          selectedImage.style.margin = '1rem 0';
+          selectedImage.style.maxWidth = '100%';
+          selectedImage.style.width = '100%';
+          break;
+      }
+
+      // Trigger onChange to save the changes
+      const quill = quillRef.current?.getEditor();
+      if (quill) {
+        onChange(quill.root.innerHTML);
+      }
+    };
+
     const modules = {
       toolbar: false,
       clipboard: {
@@ -148,6 +220,40 @@ const QuillEditor = forwardRef<QuillEditorRef, QuillEditorProps>(
           <span className="quill-toolbar-separator" />
           <button type="button" onClick={() => applyFormat('link')}>Link</button>
           <button type="button" onClick={() => applyFormat('image')}>Immagine</button>
+          {selectedImage && (
+            <>
+              <span className="quill-toolbar-separator" />
+              <span className="text-xs text-muted-foreground px-2">Allinea immagine:</span>
+              <button 
+                type="button" 
+                onClick={() => alignImage('left')}
+                title="Allinea a sinistra con testo a fianco"
+              >
+                <AlignLeft className="h-4 w-4" />
+              </button>
+              <button 
+                type="button" 
+                onClick={() => alignImage('center')}
+                title="Centra"
+              >
+                <AlignCenter className="h-4 w-4" />
+              </button>
+              <button 
+                type="button" 
+                onClick={() => alignImage('right')}
+                title="Allinea a destra con testo a fianco"
+              >
+                <AlignRight className="h-4 w-4" />
+              </button>
+              <button 
+                type="button" 
+                onClick={() => alignImage('full')}
+                title="Larghezza piena"
+              >
+                <Maximize className="h-4 w-4" />
+              </button>
+            </>
+          )}
           <span className="quill-toolbar-separator" />
           <button type="button" onClick={() => applyFormat('clean')}>Pulisci</button>
         </div>
