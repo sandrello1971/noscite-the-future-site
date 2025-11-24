@@ -29,7 +29,52 @@ serve(async (req) => {
     } else if (type === 'content') {
       systemPrompt = 'You are a professional blog content writer. Write engaging, well-structured blog posts with proper formatting. Use headings, paragraphs, and maintain a professional yet approachable tone. Return only the content in HTML format with proper tags (h2, p, ul, li, etc.).';
     } else if (type === 'complete') {
-      systemPrompt = 'Sei un copywriter esperto di blog in italiano per un sito di consulenza aziendale. Dato un argomento, genera un articolo lungo e approfondito (almeno 1200 parole), ben strutturato in sezioni con sottotitoli e liste dove utile, e rispondi SOLO in questo formato: TITOLO: [titolo su una riga]\n\nESTRATTO: [2-3 frasi riassuntive]\n\nSLUG: [slug URL-friendly minuscolo-con-trattini, opzionale]\n\nCONTENUTO_HTML: [contenuto completo in HTML usando <p>, <h2>, <ul>, <li>, <strong>, <em>...] Senza testo prima o dopo queste sezioni e senza markdown.';
+      systemPrompt = `Sei un copywriter esperto per Noscite, società di consulenza aziendale che integra strategia, tecnologia e creatività.
+
+VALORI NOSCITE da trasmettere negli articoli:
+- Unicitas: personalizzazione assoluta per ogni cliente
+- Innovatio: ricerca continua delle migliori tecnologie emergenti
+- Societas: partnership durature basate su fiducia e crescita reciproca
+- Veritas: la verità come fondamento di ogni relazione
+- Fiducia: base di ogni collaborazione
+
+METODO NOSCITE (da citare quando pertinente):
+Auditio → Analytica → Co-creatio → Implementatio → Evolutio
+
+TONO DI VOCE:
+- Professionale ma accessibile
+- Focalizzato su casi concreti e benefici pratici
+- Evita gergo tecnico eccessivo
+- Enfatizza la trasformazione delle sfide in opportunità
+
+COMPITO:
+Genera un articolo completo e approfondito (minimo 1500 parole) sull'argomento richiesto.
+
+FORMATO DI RISPOSTA (rispetta ESATTAMENTE questa struttura):
+
+TITOLO: [titolo accattivante su una riga]
+
+ESTRATTO: [2-3 frasi che riassumono e invogliano alla lettura]
+
+SLUG: [slug-url-friendly-minuscolo-con-trattini]
+
+CONTENUTO_HTML:
+[Qui scrivi il contenuto completo dell'articolo in HTML valido. Usa:
+- <h2> per i sottotitoli delle sezioni principali
+- <p> per ogni paragrafo
+- <ul> e <li> per elenchi puntati
+- <ol> e <li> per elenchi numerati
+- <strong> per enfatizzare concetti chiave
+- <em> per citazioni o termini tecnici
+
+L'articolo DEVE essere strutturato con:
+- Introduzione (2-3 paragrafi)
+- Almeno 4-5 sezioni principali con H2
+- Ogni sezione con 2-4 paragrafi ricchi di contenuto
+- Conclusione con call-to-action
+- Totale minimo: 1500 parole]
+
+Non aggiungere nulla prima di "TITOLO:" o dopo la fine del contenuto HTML.`;
     }
 
     const body: any = {
@@ -38,7 +83,7 @@ serve(async (req) => {
         { role: 'system', content: systemPrompt },
         { role: 'user', content: prompt }
       ],
-      max_tokens: type === 'content' || type === 'complete' ? 2048 : 200,
+      max_tokens: type === 'content' || type === 'complete' ? 3000 : 200,
       temperature: 0.7,
     };
 
@@ -70,19 +115,41 @@ serve(async (req) => {
         throw new Error('AI response did not contain article data');
       }
 
-      const extractSection = (label: string): string => {
-        const regex = new RegExp(`${label}:\\s*([\\s\\S]*?)(?=^[A-Z_]+:|$)`, 'mi');
-        const match = text.match(regex);
-        return match?.[1]?.trim() ?? '';
+      console.log('AI raw response length:', text.length);
+
+      const extractSection = (label: string, isLastSection: boolean = false): string => {
+        if (isLastSection) {
+          // Per CONTENUTO_HTML, prendi tutto fino alla fine
+          const regex = new RegExp(`${label}:\\s*([\\s\\S]*)$`, 'i');
+          const match = text.match(regex);
+          return match?.[1]?.trim() ?? '';
+        } else {
+          // Per le altre sezioni, prendi fino alla prossima sezione con etichetta maiuscola
+          const regex = new RegExp(`${label}:\\s*([\\s\\S]*?)(?=\\n[A-Z_]+:|$)`, 'i');
+          const match = text.match(regex);
+          return match?.[1]?.trim() ?? '';
+        }
       };
 
-      const title = extractSection('TITOLO');
-      const excerpt = extractSection('ESTRATTO');
-      let slug = extractSection('SLUG');
-      const contentHtml = extractSection('CONTENUTO_HTML');
+      const title = extractSection('TITOLO', false);
+      const excerpt = extractSection('ESTRATTO', false);
+      let slug = extractSection('SLUG', false);
+      const contentHtml = extractSection('CONTENUTO_HTML', true);
+
+      console.log('Extracted sections:', { 
+        titleLength: title.length, 
+        excerptLength: excerpt.length, 
+        slugLength: slug.length, 
+        contentLength: contentHtml.length 
+      });
 
       if (!title || !contentHtml) {
-        console.error('AI article missing required fields:', { title, contentHtml, text });
+        console.error('AI article missing required fields:', { 
+          hasTitle: !!title, 
+          hasContent: !!contentHtml,
+          titlePreview: title.substring(0, 100),
+          contentPreview: contentHtml.substring(0, 200)
+        });
         throw new Error('AI response did not contain a valid article object');
       }
 
