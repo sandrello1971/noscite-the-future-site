@@ -1,7 +1,9 @@
-import { forwardRef, useImperativeHandle, useRef, useEffect } from 'react';
+import { forwardRef, useImperativeHandle, useRef } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import './quill-custom.css';
+
+console.log('QuillEditor component loaded');
 
 export interface QuillEditorRef {
   insertImage: (imageUrl: string, altText?: string) => void;
@@ -96,8 +98,10 @@ const QuillEditor = forwardRef<QuillEditorRef, QuillEditorProps>(
       'background',
     ];
 
+    console.log('QuillEditor rendering with content:', initialContent?.substring(0, 50));
+    
     return (
-      <div className="quill-editor-wrapper">
+      <div className="quill-editor-wrapper" style={{ minHeight: '500px', border: '1px solid red' }}>
         <ReactQuill
           ref={quillRef}
           theme="snow"
