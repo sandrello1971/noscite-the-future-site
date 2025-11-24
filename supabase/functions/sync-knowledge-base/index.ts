@@ -213,8 +213,47 @@ serve(async (req) => {
     const results = [];
     const errors = [];
 
-    // Process each page content
-    for (const page of pageContents) {
+    // Fetch published blog posts
+    const { data: blogPosts, error: blogError } = await supabase
+      .from('blog_posts')
+      .select('*')
+      .eq('published', true);
+
+    if (blogError) {
+      console.error('Error fetching blog posts:', blogError);
+    }
+
+    // Add blog posts to pageContents
+    const blogContents = (blogPosts || []).map(post => {
+      // Remove HTML tags from content for better embedding
+      const cleanContent = post.content.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+      const excerpt = post.excerpt || cleanContent.substring(0, 500);
+      
+      return {
+        title: `Blog: ${post.title}`,
+        content: `Titolo: ${post.title}
+        
+Categoria: ${post.category || 'Generale'}
+
+${post.excerpt ? `Estratto: ${post.excerpt}` : ''}
+
+Contenuto completo:
+${cleanContent}
+
+${post.tags && post.tags.length > 0 ? `Tag: ${post.tags.join(', ')}` : ''}
+
+Questo articolo è disponibile su noscite.it/blog/${post.slug}`,
+        sourceId: `blog-post-${post.id}`,
+        contentType: 'blog_post'
+      };
+    });
+
+    const allContents = [...pageContents, ...blogContents];
+    console.log(`Processing ${allContents.length} items (${pageContents.length} pages + ${blogContents.length} blog posts)`);
+
+
+    // Process all content (pages + blog posts)
+    for (const page of allContents) {
       try {
         console.log(`Processing: ${page.title}`);
 
@@ -257,7 +296,9 @@ serve(async (req) => {
     return new Response(JSON.stringify({
       success: true,
       synced: results.length,
-      total: pageContents.length,
+      total: allContents.length,
+      pages: pageContents.length,
+      blogPosts: blogContents.length,
       results,
       errors: errors.length > 0 ? errors : undefined
     }), {
