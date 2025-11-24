@@ -149,35 +149,48 @@ const QuillEditor = forwardRef<QuillEditorRef, QuillEditorProps>(
     const alignImage = (alignment: 'left' | 'right' | 'center' | 'full') => {
       if (!selectedImage) return;
 
-      // Remove all float and display styles
+      // Preserve current dimensions
+      const currentWidth = selectedImage.style.width || selectedImage.getAttribute('width') || 'auto';
+      const currentHeight = selectedImage.style.height || selectedImage.getAttribute('height') || 'auto';
+
+      // Remove all float and display styles but keep dimensions
       selectedImage.style.float = '';
       selectedImage.style.display = '';
       selectedImage.style.margin = '';
-      selectedImage.style.maxWidth = '';
+      
+      // Only reset maxWidth if going full width
+      if (alignment !== 'full') {
+        selectedImage.style.width = currentWidth;
+        selectedImage.style.height = currentHeight;
+      }
 
       switch (alignment) {
         case 'left':
           selectedImage.style.float = 'left';
           selectedImage.style.marginRight = '1rem';
           selectedImage.style.marginBottom = '1rem';
-          selectedImage.style.maxWidth = '50%';
+          if (!selectedImage.style.width || selectedImage.style.width === 'auto') {
+            selectedImage.style.maxWidth = '50%';
+          }
           break;
         case 'right':
           selectedImage.style.float = 'right';
           selectedImage.style.marginLeft = '1rem';
           selectedImage.style.marginBottom = '1rem';
-          selectedImage.style.maxWidth = '50%';
+          if (!selectedImage.style.width || selectedImage.style.width === 'auto') {
+            selectedImage.style.maxWidth = '50%';
+          }
           break;
         case 'center':
           selectedImage.style.display = 'block';
           selectedImage.style.margin = '1rem auto';
-          selectedImage.style.maxWidth = '100%';
           break;
         case 'full':
           selectedImage.style.display = 'block';
           selectedImage.style.margin = '1rem 0';
-          selectedImage.style.maxWidth = '100%';
           selectedImage.style.width = '100%';
+          selectedImage.style.height = 'auto';
+          selectedImage.style.maxWidth = '100%';
           break;
       }
 
@@ -186,6 +199,11 @@ const QuillEditor = forwardRef<QuillEditorRef, QuillEditorProps>(
       if (quill) {
         onChange(quill.root.innerHTML);
       }
+      
+      // Keep the image selected
+      setTimeout(() => {
+        setSelectedImage(selectedImage);
+      }, 100);
     };
 
     const modules = {
@@ -245,11 +263,15 @@ const QuillEditor = forwardRef<QuillEditorRef, QuillEditorProps>(
           {selectedImage && (
             <>
               <span className="quill-toolbar-separator" />
-              <span className="text-xs text-muted-foreground px-2">Allinea immagine:</span>
+              <span className="text-xs text-muted-foreground px-2 flex items-center gap-1">
+                <span className="inline-block w-2 h-2 bg-primary rounded-full animate-pulse" />
+                Immagine selezionata - Allinea:
+              </span>
               <button 
                 type="button" 
                 onClick={() => alignImage('left')}
                 title="Allinea a sinistra con testo a fianco"
+                className="flex items-center gap-1"
               >
                 <AlignLeft className="h-4 w-4" />
               </button>
@@ -257,6 +279,7 @@ const QuillEditor = forwardRef<QuillEditorRef, QuillEditorProps>(
                 type="button" 
                 onClick={() => alignImage('center')}
                 title="Centra"
+                className="flex items-center gap-1"
               >
                 <AlignCenter className="h-4 w-4" />
               </button>
@@ -264,6 +287,7 @@ const QuillEditor = forwardRef<QuillEditorRef, QuillEditorProps>(
                 type="button" 
                 onClick={() => alignImage('right')}
                 title="Allinea a destra con testo a fianco"
+                className="flex items-center gap-1"
               >
                 <AlignRight className="h-4 w-4" />
               </button>
@@ -271,6 +295,7 @@ const QuillEditor = forwardRef<QuillEditorRef, QuillEditorProps>(
                 type="button" 
                 onClick={() => alignImage('full')}
                 title="Larghezza piena"
+                className="flex items-center gap-1"
               >
                 <Maximize className="h-4 w-4" />
               </button>
