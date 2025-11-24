@@ -1,6 +1,5 @@
 import { forwardRef, useImperativeHandle, useRef } from 'react';
 import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
 import './quill-custom.css';
 
 export interface QuillEditorRef {
