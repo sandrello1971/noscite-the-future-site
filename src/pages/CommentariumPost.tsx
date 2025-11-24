@@ -153,7 +153,7 @@ export default function CommentariumPost() {
               )}
 
               <div 
-                className="prose prose-lg max-w-none prose-headings:text-foreground prose-p:text-foreground prose-a:text-primary prose-strong:text-foreground prose-ul:text-foreground prose-ol:text-foreground"
+                className="commentarium-content prose prose-lg max-w-none prose-headings:text-foreground prose-p:text-foreground prose-a:text-primary prose-strong:text-foreground prose-ul:text-foreground prose-ol:text-foreground"
                 dangerouslySetInnerHTML={{ __html: post.content }}
               />
 
