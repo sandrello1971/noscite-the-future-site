@@ -10,9 +10,10 @@ import type {
   Spread,
 } from 'lexical';
 
-import { $applyNodeReplacement, DecoratorNode } from 'lexical';
+import { $applyNodeReplacement, DecoratorNode, $getNodeByKey } from 'lexical';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { ArrowUp, ArrowDown } from 'lucide-react';
 
 export type ImageAlignment = 'left' | 'right' | 'center' | 'full';
 
@@ -309,13 +310,40 @@ function ImageComponent({
     });
   };
 
-  const onDragStart = (event: React.DragEvent) => {
-    const nodeSelection = JSON.stringify({
-      type: 'image',
-      nodeKey: nodeKey,
+  const moveNodeUp = () => {
+    editor.update(() => {
+      const node = $getNodeByKey(nodeKey);
+      if (!node) return;
+      
+      const parent = node.getParent();
+      if (!parent) return;
+      
+      const siblings = parent.getChildren();
+      const index = siblings.indexOf(node);
+      
+      if (index > 0) {
+        const previousSibling = siblings[index - 1];
+        node.insertBefore(previousSibling);
+      }
     });
-    event.dataTransfer.setData('application/x-lexical-drag', nodeSelection);
-    event.dataTransfer.effectAllowed = 'move';
+  };
+
+  const moveNodeDown = () => {
+    editor.update(() => {
+      const node = $getNodeByKey(nodeKey);
+      if (!node) return;
+      
+      const parent = node.getParent();
+      if (!parent) return;
+      
+      const siblings = parent.getChildren();
+      const index = siblings.indexOf(node);
+      
+      if (index < siblings.length - 1) {
+        const nextSibling = siblings[index + 1];
+        node.insertAfter(nextSibling);
+      }
+    });
   };
 
   const getContainerStyle = (): React.CSSProperties => {
@@ -363,8 +391,6 @@ function ImageComponent({
       style={getContainerStyle()}
       onMouseEnter={() => setIsSelected(true)}
       onMouseLeave={() => !isResizing && setIsSelected(false)}
-      draggable={true}
-      onDragStart={onDragStart}
     >
       <img
         ref={imageRef}
@@ -384,7 +410,7 @@ function ImageComponent({
       />
       {isSelected && (
         <>
-          {/* Alignment controls - top bar */}
+          {/* Alignment and Move controls - top bar */}
           <div
             style={{
               position: 'absolute',
@@ -400,6 +426,42 @@ function ImageComponent({
               zIndex: 20,
             }}
           >
+            <button
+              onClick={moveNodeUp}
+              style={{
+                padding: '4px 6px',
+                background: 'transparent',
+                color: 'hsl(var(--foreground))',
+                border: '1px solid hsl(var(--border))',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+              title="Sposta su"
+            >
+              <ArrowUp size={14} />
+            </button>
+            <button
+              onClick={moveNodeDown}
+              style={{
+                padding: '4px 6px',
+                background: 'transparent',
+                color: 'hsl(var(--foreground))',
+                border: '1px solid hsl(var(--border))',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+              title="Sposta giù"
+            >
+              <ArrowDown size={14} />
+            </button>
+            <div style={{ width: '1px', background: 'hsl(var(--border))', margin: '0 4px' }} />
+
             <button
               onClick={() => changeAlignment('left')}
               style={{
