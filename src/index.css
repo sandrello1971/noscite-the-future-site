@@ -247,10 +247,4 @@ All colors MUST be HSL.
     display: table;
     clear: both;
   }
-
-  /* Ensure paragraphs after floated images flow correctly */
-  .prose p,
-  .lexical-editor-content p {
-    overflow: auto;
-  }
 }
