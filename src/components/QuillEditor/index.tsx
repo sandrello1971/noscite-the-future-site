@@ -1,6 +1,13 @@
 import { forwardRef, useImperativeHandle, useRef } from 'react';
 import ReactQuill from 'react-quill';
+import ImageResize from 'quill-image-resize-module-react';
 import './quill-custom.css';
+
+// Register the image resize module
+if (typeof window !== 'undefined') {
+  const Quill = ReactQuill.Quill;
+  Quill.register('modules/imageResize', ImageResize);
+}
 
 export interface QuillEditorRef {
   insertImage: (imageUrl: string, altText?: string) => void;
@@ -91,6 +98,10 @@ const QuillEditor = forwardRef<QuillEditorRef, QuillEditorProps>(
       toolbar: false,
       clipboard: {
         matchVisual: false,
+      },
+      imageResize: {
+        parchment: ReactQuill.Quill.import('parchment'),
+        modules: ['Resize', 'DisplaySize'],
       },
     };
     const formats = [
