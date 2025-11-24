@@ -127,6 +127,63 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
+/* Image resize handles */
+.quill-editor-wrapper .ql-editor img {
+  position: relative;
+}
+
+.quill-editor-wrapper img.selected {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+}
+
+.resize-handle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: hsl(var(--primary));
+  border: 1px solid hsl(var(--background));
+  border-radius: 50%;
+  cursor: nwse-resize;
+  z-index: 100;
+}
+
+.image-resizer {
+  position: absolute;
+  border: 2px solid hsl(var(--primary));
+  z-index: 99;
+}
+
+.image-resizer .resize-handle-nw,
+.image-resizer .resize-handle-ne,
+.image-resizer .resize-handle-sw,
+.image-resizer .resize-handle-se {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: hsl(var(--primary));
+  border: 2px solid hsl(var(--background));
+  border-radius: 50%;
+}
+
+.image-resizer .resize-handle-nw { top: -5px; left: -5px; cursor: nw-resize; }
+.image-resizer .resize-handle-ne { top: -5px; right: -5px; cursor: ne-resize; }
+.image-resizer .resize-handle-sw { bottom: -5px; left: -5px; cursor: sw-resize; }
+.image-resizer .resize-handle-se { bottom: -5px; right: -5px; cursor: se-resize; }
+
+.image-resizer .display-size {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
 /* Float support for images */
 .quill-editor-wrapper .ql-editor img[style*="float: left"] {
   float: left;
