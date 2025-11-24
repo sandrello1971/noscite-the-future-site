@@ -33,7 +33,8 @@ serve(async (req) => {
         n: 1,
         size: '1024x1024',
         quality: 'auto',
-        output_format: 'png'
+        output_format: 'png',
+        response_format: 'b64_json',
       }),
     });
 
@@ -44,7 +45,15 @@ serve(async (req) => {
     }
 
     const data = await response.json();
-    const imageUrl = data.data[0].url;
+    const imageData = data?.data?.[0];
+    const base64Image = imageData?.b64_json;
+
+    if (!base64Image) {
+      console.error('OpenAI response missing b64_json field', data);
+      throw new Error('Invalid image response from OpenAI');
+    }
+
+    const imageUrl = `data:image/png;base64,${base64Image}`;
 
     console.log('Image generated successfully');
 
