@@ -10,7 +10,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
 import { CommentariumPost } from '@/types/database';
 import DOMPurify from 'dompurify';
-import LexicalEditor, { LexicalEditorRef } from '@/components/LexicalEditor';
+import QuillEditor, { QuillEditorRef } from '@/components/QuillEditor';
 
 interface CommentariumEditorProps {
   post?: CommentariumPost | null;
@@ -20,7 +20,7 @@ interface CommentariumEditorProps {
 
 const CommentariumEditor = ({ post, onSave, onCancel }: CommentariumEditorProps) => {
   const { toast } = useToast();
-  const editorRef = useRef<LexicalEditorRef>(null);
+  const editorRef = useRef<QuillEditorRef>(null);
   const [formData, setFormData] = useState<CommentariumPost>({
     title: '',
     slug: '',
@@ -155,12 +155,27 @@ const CommentariumEditor = ({ post, onSave, onCancel }: CommentariumEditorProps)
     }
 
     if (editorRef.current) {
-      editorRef.current.insertImage(generatedImageUrl);
+      editorRef.current.insertImage(generatedImageUrl, imagePrompt.trim() || 'Immagine generata');
       toast({
         title: "Immagine inserita",
-        description: "L'immagine è stata aggiunta al contenuto",
+        description: "Trascina l'immagine per spostarla, clicca per allinearla",
       });
     }
+  };
+
+  const handleEditorImageUpload = async (file: File): Promise<string> => {
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Math.random()}.${fileExt}`;
+    const filePath = `commentarium/${fileName}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from('blog-images')
+      .upload(filePath, file);
+
+    if (uploadError) throw uploadError;
+
+    const { data } = supabase.storage.from('blog-images').getPublicUrl(filePath);
+    return data.publicUrl;
   };
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -178,20 +193,9 @@ const CommentariumEditor = ({ post, onSave, onCancel }: CommentariumEditorProps)
 
     setLoading(true);
     try {
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Math.random()}.${fileExt}`;
-      const filePath = `commentarium/${fileName}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from('blog-images')
-        .upload(filePath, file);
-
-      if (uploadError) throw uploadError;
-
-      const { data } = supabase.storage.from('blog-images').getPublicUrl(filePath);
-
-      setFormData(prev => ({ ...prev, featured_image_url: data.publicUrl }));
-      setGeneratedImageUrl(data.publicUrl);
+      const url = await handleEditorImageUpload(file);
+      setFormData(prev => ({ ...prev, featured_image_url: url }));
+      setGeneratedImageUrl(url);
 
       toast({
         title: "Caricamento completato",
@@ -420,10 +424,11 @@ const CommentariumEditor = ({ post, onSave, onCancel }: CommentariumEditorProps)
 
       <div className="space-y-2">
         <Label htmlFor="content">Contenuto</Label>
-        <LexicalEditor
+        <QuillEditor
           ref={editorRef}
           initialContent={formData.content}
           onChange={handleContentChange}
+          onImageUpload={handleEditorImageUpload}
         />
       </div>
 
