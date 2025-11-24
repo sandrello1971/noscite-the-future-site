@@ -117,7 +117,7 @@ const CommentariumEditor = ({ post, onSave, onCancel }: CommentariumEditorProps)
 
       if (error) throw error;
 
-      const imageUrl = data?.url;
+      const imageUrl = data?.imageUrl;
       if (imageUrl) {
         setGeneratedImageUrl(imageUrl);
         setFormData(prev => ({ ...prev, featured_image_url: imageUrl }));
