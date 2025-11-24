@@ -169,7 +169,12 @@ const QuillEditor = forwardRef<QuillEditorRef, QuillEditorProps>(
     const alignImage = (alignment: 'left' | 'right' | 'center' | 'full') => {
       if (!selectedImage) return;
 
-      // Usa solo classi CSS per l'allineamento, senza toccare le dimensioni
+      // Misura le dimensioni attuali dell'immagine (dopo il resize)
+      const rect = selectedImage.getBoundingClientRect();
+      const currentWidth = rect.width;
+      const currentHeight = rect.height;
+
+      // Usa classi CSS per l'allineamento
       selectedImage.classList.remove(
         'ql-image-align-left',
         'ql-image-align-right',
@@ -190,6 +195,15 @@ const QuillEditor = forwardRef<QuillEditorRef, QuillEditorProps>(
         case 'full':
           selectedImage.classList.add('ql-image-align-full');
           break;
+      }
+
+      // Reimposta esplicitamente le dimensioni calcolate per non perderle
+      if (alignment === 'full') {
+        selectedImage.style.width = '100%';
+        selectedImage.style.height = 'auto';
+      } else {
+        selectedImage.style.width = `${currentWidth}px`;
+        selectedImage.style.height = `${currentHeight}px`;
       }
 
       // Salva le modifiche nel contenuto HTML
