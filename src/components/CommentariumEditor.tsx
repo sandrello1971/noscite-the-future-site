@@ -5,12 +5,14 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, Save, Eye, Upload, Sparkles, Image as ImageIcon, FileImage } from 'lucide-react';
+import { ArrowLeft, Save, Eye, Upload, Sparkles, Image as ImageIcon, FileImage, Trash2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
 import { CommentariumPost } from '@/types/database';
 import DOMPurify from 'dompurify';
 import QuillEditor, { QuillEditorRef } from '@/components/QuillEditor';
+
+const AUTOSAVE_KEY = 'commentarium-draft-autosave';
 
 interface CommentariumEditorProps {
   post?: CommentariumPost | null;
@@ -21,6 +23,21 @@ interface CommentariumEditorProps {
 const CommentariumEditor = ({ post, onSave, onCancel }: CommentariumEditorProps) => {
   const { toast } = useToast();
   const editorRef = useRef<QuillEditorRef>(null);
+  
+  // Load from localStorage on mount if no post is being edited
+  const loadSavedDraft = () => {
+    if (post) return null; // Don't load draft if editing existing post
+    try {
+      const saved = localStorage.getItem(AUTOSAVE_KEY);
+      return saved ? JSON.parse(saved) : null;
+    } catch (e) {
+      console.error('Error loading draft:', e);
+      return null;
+    }
+  };
+
+  const savedDraft = loadSavedDraft();
+  
   const [formData, setFormData] = useState<CommentariumPost>({
     title: '',
     slug: '',
@@ -30,16 +47,77 @@ const CommentariumEditor = ({ post, onSave, onCancel }: CommentariumEditorProps)
     tags: [],
     featured_image_url: '',
     published: false,
-    ...post
+    ...post,
+    ...(savedDraft?.formData || {})
   });
   const [loading, setLoading] = useState(false);
-  const [tagsInput, setTagsInput] = useState(post?.tags?.join(', ') || '');
+  const [tagsInput, setTagsInput] = useState(
+    post?.tags?.join(', ') || savedDraft?.tagsInput || ''
+  );
   const [aiLoading, setAiLoading] = useState(false);
-  const [imagePrompt, setImagePrompt] = useState('');
+  const [imagePrompt, setImagePrompt] = useState(savedDraft?.imagePrompt || '');
   const [showImagePrompt, setShowImagePrompt] = useState(false);
-  const [topicPrompt, setTopicPrompt] = useState('');
+  const [topicPrompt, setTopicPrompt] = useState(savedDraft?.topicPrompt || '');
   const [articleAiLoading, setArticleAiLoading] = useState(false);
-  const [generatedImageUrl, setGeneratedImageUrl] = useState<string>('');
+  const [generatedImageUrl, setGeneratedImageUrl] = useState<string>(savedDraft?.generatedImageUrl || '');
+
+  // Auto-save to localStorage
+  useEffect(() => {
+    if (post) return; // Don't autosave if editing existing post
+    
+    const draft = {
+      formData,
+      tagsInput,
+      imagePrompt,
+      topicPrompt,
+      generatedImageUrl,
+      timestamp: Date.now()
+    };
+    
+    try {
+      localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(draft));
+    } catch (e) {
+      console.error('Error saving draft:', e);
+    }
+  }, [formData, tagsInput, imagePrompt, topicPrompt, generatedImageUrl, post]);
+
+  // Clear draft from localStorage
+  const clearDraft = () => {
+    try {
+      localStorage.removeItem(AUTOSAVE_KEY);
+      toast({
+        title: "Bozza eliminata",
+        description: "La bozza salvata automaticamente è stata cancellata",
+      });
+      // Reset form
+      setFormData({
+        title: '',
+        slug: '',
+        excerpt: '',
+        content: '',
+        category: '',
+        tags: [],
+        featured_image_url: '',
+        published: false,
+      });
+      setTagsInput('');
+      setImagePrompt('');
+      setTopicPrompt('');
+      setGeneratedImageUrl('');
+    } catch (e) {
+      console.error('Error clearing draft:', e);
+    }
+  };
+
+  // Show notification if draft was loaded
+  useEffect(() => {
+    if (savedDraft && !post) {
+      toast({
+        title: "Bozza recuperata",
+        description: "È stata ripristinata una bozza salvata automaticamente",
+      });
+    }
+  }, []);
 
   useEffect(() => {
     // Auto-generate slug from title
@@ -283,6 +361,11 @@ const CommentariumEditor = ({ post, onSave, onCancel }: CommentariumEditorProps)
         console.error('Error syncing knowledge base:', syncError);
       }
 
+      // Clear autosave on successful save
+      if (!post) {
+        localStorage.removeItem(AUTOSAVE_KEY);
+      }
+
       toast({
         title: "Successo",
         description: post?.id ? "Articolo aggiornato" : "Articolo creato",
@@ -309,6 +392,12 @@ const CommentariumEditor = ({ post, onSave, onCancel }: CommentariumEditorProps)
           Indietro
         </Button>
         <div className="flex gap-2">
+          {!post && savedDraft && (
+            <Button variant="outline" onClick={clearDraft}>
+              <Trash2 className="mr-2 h-4 w-4" />
+              Elimina bozza
+            </Button>
+          )}
           <Button onClick={handleSubmit} disabled={loading}>
             <Save className="mr-2 h-4 w-4" />
             {loading ? 'Salvataggio...' : 'Salva'}
