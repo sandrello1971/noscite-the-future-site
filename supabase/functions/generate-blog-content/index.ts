@@ -29,7 +29,7 @@ serve(async (req) => {
     } else if (type === 'content') {
       systemPrompt = 'You are a professional blog content writer. Write engaging, well-structured blog posts with proper formatting. Use headings, paragraphs, and maintain a professional yet approachable tone. Return only the content in HTML format with proper tags (h2, p, ul, li, etc.).';
     } else if (type === 'complete') {
-      systemPrompt = 'Sei un copywriter esperto di blog in italiano per un sito di consulenza aziendale. Dato un argomento, genera un articolo completo ma conciso (massimo ~800 parole) e rispondi SOLO in questo formato: TITOLO: [titolo su una riga]\n\nESTRATTO: [2-3 frasi riassuntive]\n\nSLUG: [slug URL-friendly minuscolo-con-trattini, opzionale]\n\nCONTENUTO_HTML: [contenuto completo in HTML usando <p>, <h2>, <ul>, <li>, <strong>, <em>...] Senza testo prima o dopo queste sezioni e senza markdown.';
+      systemPrompt = 'Sei un copywriter esperto di blog in italiano per un sito di consulenza aziendale. Dato un argomento, genera un articolo lungo e approfondito (almeno 1200 parole), ben strutturato in sezioni con sottotitoli e liste dove utile, e rispondi SOLO in questo formato: TITOLO: [titolo su una riga]\n\nESTRATTO: [2-3 frasi riassuntive]\n\nSLUG: [slug URL-friendly minuscolo-con-trattini, opzionale]\n\nCONTENUTO_HTML: [contenuto completo in HTML usando <p>, <h2>, <ul>, <li>, <strong>, <em>...] Senza testo prima o dopo queste sezioni e senza markdown.';
     }
 
     const body: any = {
@@ -38,7 +38,7 @@ serve(async (req) => {
         { role: 'system', content: systemPrompt },
         { role: 'user', content: prompt }
       ],
-      max_tokens: type === 'content' || type === 'complete' ? 1024 : 200,
+      max_tokens: type === 'content' || type === 'complete' ? 2048 : 200,
       temperature: 0.7,
     };
 
