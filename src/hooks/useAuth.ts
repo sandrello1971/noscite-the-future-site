@@ -49,12 +49,15 @@ export function useAuth() {
             }, 0);
           } else {
             console.log('⏭️ Skipping role fetch for event:', event);
+            // Per eventi come TOKEN_REFRESHED, se abbiamo già un ruolo, settiamo loading a false
+            if (userRole !== null) {
+              setLoading(false);
+            }
           }
         } else {
           setUserRole(null);
+          setLoading(false);
         }
-
-        setLoading(false);
       }
     );
 
@@ -69,14 +72,13 @@ export function useAuth() {
 
         if (session?.user) {
           console.log('✅ Initial session found, fetching user role');
-          fetchUserRole(session.user.id);
+          await fetchUserRole(session.user.id);
+        } else {
+          setLoading(false);
         }
       } catch (error) {
         console.error('Error getting session:', error);
-      } finally {
-        if (mounted) {
-          setLoading(false);
-        }
+        setLoading(false);
       }
     };
 
