@@ -252,24 +252,23 @@ All colors MUST be HSL.
   /* Commentarium (Quill) public content image styles */
   .commentarium-content img {
     max-width: 100%;
-    height: auto;
     display: block;
     margin: 1rem 0;
     border-radius: 0.5rem;
   }
 
-  .commentarium-content img.ql-image-align-left,
-  .commentarium-content img[style*="float: left"] {
+  .commentarium-content img.ql-image-align-left {
     float: left;
     margin-right: 1rem;
     margin-bottom: 1rem;
+    max-width: 50%;
   }
 
-  .commentarium-content img.ql-image-align-right,
-  .commentarium-content img[style*="float: right"] {
+  .commentarium-content img.ql-image-align-right {
     float: right;
     margin-left: 1rem;
     margin-bottom: 1rem;
+    max-width: 50%;
   }
 
   .commentarium-content img.ql-image-align-center {
@@ -280,9 +279,9 @@ All colors MUST be HSL.
   .commentarium-content img.ql-image-align-full {
     display: block;
     margin: 1rem 0;
-    width: 100%;
+    width: 100% !important;
     max-width: 100%;
-    height: auto;
+    height: auto !important;
   }
  
 }
