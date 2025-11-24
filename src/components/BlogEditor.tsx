@@ -36,6 +36,8 @@ const BlogEditor = ({ post, onSave, onCancel }: BlogEditorProps) => {
   const [aiLoading, setAiLoading] = useState(false);
   const [imagePrompt, setImagePrompt] = useState('');
   const [showImagePrompt, setShowImagePrompt] = useState(false);
+  const [topicPrompt, setTopicPrompt] = useState('');
+  const [showTopicGenerator, setShowTopicGenerator] = useState(!post);
 
   useEffect(() => {
     // Auto-generate slug from title
@@ -49,20 +51,11 @@ const BlogEditor = ({ post, onSave, onCancel }: BlogEditorProps) => {
     }
   }, [formData.title, post]);
 
-  const generateAIContent = async (type: 'title' | 'excerpt' | 'content') => {
-    let prompt = '';
-    if (type === 'title') {
-      prompt = `Generate a compelling blog title about: ${formData.excerpt || 'a blog post'}`;
-    } else if (type === 'excerpt') {
-      prompt = `Generate a 2-3 sentence excerpt for a blog post titled: ${formData.title}`;
-    } else if (type === 'content') {
-      prompt = `Write a detailed blog post about: ${formData.title}. ${formData.excerpt ? `Focus on: ${formData.excerpt}` : ''}`;
-    }
-
-    if (!prompt || (type === 'title' && !formData.excerpt) || (type === 'excerpt' && !formData.title) || (type === 'content' && !formData.title)) {
+  const generateCompleteArticle = async () => {
+    if (!topicPrompt.trim()) {
       toast({
-        title: "Info mancanti",
-        description: type === 'title' ? "Scrivi prima un estratto" : type === 'excerpt' ? "Scrivi prima un titolo" : "Scrivi prima un titolo",
+        title: "Argomento mancante",
+        description: "Inserisci un argomento per generare l'articolo",
         variant: "destructive",
       });
       return;
@@ -71,58 +64,33 @@ const BlogEditor = ({ post, onSave, onCancel }: BlogEditorProps) => {
     setAiLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke('generate-blog-content', {
-        body: { prompt, type }
+        body: { 
+          prompt: topicPrompt,
+          type: 'complete'
+        }
       });
 
       if (error) throw error;
 
-      setFormData(prev => ({ ...prev, [type]: data.content }));
+      // L'AI ritorna un oggetto con title, excerpt, content
+      setFormData(prev => ({
+        ...prev,
+        title: data.title,
+        slug: data.title.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').trim(),
+        excerpt: data.excerpt,
+        content: data.content
+      }));
+      
+      setShowTopicGenerator(false);
       toast({
-        title: "Contenuto generato",
-        description: "L'AI ha generato il contenuto con successo",
+        title: "Articolo generato",
+        description: "L'AI ha generato l'articolo completo",
       });
     } catch (error) {
-      console.error('Error generating content:', error);
+      console.error('Error generating article:', error);
       toast({
         title: "Errore",
-        description: "Impossibile generare il contenuto",
-        variant: "destructive",
-      });
-    } finally {
-      setAiLoading(false);
-    }
-  };
-
-  const generateAIImage = async () => {
-    if (!imagePrompt) {
-      toast({
-        title: "Prompt mancante",
-        description: "Inserisci una descrizione per l'immagine",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setAiLoading(true);
-    try {
-      const { data, error } = await supabase.functions.invoke('generate-blog-image', {
-        body: { prompt: imagePrompt }
-      });
-
-      if (error) throw error;
-
-      setFormData(prev => ({ ...prev, featured_image_url: data.imageUrl }));
-      setShowImagePrompt(false);
-      setImagePrompt('');
-      toast({
-        title: "Immagine generata",
-        description: "L'immagine è stata generata con successo",
-      });
-    } catch (error) {
-      console.error('Error generating image:', error);
-      toast({
-        title: "Errore",
-        description: "Impossibile generare l'immagine",
+        description: "Impossibile generare l'articolo",
         variant: "destructive",
       });
     } finally {
@@ -353,25 +321,66 @@ const BlogEditor = ({ post, onSave, onCancel }: BlogEditorProps) => {
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Main Editor */}
           <div className="lg:col-span-2 space-y-6">
+            {/* AI Topic Generator */}
+            {showTopicGenerator && (
+              <Card className="border-primary/50 bg-primary/5">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="flex items-center gap-2">
+                      <Sparkles className="h-5 w-5 text-primary" />
+                      Genera Articolo con AI
+                    </CardTitle>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setShowTopicGenerator(false)}
+                    >
+                      Chiudi
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <Label htmlFor="topic">Di cosa vuoi parlare?</Label>
+                    <Textarea
+                      id="topic"
+                      value={topicPrompt}
+                      onChange={(e) => setTopicPrompt(e.target.value)}
+                      placeholder="Es: Le migliori pratiche per l'intelligenza artificiale nel 2025"
+                      rows={3}
+                      className="mt-2"
+                    />
+                  </div>
+                  <Button
+                    onClick={generateCompleteArticle}
+                    disabled={aiLoading}
+                    className="w-full"
+                  >
+                    <Sparkles className="h-4 w-4 mr-2" />
+                    {aiLoading ? 'Generando articolo...' : 'Genera Articolo Completo'}
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
+            
             <Card>
               <CardHeader>
                 <CardTitle>Contenuto</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
+                {!showTopicGenerator && !post && (
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowTopicGenerator(true)}
+                    className="w-full mb-4"
+                  >
+                    <Sparkles className="h-4 w-4 mr-2" />
+                    Genera Articolo con AI
+                  </Button>
+                )}
+                
                 <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <Label htmlFor="title">Titolo *</Label>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => generateAIContent('title')}
-                      disabled={aiLoading}
-                    >
-                      <Sparkles className="h-4 w-4 mr-2" />
-                      Genera con AI
-                    </Button>
-                  </div>
+                  <Label htmlFor="title">Titolo *</Label>
                   <Input
                     id="title"
                     value={formData.title}
@@ -391,19 +400,7 @@ const BlogEditor = ({ post, onSave, onCancel }: BlogEditorProps) => {
                 </div>
 
                 <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <Label htmlFor="excerpt">Estratto</Label>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => generateAIContent('excerpt')}
-                      disabled={aiLoading}
-                    >
-                      <Sparkles className="h-4 w-4 mr-2" />
-                      Genera con AI
-                    </Button>
-                  </div>
+                  <Label htmlFor="excerpt">Estratto</Label>
                   <Textarea
                     id="excerpt"
                     value={formData.excerpt}
@@ -414,19 +411,7 @@ const BlogEditor = ({ post, onSave, onCancel }: BlogEditorProps) => {
                 </div>
 
                 <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <Label>Contenuto *</Label>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => generateAIContent('content')}
-                      disabled={aiLoading}
-                    >
-                      <Sparkles className="h-4 w-4 mr-2" />
-                      Genera con AI
-                    </Button>
-                  </div>
+                  <Label>Contenuto *</Label>
                   <div className="mt-2">
                     <LexicalEditor
                       initialContent={formData.content}
