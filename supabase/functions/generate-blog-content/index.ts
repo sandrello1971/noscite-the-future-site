@@ -29,7 +29,7 @@ serve(async (req) => {
     } else if (type === 'content') {
       systemPrompt = 'You are a professional blog content writer. Write engaging, well-structured blog posts with proper formatting. Use headings, paragraphs, and maintain a professional yet approachable tone. Return only the content in HTML format with proper tags (h2, p, ul, li, etc.).';
     } else if (type === 'complete') {
-      systemPrompt = 'You are an expert Italian blog writer. Given a topic, create a complete blog article for a business consultancy site. Respond ONLY with compact JSON using this exact structure and no markdown or explanations: {"title":"...","excerpt":"...","content":"..."}. The "content" field must be valid HTML using <p>, <h2>, <ul>, <li>, <strong>, <em>, and similar tags.';
+      systemPrompt = 'Sei un copywriter esperto di blog in italiano per un sito di consulenza aziendale. Dato un argomento, genera un articolo completo ma conciso (massimo ~800 parole) e rispondi SOLO in questo formato: TITOLO: [titolo su una riga]\n\nESTRATTO: [2-3 frasi riassuntive]\n\nSLUG: [slug URL-friendly minuscolo-con-trattini, opzionale]\n\nCONTENUTO_HTML: [contenuto completo in HTML usando <p>, <h2>, <ul>, <li>, <strong>, <em>...] Senza testo prima o dopo queste sezioni e senza markdown.';
     }
 
     const body: any = {
@@ -38,12 +38,8 @@ serve(async (req) => {
         { role: 'system', content: systemPrompt },
         { role: 'user', content: prompt }
       ],
-      max_completion_tokens: type === 'content' || type === 'complete' ? 1200 : 200,
+      max_completion_tokens: type === 'content' || type === 'complete' ? 512 : 200,
     };
-
-    if (type === 'complete') {
-      body.response_format = { type: 'json_object' };
-    }
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -65,59 +61,47 @@ serve(async (req) => {
     console.log('Content generated successfully');
 
     if (type === 'complete') {
-      let jsonText = (data.choices?.[0]?.message?.content as string | undefined)?.trim() ?? '';
+      const fullText = (data.choices?.[0]?.message?.content as string | undefined) ?? '';
+      const text = fullText.trim();
 
-      if (!jsonText) {
+      if (!text) {
         console.error('AI response did not contain article data:', JSON.stringify(data));
         throw new Error('AI response did not contain article data');
       }
 
-      // Rimuovi eventuali code fences ```
-      if (jsonText.startsWith('```')) {
-        const firstNewline = jsonText.indexOf('\n');
-        if (firstNewline !== -1) {
-          jsonText = jsonText.slice(firstNewline + 1);
-        }
-        if (jsonText.endsWith('```')) {
-          jsonText = jsonText.slice(0, -3);
-        }
-        jsonText = jsonText.trim();
-      }
+      const extractSection = (label: string): string => {
+        const regex = new RegExp(`${label}:\\s*([\\s\\S]*?)(?=^[A-Z_]+:|$)`, 'mi');
+        const match = text.match(regex);
+        return match?.[1]?.trim() ?? '';
+      };
 
-      // Estrai solo l'oggetto JSON più esterno, nel caso il modello aggiunga testo
-      const firstBrace = jsonText.indexOf('{');
-      const lastBrace = jsonText.lastIndexOf('}');
-      if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
-        jsonText = jsonText.slice(firstBrace, lastBrace + 1);
-      }
+      const title = extractSection('TITOLO');
+      const excerpt = extractSection('ESTRATTO');
+      let slug = extractSection('SLUG');
+      const contentHtml = extractSection('CONTENUTO_HTML');
 
-      let article: any;
-      try {
-        article = JSON.parse(jsonText);
-      } catch (e) {
-        console.error('Failed to parse article JSON from message content:', e, jsonText);
-        throw new Error('Failed to parse AI response as JSON');
-      }
-
-      if (article && article.article) {
-        article = article.article;
-      }
-
-      if (!article || typeof article !== 'object') {
-        console.error('AI article object invalid:', article);
+      if (!title || !contentHtml) {
+        console.error('AI article missing required fields:', { title, contentHtml, text });
         throw new Error('AI response did not contain a valid article object');
       }
 
-      if (!article.slug && article.title) {
-        const slugSource = String(article.title)
+      if (!slug && title) {
+        const slugSource = title
           .toLowerCase()
           .normalize('NFD')
           .replace(/\p{Diacritic}/gu, '');
 
-        article.slug = slugSource
+        slug = slugSource
           .replace(/[^a-z0-9]+/g, '-')
           .replace(/^-+|-+$/g, '');
       }
+
+      const article = {
+        title,
+        excerpt,
+        slug,
+        content: contentHtml,
+      };
 
       return new Response(JSON.stringify(article), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
