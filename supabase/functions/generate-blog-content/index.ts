@@ -33,12 +33,13 @@ serve(async (req) => {
     }
 
     const body: any = {
-      model: 'gpt-5-nano-2025-08-07',
+      model: 'gpt-4o-mini',
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: prompt }
       ],
-      max_completion_tokens: type === 'content' || type === 'complete' ? 512 : 200,
+      max_tokens: type === 'content' || type === 'complete' ? 1024 : 200,
+      temperature: 0.7,
     };
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
