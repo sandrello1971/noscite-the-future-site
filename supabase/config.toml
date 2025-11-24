@@ -17,3 +17,9 @@ verify_jwt = false
 
 [functions.sync-knowledge-base]
 verify_jwt = true
+
+[functions.generate-blog-content]
+verify_jwt = true
+
+[functions.generate-blog-image]
+verify_jwt = true

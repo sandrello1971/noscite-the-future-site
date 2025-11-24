@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, Save, Eye, Upload } from 'lucide-react';
+import { ArrowLeft, Save, Eye, Upload, Sparkles, Image } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
 import { BlogPost } from '@/types/database';
@@ -33,6 +33,9 @@ const BlogEditor = ({ post, onSave, onCancel }: BlogEditorProps) => {
   });
   const [loading, setLoading] = useState(false);
   const [tagsInput, setTagsInput] = useState(post?.tags?.join(', ') || '');
+  const [aiLoading, setAiLoading] = useState(false);
+  const [imagePrompt, setImagePrompt] = useState('');
+  const [showImagePrompt, setShowImagePrompt] = useState(false);
 
   useEffect(() => {
     // Auto-generate slug from title
@@ -45,6 +48,87 @@ const BlogEditor = ({ post, onSave, onCancel }: BlogEditorProps) => {
       setFormData(prev => ({ ...prev, slug }));
     }
   }, [formData.title, post]);
+
+  const generateAIContent = async (type: 'title' | 'excerpt' | 'content') => {
+    let prompt = '';
+    if (type === 'title') {
+      prompt = `Generate a compelling blog title about: ${formData.excerpt || 'a blog post'}`;
+    } else if (type === 'excerpt') {
+      prompt = `Generate a 2-3 sentence excerpt for a blog post titled: ${formData.title}`;
+    } else if (type === 'content') {
+      prompt = `Write a detailed blog post about: ${formData.title}. ${formData.excerpt ? `Focus on: ${formData.excerpt}` : ''}`;
+    }
+
+    if (!prompt || (type === 'title' && !formData.excerpt) || (type === 'excerpt' && !formData.title) || (type === 'content' && !formData.title)) {
+      toast({
+        title: "Info mancanti",
+        description: type === 'title' ? "Scrivi prima un estratto" : type === 'excerpt' ? "Scrivi prima un titolo" : "Scrivi prima un titolo",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setAiLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-blog-content', {
+        body: { prompt, type }
+      });
+
+      if (error) throw error;
+
+      setFormData(prev => ({ ...prev, [type]: data.content }));
+      toast({
+        title: "Contenuto generato",
+        description: "L'AI ha generato il contenuto con successo",
+      });
+    } catch (error) {
+      console.error('Error generating content:', error);
+      toast({
+        title: "Errore",
+        description: "Impossibile generare il contenuto",
+        variant: "destructive",
+      });
+    } finally {
+      setAiLoading(false);
+    }
+  };
+
+  const generateAIImage = async () => {
+    if (!imagePrompt) {
+      toast({
+        title: "Prompt mancante",
+        description: "Inserisci una descrizione per l'immagine",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setAiLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-blog-image', {
+        body: { prompt: imagePrompt }
+      });
+
+      if (error) throw error;
+
+      setFormData(prev => ({ ...prev, featured_image_url: data.imageUrl }));
+      setShowImagePrompt(false);
+      setImagePrompt('');
+      toast({
+        title: "Immagine generata",
+        description: "L'immagine è stata generata con successo",
+      });
+    } catch (error) {
+      console.error('Error generating image:', error);
+      toast({
+        title: "Errore",
+        description: "Impossibile generare l'immagine",
+        variant: "destructive",
+      });
+    } finally {
+      setAiLoading(false);
+    }
+  };
 
   const escapeHtml = (unsafe: string): string => {
     return unsafe
@@ -275,7 +359,19 @@ const BlogEditor = ({ post, onSave, onCancel }: BlogEditorProps) => {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <Label htmlFor="title">Titolo *</Label>
+                  <div className="flex items-center justify-between mb-2">
+                    <Label htmlFor="title">Titolo *</Label>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => generateAIContent('title')}
+                      disabled={aiLoading}
+                    >
+                      <Sparkles className="h-4 w-4 mr-2" />
+                      Genera con AI
+                    </Button>
+                  </div>
                   <Input
                     id="title"
                     value={formData.title}
@@ -295,7 +391,19 @@ const BlogEditor = ({ post, onSave, onCancel }: BlogEditorProps) => {
                 </div>
 
                 <div>
-                  <Label htmlFor="excerpt">Estratto</Label>
+                  <div className="flex items-center justify-between mb-2">
+                    <Label htmlFor="excerpt">Estratto</Label>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => generateAIContent('excerpt')}
+                      disabled={aiLoading}
+                    >
+                      <Sparkles className="h-4 w-4 mr-2" />
+                      Genera con AI
+                    </Button>
+                  </div>
                   <Textarea
                     id="excerpt"
                     value={formData.excerpt}
@@ -306,7 +414,19 @@ const BlogEditor = ({ post, onSave, onCancel }: BlogEditorProps) => {
                 </div>
 
                 <div>
-                  <Label>Contenuto *</Label>
+                  <div className="flex items-center justify-between mb-2">
+                    <Label>Contenuto *</Label>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => generateAIContent('content')}
+                      disabled={aiLoading}
+                    >
+                      <Sparkles className="h-4 w-4 mr-2" />
+                      Genera con AI
+                    </Button>
+                  </div>
                   <div className="mt-2">
                     <LexicalEditor
                       initialContent={formData.content}
@@ -362,7 +482,36 @@ const BlogEditor = ({ post, onSave, onCancel }: BlogEditorProps) => {
                 </div>
 
                 <div>
-                  <Label htmlFor="featured_image">URL Immagine in evidenza</Label>
+                  <div className="flex items-center justify-between mb-2">
+                    <Label htmlFor="featured_image">URL Immagine in evidenza</Label>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setShowImagePrompt(!showImagePrompt)}
+                    >
+                      <Image className="h-4 w-4 mr-2" />
+                      Genera con AI
+                    </Button>
+                  </div>
+                  {showImagePrompt && (
+                    <div className="space-y-2 mb-2">
+                      <Input
+                        value={imagePrompt}
+                        onChange={(e) => setImagePrompt(e.target.value)}
+                        placeholder="Descrivi l'immagine da generare..."
+                      />
+                      <Button
+                        type="button"
+                        onClick={generateAIImage}
+                        disabled={aiLoading}
+                        size="sm"
+                        className="w-full"
+                      >
+                        {aiLoading ? 'Generando...' : 'Genera Immagine'}
+                      </Button>
+                    </div>
+                  )}
                   <Input
                     id="featured_image"
                     value={formData.featured_image_url || ''}
