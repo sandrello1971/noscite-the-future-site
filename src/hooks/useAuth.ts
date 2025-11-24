@@ -15,7 +15,6 @@ export function useAuth() {
   const [userRole, setUserRole] = useState<'admin' | 'user' | 'moderator' | null>(null);
   const [loading, setLoading] = useState(true);
   const [roleLoading, setRoleLoading] = useState(false);
-  const [hasFetchedRole, setHasFetchedRole] = useState(false);
 
   console.log('🔍 useAuth state:', { 
     hasUser: !!user, 
@@ -28,18 +27,49 @@ export function useAuth() {
 
   useEffect(() => {
     let mounted = true;
-    
-    // Get initial session
+
+    // Listen for auth changes FIRST
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        if (!mounted) return;
+
+        console.log('🔔 Auth state changed:', event);
+
+        setSession(session);
+        setUser(session?.user ?? null);
+
+        if (session?.user) {
+          // Fetch role solo su SIGNED_IN o INITIAL_SESSION, MAI su TOKEN_REFRESHED
+          if (event === 'SIGNED_IN' || event === 'INITIAL_SESSION') {
+            console.log('✅ Scheduling user role fetch for event:', event);
+            // Deferiamo la chiamata Supabase fuori dal callback per evitare deadlock
+            setTimeout(() => {
+              if (!mounted) return;
+              fetchUserRole(session.user!.id);
+            }, 0);
+          } else {
+            console.log('⏭️ Skipping role fetch for event:', event);
+          }
+        } else {
+          setUserRole(null);
+        }
+
+        setLoading(false);
+      }
+    );
+
+    // Poi recuperiamo la sessione iniziale
     const getSession = async () => {
       try {
         const { data: { session } } = await supabase.auth.getSession();
         if (!mounted) return;
-        
+
         setSession(session);
         setUser(session?.user ?? null);
-        
+
         if (session?.user) {
-          await fetchUserRole(session.user.id);
+          console.log('✅ Initial session found, fetching user role');
+          fetchUserRole(session.user.id);
         }
       } catch (error) {
         console.error('Error getting session:', error);
@@ -51,34 +81,6 @@ export function useAuth() {
     };
 
     getSession();
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        if (!mounted) return;
-        
-        console.log('🔔 Auth state changed:', event);
-        
-        setSession(session);
-        setUser(session?.user ?? null);
-        
-        if (session?.user) {
-          // Fetch role solo alla prima autenticazione esplicita
-          if (!hasFetchedRole && event === 'SIGNED_IN') {
-            console.log('✅ Fetching user role for first SIGNED_IN event');
-            await fetchUserRole(session.user.id);
-          } else {
-            console.log('⏭️ Skipping role fetch for event:', event, 'hasFetchedRole:', hasFetchedRole);
-            // Mantieni il ruolo esistente per eventi come TOKEN_REFRESHED o SIGNED_IN ripetuti
-          }
-        } else {
-          setUserRole(null);
-          setHasFetchedRole(false);
-        }
-
-        setLoading(false);
-      }
-    );
 
     return () => {
       mounted = false;
@@ -113,7 +115,6 @@ export function useAuth() {
     } finally {
       console.log('🏁 fetchUserRole completed, setting roleLoading to false');
       setRoleLoading(false);
-      setHasFetchedRole(true);
     }
   };
 
