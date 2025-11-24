@@ -239,4 +239,18 @@ All colors MUST be HSL.
     transform: scaleX(1);
     transform-origin: bottom left;
   }
+
+  /* Lexical Editor - Image float support */
+  .prose::after,
+  .lexical-editor-content::after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+
+  /* Ensure paragraphs after floated images flow correctly */
+  .prose p,
+  .lexical-editor-content p {
+    overflow: auto;
+  }
 }

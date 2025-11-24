@@ -14,6 +14,8 @@ import { $applyNodeReplacement, DecoratorNode } from 'lexical';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 
+export type ImageAlignment = 'left' | 'right' | 'center' | 'full';
+
 export interface ImagePayload {
   altText: string;
   src: string;
@@ -21,6 +23,7 @@ export interface ImagePayload {
   width?: number;
   height?: number;
   maxWidth?: number;
+  alignment?: ImageAlignment;
 }
 
 export type SerializedImageNode = Spread<
@@ -30,6 +33,7 @@ export type SerializedImageNode = Spread<
     width?: number;
     height?: number;
     maxWidth?: number;
+    alignment?: ImageAlignment;
   },
   SerializedLexicalNode
 >;
@@ -49,6 +53,7 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
   __width?: number;
   __height?: number;
   __maxWidth: number;
+  __alignment: ImageAlignment;
 
   static getType(): string {
     return 'image';
@@ -61,18 +66,20 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
       node.__width,
       node.__height,
       node.__maxWidth,
+      node.__alignment,
       node.__key
     );
   }
 
   static importJSON(serializedNode: SerializedImageNode): ImageNode {
-    const { altText, src, width, height, maxWidth } = serializedNode;
+    const { altText, src, width, height, maxWidth, alignment } = serializedNode;
     const node = $createImageNode({
       altText,
       src,
       width,
       height,
       maxWidth,
+      alignment,
     });
     return node;
   }
@@ -101,6 +108,7 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
     width?: number,
     height?: number,
     maxWidth: number = 800,
+    alignment: ImageAlignment = 'center',
     key?: NodeKey
   ) {
     super(key);
@@ -109,6 +117,7 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
     this.__width = width;
     this.__height = height;
     this.__maxWidth = maxWidth;
+    this.__alignment = alignment;
   }
 
   exportJSON(): SerializedImageNode {
@@ -118,6 +127,7 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
       width: this.__width,
       height: this.__height,
       maxWidth: this.__maxWidth,
+      alignment: this.__alignment,
       type: 'image',
       version: 1,
     };
@@ -127,6 +137,15 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
     const writable = this.getWritable();
     writable.__width = width;
     writable.__height = height;
+  }
+
+  setAlignment(alignment: ImageAlignment): void {
+    const writable = this.getWritable();
+    writable.__alignment = alignment;
+  }
+
+  getAlignment(): ImageAlignment {
+    return this.__alignment;
   }
 
   createDOM(config: EditorConfig): HTMLElement {
@@ -159,6 +178,7 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
         width={this.__width}
         height={this.__height}
         maxWidth={this.__maxWidth}
+        alignment={this.__alignment}
         nodeKey={this.getKey()}
       />
     );
@@ -171,9 +191,10 @@ export function $createImageNode({
   width,
   height,
   maxWidth = 800,
+  alignment = 'center',
   key,
 }: ImagePayload): ImageNode {
-  return $applyNodeReplacement(new ImageNode(src, altText, width, height, maxWidth, key));
+  return $applyNodeReplacement(new ImageNode(src, altText, width, height, maxWidth, alignment, key));
 }
 
 export function $isImageNode(
@@ -182,13 +203,14 @@ export function $isImageNode(
   return node instanceof ImageNode;
 }
 
-// Component with resize functionality
+// Component with resize and drag functionality
 interface ImageComponentProps {
   src: string;
   altText: string;
   width?: number;
   height?: number;
   maxWidth: number;
+  alignment: ImageAlignment;
   nodeKey: NodeKey;
 }
 
@@ -198,14 +220,17 @@ function ImageComponent({
   width,
   height,
   maxWidth,
+  alignment,
   nodeKey,
 }: ImageComponentProps): JSX.Element {
   const imageRef = useRef<HTMLImageElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [editor] = useLexicalComposerContext();
   const [isResizing, setIsResizing] = useState(false);
   const [isSelected, setIsSelected] = useState(false);
   const [currentWidth, setCurrentWidth] = useState<number | undefined>(width);
   const [currentHeight, setCurrentHeight] = useState<number | undefined>(height);
+  const [currentAlignment, setCurrentAlignment] = useState<ImageAlignment>(alignment);
   const resizeStartRef = useRef<{ x: number; y: number; width: number; height: number } | null>(null);
 
   useEffect(() => {
@@ -274,16 +299,72 @@ function ImageComponent({
     document.addEventListener('mouseup', onMouseUp);
   }, [currentWidth, currentHeight, editor, maxWidth, nodeKey]);
 
+  const changeAlignment = (newAlignment: ImageAlignment) => {
+    setCurrentAlignment(newAlignment);
+    editor.update(() => {
+      const node = editor.getEditorState()._nodeMap.get(nodeKey);
+      if ($isImageNode(node)) {
+        node.setAlignment(newAlignment);
+      }
+    });
+  };
+
+  const onDragStart = (event: React.DragEvent) => {
+    const nodeSelection = JSON.stringify({
+      type: 'image',
+      nodeKey: nodeKey,
+    });
+    event.dataTransfer.setData('application/x-lexical-drag', nodeSelection);
+    event.dataTransfer.effectAllowed = 'move';
+  };
+
+  const getContainerStyle = (): React.CSSProperties => {
+    const baseStyle: React.CSSProperties = {
+      position: 'relative',
+      display: 'block',
+      margin: '1rem 0',
+      cursor: 'default',
+    };
+
+    if (currentAlignment === 'left') {
+      return {
+        ...baseStyle,
+        float: 'left',
+        marginRight: '1rem',
+        maxWidth: '50%',
+      };
+    } else if (currentAlignment === 'right') {
+      return {
+        ...baseStyle,
+        float: 'right',
+        marginLeft: '1rem',
+        maxWidth: '50%',
+      };
+    } else if (currentAlignment === 'center') {
+      return {
+        ...baseStyle,
+        display: 'flex',
+        justifyContent: 'center',
+        margin: '1.5rem auto',
+      };
+    } else {
+      // full width
+      return {
+        ...baseStyle,
+        width: '100%',
+        margin: '1.5rem 0',
+      };
+    }
+  };
+
   return (
     <div
-      style={{
-        position: 'relative',
-        display: 'inline-block',
-        margin: '1rem 0',
-        cursor: 'default',
-      }}
+      ref={containerRef}
+      style={getContainerStyle()}
       onMouseEnter={() => setIsSelected(true)}
       onMouseLeave={() => !isResizing && setIsSelected(false)}
+      draggable={true}
+      onDragStart={onDragStart}
     >
       <img
         ref={imageRef}
@@ -291,7 +372,7 @@ function ImageComponent({
         alt={altText}
         style={{
           display: 'block',
-          maxWidth: `${maxWidth}px`,
+          maxWidth: currentAlignment === 'full' ? '100%' : `${maxWidth}px`,
           width: currentWidth ? `${currentWidth}px` : 'auto',
           height: currentHeight ? `${currentHeight}px` : 'auto',
           objectFit: 'contain',
@@ -303,6 +384,88 @@ function ImageComponent({
       />
       {isSelected && (
         <>
+          {/* Alignment controls - top bar */}
+          <div
+            style={{
+              position: 'absolute',
+              top: '-36px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              display: 'flex',
+              gap: '4px',
+              background: 'hsl(var(--popover))',
+              padding: '4px',
+              borderRadius: '6px',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+              zIndex: 20,
+            }}
+          >
+            <button
+              onClick={() => changeAlignment('left')}
+              style={{
+                padding: '4px 8px',
+                background: currentAlignment === 'left' ? 'hsl(var(--primary))' : 'transparent',
+                color: currentAlignment === 'left' ? 'white' : 'hsl(var(--foreground))',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontSize: '12px',
+                fontWeight: '500',
+              }}
+              title="Sinistra con testo a fianco"
+            >
+              ← Sinistra
+            </button>
+            <button
+              onClick={() => changeAlignment('center')}
+              style={{
+                padding: '4px 8px',
+                background: currentAlignment === 'center' ? 'hsl(var(--primary))' : 'transparent',
+                color: currentAlignment === 'center' ? 'white' : 'hsl(var(--foreground))',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontSize: '12px',
+                fontWeight: '500',
+              }}
+              title="Centro"
+            >
+              Centro
+            </button>
+            <button
+              onClick={() => changeAlignment('right')}
+              style={{
+                padding: '4px 8px',
+                background: currentAlignment === 'right' ? 'hsl(var(--primary))' : 'transparent',
+                color: currentAlignment === 'right' ? 'white' : 'hsl(var(--foreground))',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontSize: '12px',
+                fontWeight: '500',
+              }}
+              title="Destra con testo a fianco"
+            >
+              Destra →
+            </button>
+            <button
+              onClick={() => changeAlignment('full')}
+              style={{
+                padding: '4px 8px',
+                background: currentAlignment === 'full' ? 'hsl(var(--primary))' : 'transparent',
+                color: currentAlignment === 'full' ? 'white' : 'hsl(var(--foreground))',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontSize: '12px',
+                fontWeight: '500',
+              }}
+              title="Larghezza completa"
+            >
+              Piena
+            </button>
+          </div>
+
           {/* Resize handle - bottom right */}
           <div
             onMouseDown={onResizeStart}
@@ -316,28 +479,6 @@ function ImageComponent({
               border: '2px solid white',
               borderRadius: '50%',
               cursor: 'nwse-resize',
-              zIndex: 10,
-              boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
-            }}
-          />
-          {/* Resize handle - bottom left */}
-          <div
-            onMouseDown={(e) => {
-              // Mirror the resize behavior for left handle
-              e.preventDefault();
-              e.stopPropagation();
-              // TODO: Implement left-side resize if needed
-            }}
-            style={{
-              position: 'absolute',
-              left: '-6px',
-              bottom: '-6px',
-              width: '16px',
-              height: '16px',
-              background: 'hsl(var(--primary))',
-              border: '2px solid white',
-              borderRadius: '50%',
-              cursor: 'nesw-resize',
               zIndex: 10,
               boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
             }}
