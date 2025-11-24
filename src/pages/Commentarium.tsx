@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { BlogPost } from "@/types/database";
+import { CommentariumPost } from "@/types/database";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { SEO } from "@/components/SEO";
@@ -11,8 +11,8 @@ import { Calendar, Clock, ArrowRight } from "lucide-react";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
 
-export default function Blog() {
-  const [posts, setPosts] = useState<BlogPost[]>([]);
+export default function Commentarium() {
+  const [posts, setPosts] = useState<CommentariumPost[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -30,7 +30,7 @@ export default function Blog() {
       if (error) throw error;
       setPosts(data || []);
     } catch (error) {
-      console.error('Error loading blog posts:', error);
+      console.error('Error loading commentarium posts:', error);
     } finally {
       setLoading(false);
     }
@@ -44,7 +44,7 @@ export default function Blog() {
   return (
     <>
       <SEO 
-        title="Blog - Noscite"
+        title="Commentarium - Noscite"
         description="Scopri gli ultimi articoli, insights e aggiornamenti dal team di Noscite. Approfondimenti su innovazione, strategia e cultura aziendale."
       />
       <div className="min-h-screen flex flex-col bg-background">
@@ -53,7 +53,7 @@ export default function Blog() {
           <div className="container mx-auto px-4 py-16">
             <div className="max-w-4xl mx-auto mb-12 text-center">
               <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-                Blog
+                Commentarium
               </h1>
               <p className="text-lg text-muted-foreground">
                 Scopri i nostri ultimi articoli e approfondimenti
@@ -88,7 +88,7 @@ export default function Blog() {
             ) : (
               <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
                 {posts.map((post) => (
-                  <Link key={post.id} to={`/blog/${post.slug}`}>
+                  <Link key={post.id} to={`/commentarium/${post.slug}`}>
                     <Card className="h-full hover:shadow-lg transition-all duration-300 group cursor-pointer">
                       {post.featured_image_url && (
                         <div className="overflow-hidden">

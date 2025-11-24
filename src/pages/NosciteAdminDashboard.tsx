@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
-import { BlogPost, Document } from "@/types/database";
+import { CommentariumPost, Document } from "@/types/database";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -26,7 +26,7 @@ import {
   Database,
   CheckCircle2
 } from "lucide-react";
-import BlogEditor from "@/components/BlogEditor";
+import CommentariumEditor from "@/components/CommentariumEditor";
 import DocumentManager from "@/components/DocumentManager";
 import DocumentsList from "@/components/DocumentsList";
 import UserManager from "@/components/UserManager";
@@ -36,10 +36,10 @@ import SecurityDashboard from "@/components/SecurityDashboard";
 export default function NosciteAdminDashboard() {
   const { user, loading: authLoading, userRole, isAdmin, signOut } = useAuth();
   const [loading, setLoading] = useState(true);
-  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
+  const [commentariumPosts, setCommentariumPosts] = useState<CommentariumPost[]>([]);
   const [documents, setDocuments] = useState<Document[]>([]);
-  const [showBlogEditor, setShowBlogEditor] = useState(false);
-  const [editingPost, setEditingPost] = useState<BlogPost | null>(null);
+  const [showCommentariumEditor, setShowCommentariumEditor] = useState(false);
+  const [editingPost, setEditingPost] = useState<CommentariumPost | null>(null);
   const [isSyncing, setIsSyncing] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -85,7 +85,7 @@ export default function NosciteAdminDashboard() {
       }
       
       console.log('✅ Admin access confirmed, loading dashboard data');
-      loadBlogPosts();
+      loadCommentariumPosts();
       loadDocuments();
       setLoading(false);
     } else {
@@ -93,7 +93,7 @@ export default function NosciteAdminDashboard() {
     }
   }, [user, authLoading, userRole, navigate]);
 
-  const loadBlogPosts = async () => {
+  const loadCommentariumPosts = async () => {
     try {
       const { data, error } = await supabase
         .from('blog_posts')
@@ -101,12 +101,12 @@ export default function NosciteAdminDashboard() {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setBlogPosts(data || []);
+      setCommentariumPosts(data || []);
     } catch (error) {
-      console.error('Error loading blog posts:', error);
+      console.error('Error loading commentarium posts:', error);
       toast({
         title: "Errore",
-        description: "Impossibile caricare gli articoli del blog",
+        description: "Impossibile caricare gli articoli del commentarium",
         variant: "destructive",
       });
     }
@@ -152,7 +152,7 @@ export default function NosciteAdminDashboard() {
         description: "L'articolo è stato eliminato con successo",
       });
       
-      loadBlogPosts();
+      loadCommentariumPosts();
     } catch (error) {
       console.error('Error deleting post:', error);
       toast({
@@ -163,7 +163,7 @@ export default function NosciteAdminDashboard() {
     }
   };
 
-  const handleTogglePublish = async (post: BlogPost) => {
+  const handleTogglePublish = async (post: CommentariumPost) => {
     try {
       const { error } = await supabase
         .from('blog_posts')
@@ -182,7 +182,7 @@ export default function NosciteAdminDashboard() {
           : "L'articolo è ora visibile pubblicamente",
       });
       
-      loadBlogPosts();
+      loadCommentariumPosts();
     } catch (error) {
       console.error('Error updating post:', error);
       toast({
@@ -284,17 +284,17 @@ export default function NosciteAdminDashboard() {
     );
   }
 
-  if (showBlogEditor) {
+  if (showCommentariumEditor) {
     return (
-      <BlogEditor
+      <CommentariumEditor
         post={editingPost}
         onSave={() => {
-          setShowBlogEditor(false);
+          setShowCommentariumEditor(false);
           setEditingPost(null);
-          loadBlogPosts();
+          loadCommentariumPosts();
         }}
         onCancel={() => {
-          setShowBlogEditor(false);
+          setShowCommentariumEditor(false);
           setEditingPost(null);
         }}
       />
@@ -349,9 +349,9 @@ export default function NosciteAdminDashboard() {
           {/* Blog Management */}
           <TabsContent value="blog" className="space-y-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold">Articoli del Blog</h2>
+              <h2 className="text-2xl font-bold">Articoli del Commentarium</h2>
               <Button 
-                onClick={() => setShowBlogEditor(true)}
+                onClick={() => setShowCommentariumEditor(true)}
                 className="flex items-center space-x-2"
               >
                 <PlusCircle className="h-4 w-4" />
@@ -360,7 +360,7 @@ export default function NosciteAdminDashboard() {
             </div>
 
             <div className="grid gap-6">
-              {blogPosts.map((post) => (
+              {commentariumPosts.map((post) => (
                 <Card key={post.id}>
                   <CardHeader>
                     <div className="flex items-start justify-between">
@@ -386,7 +386,7 @@ export default function NosciteAdminDashboard() {
                           size="sm"
                           onClick={() => {
                             setEditingPost(post);
-                            setShowBlogEditor(true);
+                            setShowCommentariumEditor(true);
                           }}
                         >
                           <Edit className="h-4 w-4" />
@@ -411,15 +411,15 @@ export default function NosciteAdminDashboard() {
                 </Card>
               ))}
               
-              {blogPosts.length === 0 && (
+              {commentariumPosts.length === 0 && (
                 <Card>
                   <CardContent className="text-center py-12">
                     <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                     <h3 className="text-lg font-medium mb-2">Nessun articolo</h3>
                     <p className="text-muted-foreground mb-4">
-                      Non ci sono ancora articoli nel blog. Creane uno!
+                      Non ci sono ancora articoli nel commentarium. Creane uno!
                     </p>
-                    <Button onClick={() => setShowBlogEditor(true)}>
+                    <Button onClick={() => setShowCommentariumEditor(true)}>
                       <PlusCircle className="h-4 w-4 mr-2" />
                       Crea Primo Articolo
                     </Button>

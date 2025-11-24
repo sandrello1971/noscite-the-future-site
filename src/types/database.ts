@@ -1,4 +1,4 @@
-export interface BlogPost {
+export interface CommentariumPost {
   id?: string;
   title: string;
   slug: string;
@@ -43,7 +43,7 @@ export interface Document {
 export interface KnowledgeBase {
   id?: string;
   content: string;
-  content_type: 'page' | 'blog' | 'document';
+  content_type: 'page' | 'commentarium' | 'document';
   source_id?: string;
   title?: string;
   embeddings?: number[];

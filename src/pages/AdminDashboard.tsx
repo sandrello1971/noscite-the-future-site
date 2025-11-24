@@ -23,18 +23,18 @@ import {
   Database,
   CheckCircle2
 } from "lucide-react";
-import BlogEditor from "@/components/BlogEditor";
+import CommentariumEditor from "@/components/CommentariumEditor";
 import DocumentManager from "@/components/DocumentManager";
-import { BlogPost, Document } from "@/types/database";
+import { CommentariumPost, Document } from "@/types/database";
 
 
 const AdminDashboard = () => {
   const { user, loading: authLoading, isAdmin, signOut } = useAuth();
   const [loading, setLoading] = useState(true);
-  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
+  const [commentariumPosts, setCommentariumPosts] = useState<CommentariumPost[]>([]);
   const [documents, setDocuments] = useState<Document[]>([]);
-  const [showBlogEditor, setShowBlogEditor] = useState(false);
-  const [editingPost, setEditingPost] = useState<BlogPost | null>(null);
+  const [showCommentariumEditor, setShowCommentariumEditor] = useState(false);
+  const [editingPost, setEditingPost] = useState<CommentariumPost | null>(null);
   const [newsletters, setNewsletters] = useState<Array<{
     id: string;
     email: string;
@@ -67,14 +67,14 @@ const AdminDashboard = () => {
         return;
       }
       
-      loadBlogPosts();
+      loadCommentariumPosts();
       loadDocuments();
       loadNewsletters();
       setLoading(false);
     }
   }, [user, authLoading, isAdmin, navigate, toast]);
 
-  const loadBlogPosts = async () => {
+  const loadCommentariumPosts = async () => {
     try {
       const { data, error } = await supabase
         .from('blog_posts')
@@ -82,9 +82,9 @@ const AdminDashboard = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setBlogPosts(data || []);
+      setCommentariumPosts(data || []);
     } catch (error) {
-      console.error('Error loading blog posts:', error);
+      console.error('Error loading commentarium posts:', error);
     }
   };
 
@@ -131,13 +131,13 @@ const AdminDashboard = () => {
         .eq('id', id);
 
       if (error) throw error;
-      loadBlogPosts();
+      loadCommentariumPosts();
     } catch (error) {
       console.error('Error deleting post:', error);
     }
   };
 
-  const handleTogglePublish = async (post: BlogPost) => {
+  const handleTogglePublish = async (post: CommentariumPost) => {
     try {
       const { error } = await supabase
         .from('blog_posts')
@@ -148,7 +148,7 @@ const AdminDashboard = () => {
         .eq('id', post.id);
 
       if (error) throw error;
-      loadBlogPosts();
+      loadCommentariumPosts();
     } catch (error) {
       console.error('Error updating post:', error);
     }
@@ -259,17 +259,17 @@ const AdminDashboard = () => {
     );
   }
 
-  if (showBlogEditor) {
+  if (showCommentariumEditor) {
     return (
-      <BlogEditor
+      <CommentariumEditor
         post={editingPost}
         onSave={() => {
-          setShowBlogEditor(false);
+          setShowCommentariumEditor(false);
           setEditingPost(null);
-          loadBlogPosts();
+          loadCommentariumPosts();
         }}
         onCancel={() => {
-          setShowBlogEditor(false);
+          setShowCommentariumEditor(false);
           setEditingPost(null);
         }}
       />
@@ -315,9 +315,9 @@ const AdminDashboard = () => {
           {/* Blog Management */}
           <TabsContent value="blog" className="space-y-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold">Articoli del Blog</h2>
+              <h2 className="text-2xl font-bold">Articoli del Commentarium</h2>
               <Button 
-                onClick={() => setShowBlogEditor(true)}
+                onClick={() => setShowCommentariumEditor(true)}
                 className="flex items-center space-x-2"
               >
                 <PlusCircle className="h-4 w-4" />
@@ -326,7 +326,7 @@ const AdminDashboard = () => {
             </div>
 
             <div className="grid gap-6">
-              {blogPosts.map((post) => (
+              {commentariumPosts.map((post) => (
                 <Card key={post.id}>
                   <CardHeader>
                     <div className="flex items-start justify-between">
@@ -352,7 +352,7 @@ const AdminDashboard = () => {
                           size="sm"
                           onClick={() => {
                             setEditingPost(post);
-                            setShowBlogEditor(true);
+                            setShowCommentariumEditor(true);
                           }}
                         >
                           <Edit className="h-4 w-4" />

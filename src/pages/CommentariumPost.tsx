@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { BlogPost as BlogPostType } from "@/types/database";
+import { CommentariumPost as CommentariumPostType } from "@/types/database";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { SEO } from "@/components/SEO";
@@ -12,12 +12,12 @@ import { Calendar, ArrowLeft, Clock } from "lucide-react";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
 
-export default function BlogPost() {
+export default function CommentariumPost() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
-  const [post, setPost] = useState<BlogPostType | null>(null);
+  const [post, setPost] = useState<CommentariumPostType | null>(null);
   const [loading, setLoading] = useState(true);
-  const [relatedPosts, setRelatedPosts] = useState<BlogPostType[]>([]);
+  const [relatedPosts, setRelatedPosts] = useState<CommentariumPostType[]>([]);
 
   useEffect(() => {
     if (slug) {
@@ -37,7 +37,7 @@ export default function BlogPost() {
       if (error) throw error;
       
       if (!data) {
-        navigate('/blog');
+        navigate('/commentarium');
         return;
       }
 
@@ -56,8 +56,8 @@ export default function BlogPost() {
         setRelatedPosts(related || []);
       }
     } catch (error) {
-      console.error('Error loading blog post:', error);
-      navigate('/blog');
+      console.error('Error loading commentarium post:', error);
+      navigate('/commentarium');
     } finally {
       setLoading(false);
     }
@@ -99,7 +99,7 @@ export default function BlogPost() {
   return (
     <>
       <SEO 
-        title={`${post.title} - Blog Noscite`}
+        title={`${post.title} - Commentarium Noscite`}
         description={post.excerpt || getExcerpt(post.content)}
         ogImage={post.featured_image_url}
       />
@@ -110,11 +110,11 @@ export default function BlogPost() {
             <div className="max-w-4xl mx-auto">
               <Button 
                 variant="ghost" 
-                onClick={() => navigate('/blog')}
+                onClick={() => navigate('/commentarium')}
                 className="mb-8"
               >
                 <ArrowLeft className="mr-2 h-4 w-4" />
-                Torna al Blog
+                Torna al Commentarium
               </Button>
 
               {post.featured_image_url && (
@@ -177,7 +177,7 @@ export default function BlogPost() {
                 </h2>
                 <div className="grid gap-6 md:grid-cols-3">
                   {relatedPosts.map((related) => (
-                    <Link key={related.id} to={`/blog/${related.slug}`}>
+                    <Link key={related.id} to={`/commentarium/${related.slug}`}>
                       <Card className="h-full hover:shadow-lg transition-all duration-300 group">
                         {related.featured_image_url && (
                           <div className="overflow-hidden">
