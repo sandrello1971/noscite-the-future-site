@@ -98,27 +98,66 @@ serve(async (req) => {
 
     if (type === 'complete') {
       const choice = data.choices?.[0];
+
+      let article: any = null;
+
+      // 1) Prova a usare i tool calls se il modello li ha usati
       const toolCall = choice?.message?.tool_calls?.[0];
+      if (toolCall?.function?.arguments) {
+        const args = toolCall.function.arguments as string;
+        try {
+          article = JSON.parse(args);
+        } catch (e) {
+          console.error('Failed to parse tool arguments JSON:', e, args);
+          throw new Error('Failed to parse AI tool response as JSON');
+        }
+      } else {
+        // 2) Fallback: prova a parsare il contenuto del messaggio come JSON "sporco"
+        let jsonText = (choice?.message?.content as string | undefined)?.trim() ?? '';
 
-      if (!toolCall || !toolCall.function?.arguments) {
-        console.error('No tool call found in AI response:', JSON.stringify(data));
-        throw new Error('AI did not return a tool call for article generation');
+        if (!jsonText) {
+          console.error('AI did not return content or tool call for article generation:', JSON.stringify(data));
+          throw new Error('AI response did not contain article data');
+        }
+
+        // Rimuovi eventuali code fences ```
+        if (jsonText.startsWith('```')) {
+          const firstNewline = jsonText.indexOf('\n');
+          if (firstNewline !== -1) {
+            jsonText = jsonText.slice(firstNewline + 1);
+          }
+          if (jsonText.endsWith('```')) {
+            jsonText = jsonText.slice(0, -3);
+          }
+          jsonText = jsonText.trim();
+        }
+
+        // Estrai solo l'oggetto JSON più esterno
+        const firstBrace = jsonText.indexOf('{');
+        const lastBrace = jsonText.lastIndexOf('}');
+        if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+          jsonText = jsonText.slice(firstBrace, lastBrace + 1);
+        }
+
+        try {
+          article = JSON.parse(jsonText);
+        } catch (e) {
+          console.error('Failed to parse article JSON from message content:', e, jsonText);
+          throw new Error('Failed to parse AI response as JSON');
+        }
       }
 
-      const args = toolCall.function.arguments as string;
-
-      let article: any;
-      try {
-        article = JSON.parse(args);
-      } catch (e) {
-        console.error('Failed to parse tool arguments JSON:', e, args);
-        throw new Error('Failed to parse AI tool response as JSON');
-      }
-
+      // Supporta strutture tipo { "article": { ... } }
       if (article && article.article) {
         article = article.article;
       }
 
+      if (!article || typeof article !== 'object') {
+        console.error('AI article object invalid:', article);
+        throw new Error('AI response did not contain a valid article object');
+      }
+
+      // Se manca lo slug, generarlo dal titolo
       if (!article.slug && article.title) {
         const slugSource = String(article.title)
           .toLowerCase()
