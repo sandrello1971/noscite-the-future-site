@@ -9,6 +9,8 @@ import { ListItemNode, ListNode } from '@lexical/list';
 import { LinkNode, AutoLinkNode } from '@lexical/link';
 import { CodeNode, CodeHighlightNode } from '@lexical/code';
 import ToolbarPlugin from './ToolbarPlugin';
+import ImagePlugin from './ImagePlugin';
+import { ImageNode } from './nodes/ImageNode';
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import { EditorState } from 'lexical';
 import { $generateHtmlFromNodes, $generateNodesFromDOM } from '@lexical/html';
@@ -57,6 +59,7 @@ export default function LexicalEditor({ initialContent, onChange }: LexicalEdito
       },
       quote: 'border-l-4 border-primary pl-4 italic my-4',
       link: 'text-primary underline hover:text-primary/80',
+      image: 'my-4',
       text: {
         bold: 'font-bold',
         italic: 'italic',
@@ -77,6 +80,7 @@ export default function LexicalEditor({ initialContent, onChange }: LexicalEdito
       CodeHighlightNode,
       LinkNode,
       AutoLinkNode,
+      ImageNode,
     ],
   };
 
@@ -106,6 +110,7 @@ export default function LexicalEditor({ initialContent, onChange }: LexicalEdito
         </div>
         <HistoryPlugin />
         <AutoFocusPlugin />
+        <ImagePlugin />
         <OnChangePlugin onChange={handleChange} />
         {initialContent && <InitialContentPlugin html={initialContent} />}
       </div>
