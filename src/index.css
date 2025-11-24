@@ -261,14 +261,12 @@ All colors MUST be HSL.
     float: left;
     margin-right: 1rem;
     margin-bottom: 1rem;
-    max-width: 50%;
   }
 
   .commentarium-content img.ql-image-align-right {
     float: right;
     margin-left: 1rem;
     margin-bottom: 1rem;
-    max-width: 50%;
   }
 
   .commentarium-content img.ql-image-align-center {
@@ -280,7 +278,6 @@ All colors MUST be HSL.
     display: block;
     margin: 1rem 0;
     width: 100% !important;
-    max-width: 100%;
     height: auto !important;
   }
  
