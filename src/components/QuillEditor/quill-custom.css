@@ -185,16 +185,31 @@
 }
 
 /* Float support for images */
+.quill-editor-wrapper .ql-editor img.ql-image-align-left,
 .quill-editor-wrapper .ql-editor img[style*="float: left"] {
   float: left;
   margin-right: 1rem;
-  max-width: 50%;
+  margin-bottom: 1rem;
 }
 
+.quill-editor-wrapper .ql-editor img.ql-image-align-right,
 .quill-editor-wrapper .ql-editor img[style*="float: right"] {
   float: right;
   margin-left: 1rem;
-  max-width: 50%;
+  margin-bottom: 1rem;
+}
+
+.quill-editor-wrapper .ql-editor img.ql-image-align-center {
+  display: block;
+  margin: 1rem auto;
+}
+
+.quill-editor-wrapper .ql-editor img.ql-image-align-full {
+  display: block;
+  margin: 1rem 0;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
 }
 
 /* Clear floats after editor content */
