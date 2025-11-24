@@ -98,10 +98,23 @@ export default function NosciteAdminAuth() {
           .eq('user_id', data.user.id)
           .single();
 
-        console.log('📋 Role query result:', { userRole, roleError });
+        console.log('📋 Role query result:', { 
+          userRole, 
+          roleError,
+          roleValue: userRole?.role,
+          hasRole: !!userRole,
+          isAdmin: userRole?.role === 'admin'
+        });
 
         if (roleError) {
           console.log('❌ Role error occurred:', roleError);
+          // If role error but user exists, check if no role found (PGRST116)
+          if (roleError.code === 'PGRST116') {
+            console.log('⚠️ No role found for user - access denied');
+            setError("Accesso negato. Non hai i permessi di amministratore.");
+            await supabase.auth.signOut();
+            return;
+          }
           setError("Errore nel controllo dei permessi. Contatta l'amministratore.");
           await supabase.auth.signOut();
           return;
