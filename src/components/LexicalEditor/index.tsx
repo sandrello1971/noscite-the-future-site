@@ -9,14 +9,18 @@ import { ListItemNode, ListNode } from '@lexical/list';
 import { LinkNode, AutoLinkNode } from '@lexical/link';
 import { CodeNode, CodeHighlightNode } from '@lexical/code';
 import ToolbarPlugin from './ToolbarPlugin';
-import ImagePlugin from './ImagePlugin';
+import ImagePlugin, { INSERT_IMAGE_COMMAND } from './ImagePlugin';
 import { ImageNode } from './nodes/ImageNode';
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import { EditorState } from 'lexical';
 import { $generateHtmlFromNodes, $generateNodesFromDOM } from '@lexical/html';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { useEffect } from 'react';
+import { useEffect, forwardRef, useImperativeHandle } from 'react';
 import { $getRoot, $insertNodes } from 'lexical';
+
+export interface LexicalEditorRef {
+  insertImage: (imageUrl: string, altText?: string) => void;
+}
 
 interface LexicalEditorProps {
   initialContent?: string;
@@ -43,7 +47,33 @@ function InitialContentPlugin({ html }: { html: string }) {
   return null;
 }
 
-export default function LexicalEditor({ initialContent, onChange }: LexicalEditorProps) {
+function EditorWithCommands({ onEditorReady }: { onEditorReady: (editor: any) => void }) {
+  const [editor] = useLexicalComposerContext();
+
+  useEffect(() => {
+    onEditorReady(editor);
+  }, [editor, onEditorReady]);
+
+  return null;
+}
+
+const LexicalEditor = forwardRef<LexicalEditorRef, LexicalEditorProps>(({ initialContent, onChange }, ref) => {
+  let editorInstance: any = null;
+
+  useImperativeHandle(ref, () => ({
+    insertImage: (imageUrl: string, altText = 'Generated image') => {
+      if (editorInstance) {
+        editorInstance.dispatchCommand(INSERT_IMAGE_COMMAND, {
+          src: imageUrl,
+          altText: altText,
+        });
+      }
+    },
+  }));
+
+  const handleEditorReady = (editor: any) => {
+    editorInstance = editor;
+  };
   const initialConfig = {
     namespace: 'BlogEditor',
     theme: {
@@ -113,7 +143,12 @@ export default function LexicalEditor({ initialContent, onChange }: LexicalEdito
         <ImagePlugin />
         <OnChangePlugin onChange={handleChange} />
         {initialContent && <InitialContentPlugin html={initialContent} />}
+        <EditorWithCommands onEditorReady={handleEditorReady} />
       </div>
     </LexicalComposer>
   );
-}
+});
+
+LexicalEditor.displayName = 'LexicalEditor';
+
+export default LexicalEditor;
