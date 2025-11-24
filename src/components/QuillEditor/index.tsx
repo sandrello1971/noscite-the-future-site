@@ -46,26 +46,48 @@ const QuillEditor = forwardRef<QuillEditorRef, QuillEditorProps>(
       const editor = quillRef.current?.getEditor();
       if (!editor) return;
 
-      const handleSelection = () => {
-        const selection = window.getSelection();
-        const node = selection?.focusNode;
-        
-        if (node instanceof HTMLImageElement) {
-          setSelectedImage(node);
-        } else if (node?.parentElement instanceof HTMLImageElement) {
-          setSelectedImage(node.parentElement);
+      const handleImageClick = (e: Event) => {
+        const target = e.target as HTMLElement;
+        if (target.tagName === 'IMG') {
+          setSelectedImage(target as HTMLImageElement);
+          console.log('Image selected:', target);
         } else {
           setSelectedImage(null);
         }
       };
 
       const editorElement = editor.root;
-      editorElement.addEventListener('click', handleSelection);
-      editorElement.addEventListener('keyup', handleSelection);
+      editorElement.addEventListener('click', handleImageClick);
+      
+      // Also listen for text selection changes
+      document.addEventListener('selectionchange', () => {
+        const selection = window.getSelection();
+        if (selection && selection.rangeCount > 0) {
+          const range = selection.getRangeAt(0);
+          const container = range.commonAncestorContainer;
+          
+          // Check if the selection is on an image
+          if (container.nodeType === Node.ELEMENT_NODE) {
+            const element = container as HTMLElement;
+            if (element.tagName === 'IMG') {
+              setSelectedImage(element as HTMLImageElement);
+              console.log('Image selected via selection:', element);
+            } else {
+              const img = element.querySelector('img');
+              if (img && element.contains(img)) {
+                setSelectedImage(img);
+                console.log('Image found in selection:', img);
+              }
+            }
+          } else if (container.parentElement?.tagName === 'IMG') {
+            setSelectedImage(container.parentElement as HTMLImageElement);
+            console.log('Image parent selected:', container.parentElement);
+          }
+        }
+      });
 
       return () => {
-        editorElement.removeEventListener('click', handleSelection);
-        editorElement.removeEventListener('keyup', handleSelection);
+        editorElement.removeEventListener('click', handleImageClick);
       };
     }, []);
 
