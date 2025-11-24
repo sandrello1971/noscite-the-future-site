@@ -1,16 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, Save, Eye, Upload, Sparkles, Image } from 'lucide-react';
+import { ArrowLeft, Save, Eye, Upload, Sparkles, Image as ImageIcon, FileImage } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
 import { BlogPost } from '@/types/database';
 import DOMPurify from 'dompurify';
-import LexicalEditor from '@/components/LexicalEditor';
+import LexicalEditor, { LexicalEditorRef } from '@/components/LexicalEditor';
 
 interface BlogEditorProps {
   post?: BlogPost | null;
@@ -20,6 +20,7 @@ interface BlogEditorProps {
 
 const BlogEditor = ({ post, onSave, onCancel }: BlogEditorProps) => {
   const { toast } = useToast();
+  const editorRef = useRef<LexicalEditorRef>(null);
   const [formData, setFormData] = useState<BlogPost>({
     title: '',
     slug: '',
@@ -38,6 +39,7 @@ const BlogEditor = ({ post, onSave, onCancel }: BlogEditorProps) => {
   const [showImagePrompt, setShowImagePrompt] = useState(false);
   const [topicPrompt, setTopicPrompt] = useState('');
   const [articleAiLoading, setArticleAiLoading] = useState(false);
+  const [generatedImageUrl, setGeneratedImageUrl] = useState<string>('');
 
   useEffect(() => {
     // Auto-generate slug from title
@@ -116,11 +118,10 @@ const BlogEditor = ({ post, onSave, onCancel }: BlogEditorProps) => {
       if (error) throw error;
 
       setFormData(prev => ({ ...prev, featured_image_url: data.imageUrl }));
-      setShowImagePrompt(false);
-      setImagePrompt('');
+      setGeneratedImageUrl(data.imageUrl);
       toast({
         title: "Immagine generata",
-        description: "L'immagine è stata generata con successo",
+        description: "L'immagine è stata generata con successo. Puoi usarla come immagine in evidenza o inserirla nell'articolo.",
       });
     } catch (error) {
       console.error('Error generating image:', error);
@@ -131,6 +132,16 @@ const BlogEditor = ({ post, onSave, onCancel }: BlogEditorProps) => {
       });
     } finally {
       setAiLoading(false);
+    }
+  };
+
+  const insertImageInArticle = () => {
+    if (generatedImageUrl && editorRef.current) {
+      editorRef.current.insertImage(generatedImageUrl, 'Immagine generata con AI');
+      toast({
+        title: "Immagine inserita",
+        description: "L'immagine è stata inserita nell'articolo",
+      });
     }
   };
 
@@ -429,6 +440,7 @@ const BlogEditor = ({ post, onSave, onCancel }: BlogEditorProps) => {
                   </div>
                   <div className="mt-2">
                     <LexicalEditor
+                      ref={editorRef}
                       initialContent={formData.content}
                       onChange={(html) => setFormData(prev => ({ ...prev, content: html }))}
                     />
@@ -490,7 +502,7 @@ const BlogEditor = ({ post, onSave, onCancel }: BlogEditorProps) => {
                       size="sm"
                       onClick={() => setShowImagePrompt(!showImagePrompt)}
                     >
-                      <Image className="h-4 w-4 mr-2" />
+                      <ImageIcon className="h-4 w-4 mr-2" />
                       Genera con AI
                     </Button>
                   </div>
@@ -518,6 +530,25 @@ const BlogEditor = ({ post, onSave, onCancel }: BlogEditorProps) => {
                     onChange={(e) => setFormData(prev => ({ ...prev, featured_image_url: e.target.value }))}
                     placeholder="https://..."
                   />
+                  {generatedImageUrl && (
+                    <div className="mt-3 space-y-2">
+                      <img 
+                        src={generatedImageUrl} 
+                        alt="Anteprima immagine generata" 
+                        className="w-full h-40 object-cover rounded-lg border"
+                      />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={insertImageInArticle}
+                        className="w-full"
+                      >
+                        <FileImage className="h-4 w-4 mr-2" />
+                        Inserisci nell'articolo
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
