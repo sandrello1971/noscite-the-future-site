@@ -32,20 +32,58 @@ serve(async (req) => {
       systemPrompt = 'You are an expert Italian blog writer. Given a topic, create a complete blog article for a business consultancy site. Respond ONLY with compact JSON using this exact structure and no markdown or explanations: {"title":"...","excerpt":"...","content":"..."}. The "content" field must be valid HTML using <p>, <h2>, <ul>, <li>, <strong>, <em>, and similar tags.';
     }
 
+    const body: any = {
+      model: 'gpt-5-nano-2025-08-07',
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: prompt }
+      ],
+      max_completion_tokens: type === 'content' || type === 'complete' ? 2000 : 200,
+    };
+
+    if (type === 'complete') {
+      body.tools = [
+        {
+          type: 'function',
+          function: {
+            name: 'create_article',
+            description: 'Genera un articolo di blog completo per il sito di consulenza aziendale.',
+            parameters: {
+              type: 'object',
+              properties: {
+                title: {
+                  type: 'string',
+                  description: "Titolo dell'articolo in italiano, accattivante e SEO-friendly.",
+                },
+                excerpt: {
+                  type: 'string',
+                  description: "Estratto di 2-3 frasi che riassume e invoglia alla lettura.",
+                },
+                content: {
+                  type: 'string',
+                  description: 'Contenuto HTML completo (<p>, <h2>, <ul>, <li>, <strong>, <em>, ...).',
+                },
+                slug: {
+                  type: 'string',
+                  description: "Slug URL-friendly basato sul titolo, minuscolo con trattini.",
+                },
+              },
+              required: ['title', 'excerpt', 'content'],
+              additionalProperties: false,
+            },
+          },
+        },
+      ];
+      body.tool_choice = { type: 'function', function: { name: 'create_article' } };
+    }
+
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${OPENAI_API_KEY}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        model: 'gpt-5-nano-2025-08-07',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: prompt }
-        ],
-        max_completion_tokens: type === 'content' || type === 'complete' ? 2000 : 200,
-      }),
+      body: JSON.stringify(body),
     });
 
     if (!response.ok) {
@@ -55,49 +93,49 @@ serve(async (req) => {
     }
 
     const data = await response.json();
-    const rawContent = data.choices[0].message.content as string;
 
     console.log('Content generated successfully');
 
     if (type === 'complete') {
-      let jsonText = rawContent.trim();
+      const choice = data.choices?.[0];
+      const toolCall = choice?.message?.tool_calls?.[0];
 
-      // Strip markdown code fences if present
-      if (jsonText.startsWith('```')) {
-        const firstNewline = jsonText.indexOf('\n');
-        if (firstNewline !== -1) {
-          jsonText = jsonText.slice(firstNewline + 1);
-        }
-        if (jsonText.endsWith('```')) {
-          jsonText = jsonText.slice(0, -3);
-        }
-        jsonText = jsonText.trim();
+      if (!toolCall || !toolCall.function?.arguments) {
+        console.error('No tool call found in AI response:', JSON.stringify(data));
+        throw new Error('AI did not return a tool call for article generation');
       }
 
-      // Try to extract a JSON object even if there is extra text around it
-      const firstBrace = jsonText.indexOf('{');
-      const lastBrace = jsonText.lastIndexOf('}');
-      if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
-        jsonText = jsonText.slice(firstBrace, lastBrace + 1);
-      }
+      const args = toolCall.function.arguments as string;
 
       let article: any;
       try {
-        article = JSON.parse(jsonText);
+        article = JSON.parse(args);
       } catch (e) {
-        console.error('Failed to parse article JSON:', e, jsonText);
-        throw new Error('Failed to parse AI response as JSON');
+        console.error('Failed to parse tool arguments JSON:', e, args);
+        throw new Error('Failed to parse AI tool response as JSON');
       }
 
-      // Support responses like { "article": { ... } }
       if (article && article.article) {
         article = article.article;
+      }
+
+      if (!article.slug && article.title) {
+        const slugSource = String(article.title)
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/\p{Diacritic}/gu, '');
+
+        article.slug = slugSource
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-+|-+$/g, '');
       }
 
       return new Response(JSON.stringify(article), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
+
+    const rawContent = data.choices[0].message.content as string;
 
     return new Response(JSON.stringify({ content: rawContent }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
