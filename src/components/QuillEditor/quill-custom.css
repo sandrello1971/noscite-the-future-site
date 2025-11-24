@@ -6,7 +6,9 @@
   border-radius: 0.5rem;
   background: hsl(var(--background));
   overflow: hidden;
+  min-height: 400px;
 }
+
 
 .quill-editor-wrapper .ql-toolbar {
   border: none;
