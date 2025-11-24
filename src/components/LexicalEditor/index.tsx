@@ -123,12 +123,12 @@ const LexicalEditor = forwardRef<LexicalEditorRef, LexicalEditorProps>(({ initia
 
   return (
     <LexicalComposer initialConfig={initialConfig}>
-      <div className="relative border rounded-lg bg-background">
+      <div className="relative border rounded-lg bg-background flex flex-col">
         <ToolbarPlugin />
-        <div className="relative">
+        <div className="relative max-h-[600px] overflow-auto">
           <RichTextPlugin
             contentEditable={
-              <ContentEditable className="min-h-[400px] outline-none p-4 prose prose-sm max-w-none focus:ring-0" />
+              <ContentEditable className="lexical-editor-content min-h-[400px] outline-none p-4 prose prose-sm max-w-none focus:ring-0" />
             }
             placeholder={
               <div className="absolute top-4 left-4 text-muted-foreground pointer-events-none">
