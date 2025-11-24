@@ -62,6 +62,7 @@ serve(async (req) => {
     if (type === 'complete') {
       let jsonText = rawContent.trim();
 
+      // Strip markdown code fences if present
       if (jsonText.startsWith('```')) {
         const firstNewline = jsonText.indexOf('\n');
         if (firstNewline !== -1) {
@@ -73,12 +74,24 @@ serve(async (req) => {
         jsonText = jsonText.trim();
       }
 
-      let article;
+      // Try to extract a JSON object even if there is extra text around it
+      const firstBrace = jsonText.indexOf('{');
+      const lastBrace = jsonText.lastIndexOf('}');
+      if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+        jsonText = jsonText.slice(firstBrace, lastBrace + 1);
+      }
+
+      let article: any;
       try {
         article = JSON.parse(jsonText);
       } catch (e) {
         console.error('Failed to parse article JSON:', e, jsonText);
         throw new Error('Failed to parse AI response as JSON');
+      }
+
+      // Support responses like { "article": { ... } }
+      if (article && article.article) {
+        article = article.article;
       }
 
       return new Response(JSON.stringify(article), {
