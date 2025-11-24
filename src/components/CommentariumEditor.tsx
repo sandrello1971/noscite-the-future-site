@@ -296,13 +296,10 @@ const CommentariumEditor = ({ post, onSave, onCancel }: CommentariumEditorProps)
   };
 
   const handleContentChange = (newContent: string) => {
-    const sanitized = DOMPurify.sanitize(newContent, {
-      ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'u', 'h1', 'h2', 'h3', 'ul', 'ol', 'li', 'a', 'img', 'blockquote', 'code', 'pre'],
-      ALLOWED_ATTR: ['href', 'src', 'alt', 'class', 'style', 'width', 'height']
-    });
-    setFormData(prev => ({ ...prev, content: sanitized }));
+    // Salviamo il contenuto così com'è per preservare dimensioni e stili delle immagini.
+    // La sanificazione viene gestita in fase di rendering pubblico degli articoli.
+    setFormData(prev => ({ ...prev, content: newContent }));
   };
-
   const handleSubmit = async () => {
     if (!formData.title.trim()) {
       toast({
