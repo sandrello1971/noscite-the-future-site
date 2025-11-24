@@ -1,7 +1,8 @@
 import { forwardRef, useImperativeHandle, useRef, useState, useEffect } from 'react';
 import ReactQuill from 'react-quill';
 import ImageResize from 'quill-image-resize-module-react';
-import { AlignLeft, AlignRight, AlignCenter, Maximize } from 'lucide-react';
+import { AlignLeft, AlignRight, AlignCenter, Maximize, Trash2 } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 import './quill-custom.css';
 
 // Register the image resize module
@@ -25,6 +26,7 @@ const QuillEditor = forwardRef<QuillEditorRef, QuillEditorProps>(
   ({ initialContent, onChange, onImageUpload }, ref) => {
     const quillRef = useRef<ReactQuill>(null);
     const [selectedImage, setSelectedImage] = useState<HTMLImageElement | null>(null);
+    const { toast } = useToast();
 
     useImperativeHandle(ref, () => ({
       insertImage: (imageUrl: string, altText = 'Image') => {
@@ -41,7 +43,7 @@ const QuillEditor = forwardRef<QuillEditorRef, QuillEditorProps>(
       },
     }));
 
-    // Track selected image
+    // Track selected image and handle delete key
     useEffect(() => {
       const editor = quillRef.current?.getEditor();
       if (!editor) return;
@@ -56,11 +58,25 @@ const QuillEditor = forwardRef<QuillEditorRef, QuillEditorProps>(
         }
       };
 
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if ((e.key === 'Delete' || e.key === 'Backspace') && selectedImage) {
+          e.preventDefault();
+          selectedImage.remove();
+          setSelectedImage(null);
+          onChange(editor.root.innerHTML);
+          toast({
+            title: "Immagine rimossa",
+            description: "L'immagine è stata eliminata dall'articolo",
+          });
+        }
+      };
+
       const editorElement = editor.root;
       editorElement.addEventListener('click', handleImageClick);
+      document.addEventListener('keydown', handleKeyDown);
       
       // Also listen for text selection changes
-      document.addEventListener('selectionchange', () => {
+      const handleSelectionChange = () => {
         const selection = window.getSelection();
         if (selection && selection.rangeCount > 0) {
           const range = selection.getRangeAt(0);
@@ -84,12 +100,16 @@ const QuillEditor = forwardRef<QuillEditorRef, QuillEditorProps>(
             console.log('Image parent selected:', container.parentElement);
           }
         }
-      });
+      };
+      
+      document.addEventListener('selectionchange', handleSelectionChange);
 
       return () => {
         editorElement.removeEventListener('click', handleImageClick);
+        document.removeEventListener('keydown', handleKeyDown);
+        document.removeEventListener('selectionchange', handleSelectionChange);
       };
-    }, []);
+    }, [selectedImage, onChange]);
 
     const imageHandler = async () => {
       const input = document.createElement('input');
@@ -276,6 +296,28 @@ const QuillEditor = forwardRef<QuillEditorRef, QuillEditorProps>(
                 className="flex items-center gap-1"
               >
                 <Maximize className="h-4 w-4" />
+              </button>
+              <span className="quill-toolbar-separator" />
+              <button 
+                type="button" 
+                onClick={() => {
+                  if (selectedImage) {
+                    selectedImage.remove();
+                    setSelectedImage(null);
+                    const quill = quillRef.current?.getEditor();
+                    if (quill) {
+                      onChange(quill.root.innerHTML);
+                    }
+                    toast({
+                      title: "Immagine rimossa",
+                      description: "L'immagine è stata eliminata dall'articolo",
+                    });
+                  }
+                }}
+                title="Elimina immagine"
+                className="flex items-center gap-1 text-destructive hover:bg-destructive/10"
+              >
+                <Trash2 className="h-4 w-4" />
               </button>
             </>
           )}
