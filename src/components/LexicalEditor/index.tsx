@@ -84,9 +84,9 @@ export default function LexicalEditor({ initialContent, onChange }: LexicalEdito
     ],
   };
 
-  const handleChange = (editorState: EditorState) => {
+  const handleChange = (editorState: EditorState, editor: any) => {
     editorState.read(() => {
-      const html = $generateHtmlFromNodes(editorState._nodeMap as any);
+      const html = $generateHtmlFromNodes(editor);
       onChange(html);
     });
   };
