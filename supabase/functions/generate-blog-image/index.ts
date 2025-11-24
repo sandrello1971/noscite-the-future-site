@@ -34,7 +34,6 @@ serve(async (req) => {
         size: '1024x1024',
         quality: 'auto',
         output_format: 'png',
-        response_format: 'b64_json',
       }),
     });
 
