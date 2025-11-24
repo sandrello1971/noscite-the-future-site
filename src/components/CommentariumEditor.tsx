@@ -317,6 +317,9 @@ const CommentariumEditor = ({ post, onSave, onCancel }: CommentariumEditorProps)
         .map(tag => tag.trim())
         .filter(tag => tag);
 
+      // Recupera sempre l'HTML reale dall'editor (così includiamo resize/allineamento immagini)
+      const editorContent = editorRef.current?.getHTML() || formData.content;
+
       // Get current user
       const { data: { user } } = await supabase.auth.getUser();
       
@@ -326,6 +329,7 @@ const CommentariumEditor = ({ post, onSave, onCancel }: CommentariumEditorProps)
 
       const postData = {
         ...formData,
+        content: editorContent,
         tags,
         author_id: user.id, // CRITICAL: Set author_id for RLS
         published_at: formData.published ? new Date().toISOString() : null,
