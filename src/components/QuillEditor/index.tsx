@@ -149,41 +149,36 @@ const QuillEditor = forwardRef<QuillEditorRef, QuillEditorProps>(
     const alignImage = (alignment: 'left' | 'right' | 'center' | 'full') => {
       if (!selectedImage) return;
 
-      // Reset only positioning styles, don't touch dimensions
-      selectedImage.style.float = '';
-      selectedImage.style.display = '';
-      selectedImage.style.margin = '';
+      // Usa solo classi CSS per l'allineamento, senza toccare le dimensioni
+      selectedImage.classList.remove(
+        'ql-image-align-left',
+        'ql-image-align-right',
+        'ql-image-align-center',
+        'ql-image-align-full'
+      );
 
       switch (alignment) {
         case 'left':
-          selectedImage.style.float = 'left';
-          selectedImage.style.marginRight = '1rem';
-          selectedImage.style.marginBottom = '1rem';
+          selectedImage.classList.add('ql-image-align-left');
           break;
         case 'right':
-          selectedImage.style.float = 'right';
-          selectedImage.style.marginLeft = '1rem';
-          selectedImage.style.marginBottom = '1rem';
+          selectedImage.classList.add('ql-image-align-right');
           break;
         case 'center':
-          selectedImage.style.display = 'block';
-          selectedImage.style.margin = '1rem auto';
+          selectedImage.classList.add('ql-image-align-center');
           break;
         case 'full':
-          selectedImage.style.display = 'block';
-          selectedImage.style.margin = '1rem 0';
-          selectedImage.style.width = '100%';
-          selectedImage.style.height = 'auto';
+          selectedImage.classList.add('ql-image-align-full');
           break;
       }
 
-      // Trigger onChange to save the changes
+      // Salva le modifiche nel contenuto HTML
       const quill = quillRef.current?.getEditor();
       if (quill) {
         onChange(quill.root.innerHTML);
       }
       
-      // Keep the image selected
+      // Mantieni l'immagine selezionata
       setTimeout(() => {
         setSelectedImage(selectedImage);
       }, 100);
