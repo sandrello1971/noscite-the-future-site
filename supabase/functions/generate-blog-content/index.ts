@@ -38,43 +38,11 @@ serve(async (req) => {
         { role: 'system', content: systemPrompt },
         { role: 'user', content: prompt }
       ],
-      max_completion_tokens: type === 'content' || type === 'complete' ? 2000 : 200,
+      max_completion_tokens: type === 'content' || type === 'complete' ? 1200 : 200,
     };
 
     if (type === 'complete') {
-      body.tools = [
-        {
-          type: 'function',
-          function: {
-            name: 'create_article',
-            description: 'Genera un articolo di blog completo per il sito di consulenza aziendale.',
-            parameters: {
-              type: 'object',
-              properties: {
-                title: {
-                  type: 'string',
-                  description: "Titolo dell'articolo in italiano, accattivante e SEO-friendly.",
-                },
-                excerpt: {
-                  type: 'string',
-                  description: "Estratto di 2-3 frasi che riassume e invoglia alla lettura.",
-                },
-                content: {
-                  type: 'string',
-                  description: 'Contenuto HTML completo (<p>, <h2>, <ul>, <li>, <strong>, <em>, ...).',
-                },
-                slug: {
-                  type: 'string',
-                  description: "Slug URL-friendly basato sul titolo, minuscolo con trattini.",
-                },
-              },
-              required: ['title', 'excerpt', 'content'],
-              additionalProperties: false,
-            },
-          },
-        },
-      ];
-      body.tool_choice = { type: 'function', function: { name: 'create_article' } };
+      body.response_format = { type: 'json_object' };
     }
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -97,57 +65,40 @@ serve(async (req) => {
     console.log('Content generated successfully');
 
     if (type === 'complete') {
-      const choice = data.choices?.[0];
+      let jsonText = (data.choices?.[0]?.message?.content as string | undefined)?.trim() ?? '';
 
-      let article: any = null;
-
-      // 1) Prova a usare i tool calls se il modello li ha usati
-      const toolCall = choice?.message?.tool_calls?.[0];
-      if (toolCall?.function?.arguments) {
-        const args = toolCall.function.arguments as string;
-        try {
-          article = JSON.parse(args);
-        } catch (e) {
-          console.error('Failed to parse tool arguments JSON:', e, args);
-          throw new Error('Failed to parse AI tool response as JSON');
-        }
-      } else {
-        // 2) Fallback: prova a parsare il contenuto del messaggio come JSON "sporco"
-        let jsonText = (choice?.message?.content as string | undefined)?.trim() ?? '';
-
-        if (!jsonText) {
-          console.error('AI did not return content or tool call for article generation:', JSON.stringify(data));
-          throw new Error('AI response did not contain article data');
-        }
-
-        // Rimuovi eventuali code fences ```
-        if (jsonText.startsWith('```')) {
-          const firstNewline = jsonText.indexOf('\n');
-          if (firstNewline !== -1) {
-            jsonText = jsonText.slice(firstNewline + 1);
-          }
-          if (jsonText.endsWith('```')) {
-            jsonText = jsonText.slice(0, -3);
-          }
-          jsonText = jsonText.trim();
-        }
-
-        // Estrai solo l'oggetto JSON più esterno
-        const firstBrace = jsonText.indexOf('{');
-        const lastBrace = jsonText.lastIndexOf('}');
-        if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
-          jsonText = jsonText.slice(firstBrace, lastBrace + 1);
-        }
-
-        try {
-          article = JSON.parse(jsonText);
-        } catch (e) {
-          console.error('Failed to parse article JSON from message content:', e, jsonText);
-          throw new Error('Failed to parse AI response as JSON');
-        }
+      if (!jsonText) {
+        console.error('AI response did not contain article data:', JSON.stringify(data));
+        throw new Error('AI response did not contain article data');
       }
 
-      // Supporta strutture tipo { "article": { ... } }
+      // Rimuovi eventuali code fences ```
+      if (jsonText.startsWith('```')) {
+        const firstNewline = jsonText.indexOf('\n');
+        if (firstNewline !== -1) {
+          jsonText = jsonText.slice(firstNewline + 1);
+        }
+        if (jsonText.endsWith('```')) {
+          jsonText = jsonText.slice(0, -3);
+        }
+        jsonText = jsonText.trim();
+      }
+
+      // Estrai solo l'oggetto JSON più esterno, nel caso il modello aggiunga testo
+      const firstBrace = jsonText.indexOf('{');
+      const lastBrace = jsonText.lastIndexOf('}');
+      if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+        jsonText = jsonText.slice(firstBrace, lastBrace + 1);
+      }
+
+      let article: any;
+      try {
+        article = JSON.parse(jsonText);
+      } catch (e) {
+        console.error('Failed to parse article JSON from message content:', e, jsonText);
+        throw new Error('Failed to parse AI response as JSON');
+      }
+
       if (article && article.article) {
         article = article.article;
       }
@@ -157,7 +108,6 @@ serve(async (req) => {
         throw new Error('AI response did not contain a valid article object');
       }
 
-      // Se manca lo slug, generarlo dal titolo
       if (!article.slug && article.title) {
         const slugSource = String(article.title)
           .toLowerCase()
