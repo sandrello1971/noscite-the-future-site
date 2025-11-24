@@ -1,17 +1,16 @@
-import { useState, useRef, useEffect } from 'react';
-import { Editor } from '@tinymce/tinymce-react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { ArrowLeft, Save, Eye, Upload, AlertTriangle } from 'lucide-react';
+import { ArrowLeft, Save, Eye, Upload } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
 import { BlogPost } from '@/types/database';
 import DOMPurify from 'dompurify';
+import LexicalEditor from '@/components/LexicalEditor';
 
 interface BlogEditorProps {
   post?: BlogPost | null;
@@ -21,7 +20,6 @@ interface BlogEditorProps {
 
 const BlogEditor = ({ post, onSave, onCancel }: BlogEditorProps) => {
   const { toast } = useToast();
-  const editorRef = useRef<any>(null);
   const [formData, setFormData] = useState<BlogPost>({
     title: '',
     slug: '',
@@ -35,22 +33,6 @@ const BlogEditor = ({ post, onSave, onCancel }: BlogEditorProps) => {
   });
   const [loading, setLoading] = useState(false);
   const [tagsInput, setTagsInput] = useState(post?.tags?.join(', ') || '');
-  const [apiKey, setApiKey] = useState<string>('');
-  const [keyLoading, setKeyLoading] = useState(true);
-  const [showKeyForm, setShowKeyForm] = useState(false);
-  const [tempKey, setTempKey] = useState('');
-
-  useEffect(() => {
-    // Recupera la chiave API da localStorage oppure usa la demo key
-    try {
-      const saved = localStorage.getItem('tinymce_api_key');
-      setApiKey(saved || 'no-api-key');
-    } catch {
-      setApiKey('no-api-key');
-    } finally {
-      setKeyLoading(false);
-    }
-  }, []);
 
   useEffect(() => {
     // Auto-generate slug from title
@@ -63,31 +45,6 @@ const BlogEditor = ({ post, onSave, onCancel }: BlogEditorProps) => {
       setFormData(prev => ({ ...prev, slug }));
     }
   }, [formData.title, post]);
-
-  const handleSaveApiKey = async () => {
-    if (!tempKey.trim()) {
-      toast({
-        title: "Errore",
-        description: "Inserisci una chiave API valida",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // Salva la chiave in localStorage e nello stato
-    const cleaned = tempKey.trim();
-    try {
-      localStorage.setItem('tinymce_api_key', cleaned);
-    } catch {}
-    setApiKey(cleaned);
-    setShowKeyForm(false);
-    setTempKey('');
-    
-    toast({
-      title: "Successo",
-      description: "Chiave API salvata correttamente",
-    });
-  };
 
   const escapeHtml = (unsafe: string): string => {
     return unsafe
@@ -350,105 +307,12 @@ const BlogEditor = ({ post, onSave, onCancel }: BlogEditorProps) => {
 
                 <div>
                   <Label>Contenuto *</Label>
-                  {keyLoading ? (
-                    <div className="mt-2 p-4 border rounded-lg">
-                      <p className="text-muted-foreground">Caricamento editor...</p>
-                    </div>
-                  ) : (
-                    <>
-                      {apiKey === 'no-api-key' && (
-                        <div className="mt-2 space-y-4">
-                          <Alert>
-                            <AlertTriangle className="h-4 w-4" />
-                            <AlertDescription>
-                              Stai usando la chiave demo di TinyMCE. Inserisci la tua chiave API per rimuovere i limiti.
-                              <Button
-                                variant="link"
-                                size="sm"
-                                className="p-0 h-auto ml-1"
-                                onClick={() => setShowKeyForm(!showKeyForm)}
-                              >
-                                {showKeyForm ? 'Annulla' : 'Inserisci chiave API'}
-                              </Button>
-                            </AlertDescription>
-                          </Alert>
-
-                          {showKeyForm && (
-                            <div className="p-4 border rounded-lg space-y-3">
-                              <Input
-                                value={tempKey}
-                                onChange={(e) => setTempKey(e.target.value)}
-                                placeholder="Inserisci la tua chiave API TinyMCE"
-                                type="password"
-                              />
-                              <Button onClick={handleSaveApiKey} size="sm">
-                                Salva Chiave API
-                              </Button>
-                            </div>
-                          )}
-                        </div>
-                      )}
-
-                      <div className="mt-2">
-                        <Editor
-                          apiKey={apiKey}
-                          onInit={(evt, editor) => editorRef.current = editor}
-                          value={formData.content}
-                          onEditorChange={(content) => setFormData(prev => ({ ...prev, content }))}
-                          init={{
-                            height: 500,
-                            menubar: false,
-                            plugins: 'advlist autolink lists link image charmap print preview anchor searchreplace visualblocks code fullscreen insertdatetime media table paste code help wordcount',
-                            toolbar: 'undo redo | formatselect | ' +
-                            'bold italic backcolor | alignleft aligncenter ' +
-                            'alignright alignjustify | bullist numlist outdent indent | ' +
-                            'removeformat | image link | code preview | help',
-                            content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
-                            images_upload_handler: async (blobInfo) => {
-                              return new Promise(async (resolve, reject) => {
-                                try {
-                                  const file = blobInfo.blob();
-                                  const fileExt = file.type.split('/')[1];
-                                  const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
-                                  const filePath = fileName;
-
-                                  // Create bucket if it doesn't exist
-                                  const { data: buckets } = await supabase.storage.listBuckets();
-                                  const bucketExists = buckets?.some(bucket => bucket.name === 'blog-images');
-                                  
-                                  if (!bucketExists) {
-                                    await supabase.storage.createBucket('blog-images', {
-                                      public: true,
-                                      allowedMimeTypes: ['image/*'],
-                                      fileSizeLimit: 5242880 // 5MB
-                                    });
-                                  }
-
-                                  const { error: uploadError } = await supabase.storage
-                                    .from('blog-images')
-                                    .upload(filePath, file, {
-                                      cacheControl: '3600',
-                                      upsert: false
-                                    });
-
-                                  if (uploadError) throw uploadError;
-
-                                  const { data: { publicUrl } } = supabase.storage
-                                    .from('blog-images')
-                                    .getPublicUrl(filePath);
-
-                                  resolve(publicUrl);
-                                } catch (error) {
-                                  console.error('Image upload error:', error);
-                                  reject(`Errore upload immagine: ${error.message}`);
-                                }
-                              });
-                            }
-                          }}
-                        />
-                      </div>
-                    </>
-                  )}
+                  <div className="mt-2">
+                    <LexicalEditor
+                      initialContent={formData.content}
+                      onChange={(html) => setFormData(prev => ({ ...prev, content: html }))}
+                    />
+                  </div>
                 </div>
               </CardContent>
             </Card>
