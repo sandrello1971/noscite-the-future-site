@@ -234,9 +234,17 @@ const CommentariumEditor = ({ post, onSave, onCancel }: CommentariumEditorProps)
         .map(tag => tag.trim())
         .filter(tag => tag);
 
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        throw new Error('Utente non autenticato');
+      }
+
       const postData = {
         ...formData,
         tags,
+        author_id: user.id, // CRITICAL: Set author_id for RLS
         published_at: formData.published ? new Date().toISOString() : null,
         updated_at: new Date().toISOString(),
       };
