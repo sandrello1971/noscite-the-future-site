@@ -19,6 +19,42 @@
   z-index: 10;
 }
 
+.quill-custom-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  padding: 0.5rem;
+  border-bottom: 1px solid hsl(var(--border));
+  background: hsl(var(--muted) / 0.3);
+}
+
+.quill-custom-toolbar button {
+  border: none;
+  background: transparent;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  color: hsl(var(--foreground));
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.quill-custom-toolbar button:hover {
+  background: hsl(var(--muted) / 0.6);
+  color: hsl(var(--primary));
+}
+
+.quill-custom-toolbar button:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 1px;
+}
+
+.quill-toolbar-separator {
+  width: 1px;
+  align-self: stretch;
+  background: hsl(var(--border));
+  margin: 0 0.25rem;
+}
+
 .quill-editor-wrapper .ql-container {
   border: none;
   font-family: inherit;
