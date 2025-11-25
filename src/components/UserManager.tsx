@@ -111,7 +111,28 @@ export default function UserManager() {
         }
       });
 
-      if (error) throw error;
+      if (error) {
+        // Handle FunctionsHttpError and FunctionsRelayError
+        let errorTitle = "Errore";
+        let errorMessage = "Impossibile completare l'operazione";
+        
+        // Try to parse error context if available
+        if (error.context) {
+          try {
+            const errorData = typeof error.context === 'string' 
+              ? JSON.parse(error.context) 
+              : error.context;
+            errorTitle = errorData.error || errorTitle;
+            errorMessage = errorData.details || errorData.message || errorMessage;
+          } catch {
+            errorMessage = error.message || errorMessage;
+          }
+        } else if (error.message) {
+          errorMessage = error.message;
+        }
+        
+        throw new Error(JSON.stringify({ error: errorTitle, details: errorMessage }));
+      }
 
       toast({
         title: useManualCreation ? "Utente creato" : "Invito inviato",
@@ -126,7 +147,7 @@ export default function UserManager() {
     } catch (error: any) {
       console.error("Errore nell'operazione:", error);
       
-      // Parse error response if it exists
+      // Parse error response
       let errorMessage = "Impossibile completare l'operazione";
       let errorTitle = "Errore";
       
@@ -137,8 +158,13 @@ export default function UserManager() {
           errorTitle = parsed.error || errorTitle;
           errorMessage = parsed.details || errorMessage;
         } catch {
-          // If not JSON, use the message as is
-          errorMessage = error.message;
+          // If not JSON, check if it's an object with error/details
+          if (typeof error.message === 'object') {
+            errorTitle = error.message.error || errorTitle;
+            errorMessage = error.message.details || error.message.message || errorMessage;
+          } else {
+            errorMessage = error.message;
+          }
         }
       }
       
