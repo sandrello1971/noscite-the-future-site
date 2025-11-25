@@ -6,6 +6,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
 import { Trash2, UserPlus, Shield, User } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -22,7 +23,9 @@ export default function UserManager() {
   const [users, setUsers] = useState<UserWithRole[]>([]);
   const [loading, setLoading] = useState(true);
   const [inviteEmail, setInviteEmail] = useState("");
+  const [invitePassword, setInvitePassword] = useState("");
   const [inviteRole, setInviteRole] = useState<'admin' | 'user'>('user');
+  const [useManualCreation, setUseManualCreation] = useState(true);
   const [inviting, setInviting] = useState(false);
   const { toast } = useToast();
 
@@ -84,14 +87,24 @@ export default function UserManager() {
       return;
     }
 
+    if (useManualCreation && !invitePassword) {
+      toast({
+        title: "Errore",
+        description: "Inserisci una password",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setInviting(true);
 
     try {
       // Use secure admin operations edge function
       const { data, error } = await supabase.functions.invoke('admin-operations', {
         body: {
-          action: 'invite',
+          action: useManualCreation ? 'createUser' : 'invite',
           email: inviteEmail,
+          password: invitePassword,
           role: inviteRole
         }
       });
@@ -99,17 +112,20 @@ export default function UserManager() {
       if (error) throw error;
 
       toast({
-        title: "Invito inviato",
-        description: `Invito inviato a ${inviteEmail}`,
+        title: useManualCreation ? "Utente creato" : "Invito inviato",
+        description: useManualCreation 
+          ? `Utente ${inviteEmail} creato con successo`
+          : `Invito inviato a ${inviteEmail}`,
       });
 
       setInviteEmail("");
+      setInvitePassword("");
       loadUsers();
     } catch (error: any) {
-      console.error("Errore nell'invito:", error);
+      console.error("Errore nell'operazione:", error);
       toast({
         title: "Errore",
-        description: error.message || "Impossibile inviare l'invito",
+        description: error.message || "Impossibile completare l'operazione",
         variant: "destructive",
       });
     } finally {
@@ -191,38 +207,75 @@ export default function UserManager() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <UserPlus className="h-5 w-5" />
-            Invita Nuovo Utente
+            {useManualCreation ? "Crea Nuovo Utente" : "Invita Nuovo Utente"}
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleInviteUser} className="flex gap-4 items-end">
-            <div className="flex-1">
-              <Label htmlFor="invite-email">Email</Label>
-              <Input
-                id="invite-email"
-                type="email"
-                placeholder="utente@esempio.com"
-                value={inviteEmail}
-                onChange={(e) => setInviteEmail(e.target.value)}
-                required
+          <div className="space-y-4">
+            <div className="flex items-center justify-between pb-4 border-b">
+              <div className="space-y-1">
+                <Label htmlFor="manual-creation">Creazione Manuale</Label>
+                <p className="text-sm text-muted-foreground">
+                  {useManualCreation 
+                    ? "Crea utente con password senza inviare email"
+                    : "Invia email di invito all'utente"}
+                </p>
+              </div>
+              <Switch
+                id="manual-creation"
+                checked={useManualCreation}
+                onCheckedChange={setUseManualCreation}
               />
             </div>
-            <div className="w-32">
-              <Label htmlFor="invite-role">Ruolo</Label>
-              <Select value={inviteRole} onValueChange={(value: 'admin' | 'user') => setInviteRole(value)}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="user">Utente</SelectItem>
-                  <SelectItem value="admin">Admin</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <Button type="submit" disabled={inviting}>
-              {inviting ? "Invio..." : "Invia Invito"}
-            </Button>
-          </form>
+            
+            <form onSubmit={handleInviteUser} className="flex flex-col gap-4">
+              <div className="flex gap-4">
+                <div className="flex-1">
+                  <Label htmlFor="invite-email">Email</Label>
+                  <Input
+                    id="invite-email"
+                    type="email"
+                    placeholder="utente@esempio.com"
+                    value={inviteEmail}
+                    onChange={(e) => setInviteEmail(e.target.value)}
+                    required
+                  />
+                </div>
+                
+                {useManualCreation && (
+                  <div className="flex-1">
+                    <Label htmlFor="invite-password">Password</Label>
+                    <Input
+                      id="invite-password"
+                      type="password"
+                      placeholder="Password"
+                      value={invitePassword}
+                      onChange={(e) => setInvitePassword(e.target.value)}
+                      required={useManualCreation}
+                      minLength={6}
+                    />
+                  </div>
+                )}
+                
+                <div className="w-32">
+                  <Label htmlFor="invite-role">Ruolo</Label>
+                  <Select value={inviteRole} onValueChange={(value: 'admin' | 'user') => setInviteRole(value)}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="user">Utente</SelectItem>
+                      <SelectItem value="admin">Admin</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              
+              <Button type="submit" disabled={inviting} className="w-fit">
+                {inviting ? "Elaborazione..." : (useManualCreation ? "Crea Utente" : "Invia Invito")}
+              </Button>
+            </form>
+          </div>
         </CardContent>
       </Card>
 
