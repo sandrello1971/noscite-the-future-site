@@ -26,6 +26,7 @@ export default function UserManager() {
   const [invitePassword, setInvitePassword] = useState("");
   const [inviteRole, setInviteRole] = useState<'admin' | 'user'>('user');
   const [useManualCreation, setUseManualCreation] = useState(true);
+  const [requirePasswordChange, setRequirePasswordChange] = useState(true);
   const [inviting, setInviting] = useState(false);
   const { toast } = useToast();
 
@@ -105,7 +106,8 @@ export default function UserManager() {
           action: useManualCreation ? 'createUser' : 'invite',
           email: inviteEmail,
           password: invitePassword,
-          role: inviteRole
+          role: inviteRole,
+          requirePasswordChange: useManualCreation ? requirePasswordChange : false
         }
       });
 
@@ -227,6 +229,22 @@ export default function UserManager() {
                 onCheckedChange={setUseManualCreation}
               />
             </div>
+            
+            {useManualCreation && (
+              <div className="flex items-center justify-between pb-4 border-b">
+                <div className="space-y-1">
+                  <Label htmlFor="require-password-change">Richiedi Cambio Password</Label>
+                  <p className="text-sm text-muted-foreground">
+                    L'utente riceverà una email per cambiare la password al primo accesso
+                  </p>
+                </div>
+                <Switch
+                  id="require-password-change"
+                  checked={requirePasswordChange}
+                  onCheckedChange={setRequirePasswordChange}
+                />
+              </div>
+            )}
             
             <form onSubmit={handleInviteUser} className="flex flex-col gap-4">
               <div className="flex gap-4">
