@@ -62,7 +62,29 @@ serve(async (req) => {
           }
         });
 
-        if (createError) throw createError;
+        if (createError) {
+          console.error('Error creating user:', createError);
+          
+          // Handle specific error cases
+          if (createError.message.includes('already been registered')) {
+            return new Response(JSON.stringify({ 
+              error: 'Utente già esistente',
+              details: `Un utente con l'email ${email} è già registrato nel sistema.`
+            }), {
+              status: 409,
+              headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+            });
+          }
+          
+          // Generic error
+          return new Response(JSON.stringify({ 
+            error: 'Errore nella creazione utente',
+            details: createError.message
+          }), {
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          });
+        }
 
         // Create profile
         await supabase

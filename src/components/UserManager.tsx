@@ -125,9 +125,26 @@ export default function UserManager() {
       loadUsers();
     } catch (error: any) {
       console.error("Errore nell'operazione:", error);
+      
+      // Parse error response if it exists
+      let errorMessage = "Impossibile completare l'operazione";
+      let errorTitle = "Errore";
+      
+      if (error?.message) {
+        try {
+          // Try to parse JSON error message
+          const parsed = JSON.parse(error.message);
+          errorTitle = parsed.error || errorTitle;
+          errorMessage = parsed.details || errorMessage;
+        } catch {
+          // If not JSON, use the message as is
+          errorMessage = error.message;
+        }
+      }
+      
       toast({
-        title: "Errore",
-        description: error.message || "Impossibile completare l'operazione",
+        title: errorTitle,
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
