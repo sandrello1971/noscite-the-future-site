@@ -65,15 +65,84 @@ serve(async (req) => {
         if (createError) {
           console.error('Error creating user:', createError);
           
-          // Handle specific error cases
-          if (createError.message.includes('already been registered')) {
-            return new Response(JSON.stringify({ 
-              error: 'Utente già esistente',
-              details: `Un utente con l'email ${email} è già registrato nel sistema.`
-            }), {
-              status: 409,
-              headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-            });
+          // If the user already exists in Auth, sync profile and role instead of failing
+          if (
+            createError.message?.includes('already been registered') ||
+            (createError as any).code === 'email_exists' ||
+            (createError as any).status === 422
+          ) {
+            try {
+              const { data: usersPage, error: listError } = await supabase.auth.admin.listUsers({
+                page: 1,
+                perPage: 100,
+              });
+
+              if (listError) {
+                console.error('Error listing users for existing email:', listError);
+                throw listError;
+              }
+
+              const existingUser = usersPage?.users?.find(
+                (u: any) => u.email?.toLowerCase() === email.toLowerCase()
+              );
+
+              if (!existingUser) {
+                return new Response(JSON.stringify({
+                  error: 'Utente già esistente',
+                  details: `Un utente con l'email ${email} risulta registrato ma non è stato possibile recuperarlo.`,
+                }), {
+                  status: 409,
+                  headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+                });
+              }
+
+              // Ensure profile exists/updated
+              await supabase
+                .from('profiles')
+                .upsert({ user_id: existingUser.id, email }, { onConflict: 'user_id' });
+
+              // Ensure role is set
+              await supabase
+                .from('user_roles')
+                .delete()
+                .eq('user_id', existingUser.id);
+
+              await supabase
+                .from('user_roles')
+                .insert({ user_id: existingUser.id, role });
+
+              // Optionally send password reset email
+              if (requirePasswordChange) {
+                const { error: resetError } = await supabase.auth.resetPasswordForEmail(
+                  email,
+                  {
+                    redirectTo: `${req.headers.get('origin') || 'https://noscite.it'}/nosciteadmin/auth?reset=true`,
+                  },
+                );
+
+                if (resetError) {
+                  console.error('Error sending password reset email for existing user:', resetError);
+                }
+              }
+
+              return new Response(JSON.stringify({
+                success: true,
+                message: `Utente già esistente sincronizzato. Ruolo impostato a ${role}.`,
+              }), {
+                status: 200,
+                headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+              });
+            } catch (syncError) {
+              console.error('Error syncing existing user data:', syncError);
+
+              return new Response(JSON.stringify({
+                error: 'Utente già esistente',
+                details: `Un utente con l'email ${email} è già registrato, ma si è verificato un errore durante la sincronizzazione.`,
+              }), {
+                status: 409,
+                headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+              });
+            }
           }
           
           // Generic error
