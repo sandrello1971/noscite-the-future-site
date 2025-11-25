@@ -40,7 +40,7 @@ serve(async (req) => {
       });
     }
 
-    const { action, email, role, userId, password } = await req.json();
+    const { action, email, role, userId, password, requirePasswordChange } = await req.json();
 
     console.log('Admin operation:', { action, email, role, userId });
 
@@ -80,7 +80,27 @@ serve(async (req) => {
             role: role
           });
 
-        return new Response(JSON.stringify({ success: true, message: `User ${email} created successfully` }), {
+        // If password change is required, send password reset email
+        if (requirePasswordChange) {
+          const { error: resetError } = await supabase.auth.resetPasswordForEmail(
+            email,
+            {
+              redirectTo: `${req.headers.get('origin') || 'https://noscite.it'}/nosciteadmin/auth?reset=true`
+            }
+          );
+          
+          if (resetError) {
+            console.error('Error sending password reset email:', resetError);
+            // Don't fail the user creation if reset email fails
+          }
+        }
+
+        return new Response(JSON.stringify({ 
+          success: true, 
+          message: requirePasswordChange 
+            ? `User ${email} created. Password reset email sent.`
+            : `User ${email} created successfully`
+        }), {
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
 
