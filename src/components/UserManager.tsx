@@ -111,25 +111,11 @@ export default function UserManager() {
         }
       });
 
-      if (error) {
-        // Handle FunctionsHttpError and FunctionsRelayError
-        let errorTitle = "Errore";
-        let errorMessage = "Impossibile completare l'operazione";
-        
-        // Try to parse error context if available
-        if (error.context) {
-          try {
-            const errorData = typeof error.context === 'string' 
-              ? JSON.parse(error.context) 
-              : error.context;
-            errorTitle = errorData.error || errorTitle;
-            errorMessage = errorData.details || errorData.message || errorMessage;
-          } catch {
-            errorMessage = error.message || errorMessage;
-          }
-        } else if (error.message) {
-          errorMessage = error.message;
-        }
+      // Check if there's an error in the response data (HTTP error status)
+      if (error || (data && data.error)) {
+        const errorData = data || {};
+        const errorTitle = errorData.error || "Errore";
+        const errorMessage = errorData.details || error?.message || "Impossibile completare l'operazione";
         
         throw new Error(JSON.stringify({ error: errorTitle, details: errorMessage }));
       }
