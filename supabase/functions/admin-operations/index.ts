@@ -40,11 +40,50 @@ serve(async (req) => {
       });
     }
 
-    const { action, email, role, userId } = await req.json();
+    const { action, email, role, userId, password } = await req.json();
 
     console.log('Admin operation:', { action, email, role, userId });
 
     switch (action) {
+      case 'createUser':
+        if (!email || !role || !password) {
+          return new Response(JSON.stringify({ error: 'Email, password and role are required' }), {
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          });
+        }
+
+        const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
+          email: email,
+          password: password,
+          email_confirm: true,
+          user_metadata: {
+            role: role
+          }
+        });
+
+        if (createError) throw createError;
+
+        // Create profile
+        await supabase
+          .from('profiles')
+          .insert({
+            user_id: newUser.user.id,
+            email: email
+          });
+
+        // Assign role
+        await supabase
+          .from('user_roles')
+          .insert({
+            user_id: newUser.user.id,
+            role: role
+          });
+
+        return new Response(JSON.stringify({ success: true, message: `User ${email} created successfully` }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+
       case 'invite':
         if (!email || !role) {
           return new Response(JSON.stringify({ error: 'Email and role are required' }), {
