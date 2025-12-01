@@ -25,7 +25,7 @@ const Partners = () => {
           {partners.map((partner, index) => (
             <div 
               key={partner.name} 
-              className="flex items-center justify-center p-4 grayscale hover:grayscale-0 transition-all duration-300 opacity-60 hover:opacity-100"
+              className="flex items-center justify-center p-4 transition-all duration-300"
               style={{ animationDelay: `${index * 100}ms` }}
             >
               <img 
