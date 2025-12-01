@@ -1,11 +1,12 @@
+import webidooLogo from "@/assets/webidoo-logo.png";
+import tibidaboLogo from "@/assets/tibidabo-logo.jpeg";
+import teknetLogo from "@/assets/teknet-logo.png";
+
 const Partners = () => {
   const partners = [
-    { name: "Microsoft", logo: "https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg" },
-    { name: "Google Cloud", logo: "https://upload.wikimedia.org/wikipedia/commons/5/51/Google_Cloud_logo.svg" },
-    { name: "AWS", logo: "https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg" },
-    { name: "OpenAI", logo: "https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg" },
-    { name: "Salesforce", logo: "https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg" },
-    { name: "Hubspot", logo: "https://upload.wikimedia.org/wikipedia/commons/3/3f/HubSpot_Logo.svg" }
+    { name: "Webidoo", logo: webidooLogo },
+    { name: "Tibidabo", logo: tibidaboLogo },
+    { name: "Teknet", logo: teknetLogo }
   ];
 
   return (
@@ -20,7 +21,7 @@ const Partners = () => {
           </p>
         </div>
         
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 items-center">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center max-w-4xl mx-auto">
           {partners.map((partner, index) => (
             <div 
               key={partner.name} 
