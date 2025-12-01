@@ -5,6 +5,7 @@ import Methodus from "@/components/Methodus";
 import Valor from "@/components/Valor";
 import Historiae from "@/components/Historiae";
 import Atheneum from "@/components/Atheneum";
+import Partners from "@/components/Partners";
 import Contactus from "@/components/Contactus";
 import Footer from "@/components/Footer";
 import { SEO } from "@/components/SEO";
@@ -28,6 +29,7 @@ const Index = () => {
         <Methodus />
         <Valor />
         <Atheneum />
+        <Partners />
         <Contactus />
       </main>
       <Footer />
