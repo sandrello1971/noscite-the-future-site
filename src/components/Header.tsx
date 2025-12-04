@@ -12,6 +12,7 @@ const Header = () => {
 
   const menuItems = [
     { name: "Profilum Societatis", path: "/profilum-societatis" },
+    { name: "Fundamenta", path: "/fundamenta" },
     { name: "Methodus", path: "/methodus" },
     { name: "Valor", path: "/valor" },
     { name: "Atheneum", path: "/atheneum" },
