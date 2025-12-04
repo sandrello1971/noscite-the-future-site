@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import Identitas from "./pages/Identitas";
 import Methodus from "./pages/Methodus";
 import Valor from "./pages/Valor";
+import Fundamenta from "./pages/Fundamenta";
 import Historiae from "./pages/Historiae";
 import Atheneum from "./pages/Atheneum";
 import Contactus from "./pages/Contactus";
@@ -46,6 +47,7 @@ const App = () => (
             <Route path="/identitas" element={<Identitas />} />
             <Route path="/methodus" element={<Methodus />} />
             <Route path="/valor" element={<Valor />} />
+            <Route path="/fundamenta" element={<Fundamenta />} />
             <Route path="/historiae" element={<Historiae />} />
             <Route path="/atheneum" element={<Atheneum />} />
             <Route path="/contactus" element={<Contactus />} />

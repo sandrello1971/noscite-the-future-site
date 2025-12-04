@@ -4,6 +4,7 @@ import { Linkedin, Mail, Phone, MapPin, Shield, Cookie, Facebook, Instagram } fr
 const Footer = () => {
   const menuItems = [
     { name: "Identitas", path: "/identitas" },
+    { name: "Fundamenta", path: "/fundamenta" },
     { name: "Methodus", path: "/methodus" },
     { name: "Valor", path: "/valor" },
     { name: "Atheneum", path: "/atheneum" },
