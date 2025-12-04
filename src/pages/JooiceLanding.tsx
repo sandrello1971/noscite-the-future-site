@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Check, Star, ArrowRight, Zap, BarChart3, MessageSquare, Bot } from "lucide-react";
+import { Check, ArrowRight, Zap, BarChart3, MessageSquare, Bot } from "lucide-react";
 import { Link } from "react-router-dom";
 import { SEO } from "@/components/SEO";
 
@@ -12,7 +12,7 @@ import socialPostingImg from "@/assets/jooice/social-posting.png";
 import reputationImg from "@/assets/jooice/reputation.png";
 import aiAssistantImg from "@/assets/jooice/ai-assistant.png";
 import platformPreview from "@/assets/jooice/platform-preview.png";
-import testimonialBg from "@/assets/jooice/testimonial-bg.png";
+
 
 const JooiceLanding = () => {
   const features = [
@@ -51,29 +51,6 @@ const JooiceLanding = () => {
     "Supporto dedicato in italiano",
   ];
 
-  const testimonials = [
-    {
-      name: "Marco Rossi",
-      role: "Titolare",
-      company: "Ristorante La Pergola",
-      content: "Jooice ha rivoluzionato il modo in cui gestiamo la nostra presenza online. Ora rispondo a tutte le recensioni in pochi minuti!",
-      rating: 5,
-    },
-    {
-      name: "Laura Bianchi",
-      role: "Marketing Manager",
-      company: "Studio Dentistico Bianchi",
-      content: "Finalmente una piattaforma che semplifica tutto. Il risparmio di tempo è incredibile e i risultati si vedono.",
-      rating: 5,
-    },
-    {
-      name: "Giuseppe Verdi",
-      role: "Proprietario",
-      company: "Palestra FitLife",
-      content: "L'AI Assistant è fantastico! Mi suggerisce risposte perfette per le recensioni e contenuti per i social.",
-      rating: 5,
-    },
-  ];
 
   return (
     <div className="min-h-screen bg-white">
@@ -243,7 +220,7 @@ const JooiceLanding = () => {
             <div className="relative">
               <div className="absolute -inset-4 bg-[hsl(25,95%,53%)]/20 rounded-3xl blur-3xl" />
               <img 
-                src={testimonialBg} 
+                src={platformPreview} 
                 alt="Jooice piattaforma integrata per il marketing" 
                 className="relative w-full max-w-md mx-auto"
               />
@@ -305,43 +282,6 @@ const JooiceLanding = () => {
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      <section className="py-20 lg:py-32 bg-white">
-        <div className="container mx-auto px-4 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[hsl(220,80%,20%)] mb-6">
-              Cosa dicono i nostri{" "}
-              <span className="text-[hsl(25,95%,53%)]">clienti</span>
-            </h2>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <Card 
-                key={index}
-                className="border-0 shadow-xl shadow-[hsl(220,80%,20%)]/5 rounded-2xl bg-white hover:shadow-2xl transition-shadow duration-300"
-              >
-                <CardContent className="p-8">
-                  <div className="flex gap-1 mb-4">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="h-5 w-5 fill-[hsl(45,100%,50%)] text-[hsl(45,100%,50%)]" />
-                    ))}
-                  </div>
-                  <p className="text-[hsl(220,20%,40%)] mb-6 leading-relaxed italic">
-                    "{testimonial.content}"
-                  </p>
-                  <div className="border-t border-[hsl(220,20%,90%)] pt-4">
-                    <p className="font-bold text-[hsl(220,80%,20%)]">{testimonial.name}</p>
-                    <p className="text-sm text-[hsl(220,20%,50%)]">
-                      {testimonial.role}, {testimonial.company}
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* Footer */}
       <footer className="py-12 bg-[hsl(220,80%,15%)]">
