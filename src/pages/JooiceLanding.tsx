@@ -55,9 +55,10 @@ const JooiceLanding = () => {
   return (
     <div className="min-h-screen bg-white">
       <SEO 
-        title="Jooice - Prova Gratis 30 Giorni | All Your Marketing in One Place"
-        description="Prova Jooice gratis per 30 giorni. Gestisci listings, social posting, reputation e AI assistant in un'unica piattaforma. Nessuna carta di credito richiesta."
-        keywords="jooice, marketing, social media, reputation management, listings, AI assistant, prova gratuita"
+        title="Jooice – La tua presenza digitale in un unico posto | Prova gratis 30 giorni"
+        description="Jooice è la piattaforma che unisce social, recensioni, Google Business, contenuti e AI. Gestisci tutto da un'unica dashboard. Provalo gratis per 30 giorni, nessuna carta di credito."
+        keywords="jooice, marketing, social media, reputation management, listings, AI assistant, prova gratuita, Google Business, recensioni, dashboard marketing"
+        canonical="https://noscite.it/jooice"
       />
 
       {/* Hero Section */}
