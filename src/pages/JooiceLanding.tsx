@@ -86,10 +86,10 @@ const JooiceLanding = () => {
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center overflow-hidden">
         <div 
-          className="absolute inset-0 bg-contain bg-right bg-no-repeat"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: `url(${heroImage})` }}
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-[hsl(220,80%,20%)] via-[hsl(220,80%,20%)]/85 to-[hsl(220,80%,20%)]/40" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[hsl(220,80%,20%)]/95 via-[hsl(220,80%,20%)]/80 to-[hsl(220,80%,20%)]/50" />
         </div>
         
         <div className="container mx-auto px-4 lg:px-8 relative z-10 py-20">
@@ -121,7 +121,7 @@ const JooiceLanding = () => {
               <Button 
                 size="lg" 
                 variant="outline" 
-                className="border-white/30 text-white hover:bg-white/10 text-lg px-8 py-6 rounded-xl backdrop-blur-sm"
+                className="border-white bg-white/10 text-white hover:bg-white hover:text-[hsl(220,80%,20%)] text-lg px-8 py-6 rounded-xl backdrop-blur-sm"
                 asChild
               >
                 <Link to="/contatti">
