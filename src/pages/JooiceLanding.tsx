@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Check, Play, Star, ArrowRight, Zap, BarChart3, MessageSquare, Bot } from "lucide-react";
+import { Check, Star, ArrowRight, Zap, BarChart3, MessageSquare, Bot } from "lucide-react";
 import { Link } from "react-router-dom";
 import { SEO } from "@/components/SEO";
 
@@ -86,10 +86,10 @@ const JooiceLanding = () => {
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center overflow-hidden">
         <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          className="absolute inset-0 bg-contain bg-right bg-no-repeat"
           style={{ backgroundImage: `url(${heroImage})` }}
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-[hsl(220,80%,20%)]/90 via-[hsl(220,80%,20%)]/70 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[hsl(220,80%,20%)] via-[hsl(220,80%,20%)]/85 to-[hsl(220,80%,20%)]/40" />
         </div>
         
         <div className="container mx-auto px-4 lg:px-8 relative z-10 py-20">
@@ -122,9 +122,11 @@ const JooiceLanding = () => {
                 size="lg" 
                 variant="outline" 
                 className="border-white/30 text-white hover:bg-white/10 text-lg px-8 py-6 rounded-xl backdrop-blur-sm"
+                asChild
               >
-                <Play className="mr-2 h-5 w-5" />
-                Guarda la demo
+                <Link to="/contatti">
+                  Contattaci
+                </Link>
               </Button>
             </div>
           </div>
