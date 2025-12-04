@@ -111,9 +111,12 @@ const JooiceLanding = () => {
               <Button 
                 size="lg" 
                 className="bg-[hsl(25,95%,53%)] hover:bg-[hsl(25,95%,45%)] text-white text-lg px-8 py-6 rounded-xl shadow-lg shadow-[hsl(25,95%,53%)]/30"
+                asChild
               >
-                Inizia la prova gratuita
-                <ArrowRight className="ml-2 h-5 w-5" />
+                <a href="https://www.jooice.com/it/checkout/account?plan=wQX0ObQK&term=month&partner=Noscite" target="_blank" rel="noopener noreferrer">
+                  Inizia la prova gratuita
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </a>
               </Button>
               <Button 
                 size="lg" 
@@ -226,9 +229,12 @@ const JooiceLanding = () => {
               <Button 
                 size="lg" 
                 className="bg-[hsl(25,95%,53%)] hover:bg-[hsl(25,95%,45%)] text-white text-lg px-8 py-6 rounded-xl shadow-lg shadow-[hsl(25,95%,53%)]/30"
+                asChild
               >
-                Inizia la prova gratuita
-                <ArrowRight className="ml-2 h-5 w-5" />
+                <a href="https://www.jooice.com/it/checkout/account?plan=wQX0ObQK&term=month&partner=Noscite" target="_blank" rel="noopener noreferrer">
+                  Inizia la prova gratuita
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </a>
               </Button>
             </div>
             
@@ -282,9 +288,12 @@ const JooiceLanding = () => {
             <Button 
               size="lg" 
               className="bg-white text-[hsl(25,95%,53%)] hover:bg-white/90 text-lg px-10 py-6 rounded-xl shadow-lg"
+              asChild
             >
-              Inizia ora - È gratis
-              <ArrowRight className="ml-2 h-5 w-5" />
+              <a href="https://www.jooice.com/it/checkout/account?plan=wQX0ObQK&term=month&partner=Noscite" target="_blank" rel="noopener noreferrer">
+                Inizia ora - È gratis
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </a>
             </Button>
           </div>
 
