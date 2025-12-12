@@ -1,5 +1,5 @@
 # Servi i file statici di Kipin prima di tutto
-/card/index.html/*  /card/index.html/index.html  200
+/card/index.html/*  /card/index.html/index.html  200!
 
 # Poi le altre regole della SPA
 /*    /index.html   200
