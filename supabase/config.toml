@@ -23,3 +23,6 @@ verify_jwt = true
 
 [functions.generate-blog-image]
 verify_jwt = true
+
+[functions.kipin-proxy]
+verify_jwt = false
