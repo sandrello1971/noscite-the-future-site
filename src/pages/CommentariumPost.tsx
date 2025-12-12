@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { CommentariumPost as CommentariumPostType } from "@/types/database";
@@ -11,6 +11,22 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Calendar, ArrowLeft, Clock } from "lucide-react";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
+import DOMPurify from "dompurify";
+
+// Configure DOMPurify to allow safe image attributes while blocking XSS
+const SANITIZE_CONFIG = {
+  ALLOWED_TAGS: [
+    'p', 'br', 'strong', 'em', 'u', 's', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+    'ul', 'ol', 'li', 'blockquote', 'pre', 'code', 'a', 'img', 'span', 'div',
+    'table', 'thead', 'tbody', 'tr', 'th', 'td', 'hr', 'sub', 'sup'
+  ],
+  ALLOWED_ATTR: [
+    'href', 'target', 'rel', 'src', 'alt', 'title', 'width', 'height',
+    'style', 'class', 'id', 'colspan', 'rowspan'
+  ],
+  FORBID_ATTR: ['onerror', 'onclick', 'onload', 'onmouseover', 'onfocus', 'onblur'],
+  ALLOW_DATA_ATTR: false,
+};
 
 export default function CommentariumPost() {
   const { slug } = useParams<{ slug: string }>();
@@ -152,9 +168,10 @@ export default function CommentariumPost() {
                 </div>
               )}
 
+              {/* Sanitize HTML content to prevent XSS while preserving image styling */}
               <div 
                 className="commentarium-content prose prose-lg max-w-none prose-headings:text-foreground prose-p:text-foreground prose-a:text-primary prose-strong:text-foreground prose-ul:text-foreground prose-ol:text-foreground"
-                dangerouslySetInnerHTML={{ __html: post.content }}
+                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content, SANITIZE_CONFIG) }}
               />
 
               {post.tags && post.tags.length > 0 && (
