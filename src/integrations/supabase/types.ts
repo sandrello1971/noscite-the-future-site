@@ -462,163 +462,6 @@ export type Database = {
         }
         Relationships: []
       }
-      bank_statements: {
-        Row: {
-          account_name: string | null
-          account_number: string | null
-          bank_name: string | null
-          closing_balance: number | null
-          created_at: string
-          file_name: string
-          file_size: number
-          file_type: string
-          file_url: string
-          id: string
-          opening_balance: number | null
-          parsed_data: Json | null
-          processing_error: string | null
-          statement_period_end: string | null
-          statement_period_start: string | null
-          status: string
-          total_transactions: number | null
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          account_name?: string | null
-          account_number?: string | null
-          bank_name?: string | null
-          closing_balance?: number | null
-          created_at?: string
-          file_name: string
-          file_size: number
-          file_type: string
-          file_url: string
-          id?: string
-          opening_balance?: number | null
-          parsed_data?: Json | null
-          processing_error?: string | null
-          statement_period_end?: string | null
-          statement_period_start?: string | null
-          status?: string
-          total_transactions?: number | null
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          account_name?: string | null
-          account_number?: string | null
-          bank_name?: string | null
-          closing_balance?: number | null
-          created_at?: string
-          file_name?: string
-          file_size?: number
-          file_type?: string
-          file_url?: string
-          id?: string
-          opening_balance?: number | null
-          parsed_data?: Json | null
-          processing_error?: string | null
-          statement_period_end?: string | null
-          statement_period_start?: string | null
-          status?: string
-          total_transactions?: number | null
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
-      bank_transactions: {
-        Row: {
-          amount: number
-          bank_statement_id: string
-          category: string | null
-          counterpart_account: string | null
-          counterpart_name: string | null
-          created_at: string
-          currency: string
-          description: string
-          expense_id: string | null
-          id: string
-          is_reconciled: boolean | null
-          project_id: string | null
-          reconciliation_confidence: number | null
-          reconciliation_notes: string | null
-          reference_number: string | null
-          tags: string[] | null
-          transaction_date: string
-          transaction_type: string
-          updated_at: string
-          value_date: string | null
-        }
-        Insert: {
-          amount: number
-          bank_statement_id: string
-          category?: string | null
-          counterpart_account?: string | null
-          counterpart_name?: string | null
-          created_at?: string
-          currency?: string
-          description: string
-          expense_id?: string | null
-          id?: string
-          is_reconciled?: boolean | null
-          project_id?: string | null
-          reconciliation_confidence?: number | null
-          reconciliation_notes?: string | null
-          reference_number?: string | null
-          tags?: string[] | null
-          transaction_date: string
-          transaction_type: string
-          updated_at?: string
-          value_date?: string | null
-        }
-        Update: {
-          amount?: number
-          bank_statement_id?: string
-          category?: string | null
-          counterpart_account?: string | null
-          counterpart_name?: string | null
-          created_at?: string
-          currency?: string
-          description?: string
-          expense_id?: string | null
-          id?: string
-          is_reconciled?: boolean | null
-          project_id?: string | null
-          reconciliation_confidence?: number | null
-          reconciliation_notes?: string | null
-          reference_number?: string | null
-          tags?: string[] | null
-          transaction_date?: string
-          transaction_type?: string
-          updated_at?: string
-          value_date?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "bank_transactions_bank_statement_id_fkey"
-            columns: ["bank_statement_id"]
-            isOneToOne: false
-            referencedRelation: "bank_statements"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bank_transactions_expense_id_fkey"
-            columns: ["expense_id"]
-            isOneToOne: false
-            referencedRelation: "project_expenses"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "bank_transactions_project_id_fkey"
-            columns: ["project_id"]
-            isOneToOne: false
-            referencedRelation: "projects"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       blog_posts: {
         Row: {
           author_id: string | null
@@ -1190,6 +1033,315 @@ export type Database = {
           },
         ]
       }
+      crm_project_documents: {
+        Row: {
+          created_at: string
+          description: string | null
+          document_type: string
+          file_name: string
+          file_size: number
+          file_type: string
+          file_url: string
+          id: string
+          name: string
+          project_id: string
+          task_id: string | null
+          updated_at: string
+          user_id: string
+          version: number | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          document_type: string
+          file_name: string
+          file_size: number
+          file_type: string
+          file_url: string
+          id?: string
+          name: string
+          project_id: string
+          task_id?: string | null
+          updated_at?: string
+          user_id: string
+          version?: number | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          document_type?: string
+          file_name?: string
+          file_size?: number
+          file_type?: string
+          file_url?: string
+          id?: string
+          name?: string
+          project_id?: string
+          task_id?: string | null
+          updated_at?: string
+          user_id?: string
+          version?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crm_project_documents_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "crm_projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "crm_project_documents_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "crm_project_tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      crm_project_tasks: {
+        Row: {
+          actual_cost: number | null
+          actual_hours: number | null
+          assigned_to_company_id: string | null
+          assigned_to_group: string | null
+          assigned_to_user_id: string | null
+          created_at: string
+          depends_on: string[] | null
+          description: string | null
+          end_date: string | null
+          estimated_hours: number | null
+          id: string
+          name: string
+          parent_task_id: string | null
+          planned_cost: number | null
+          planned_end_date: string | null
+          planned_start_date: string | null
+          priority: string | null
+          progress_percentage: number | null
+          project_id: string
+          sort_order: number | null
+          start_date: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          actual_cost?: number | null
+          actual_hours?: number | null
+          assigned_to_company_id?: string | null
+          assigned_to_group?: string | null
+          assigned_to_user_id?: string | null
+          created_at?: string
+          depends_on?: string[] | null
+          description?: string | null
+          end_date?: string | null
+          estimated_hours?: number | null
+          id?: string
+          name: string
+          parent_task_id?: string | null
+          planned_cost?: number | null
+          planned_end_date?: string | null
+          planned_start_date?: string | null
+          priority?: string | null
+          progress_percentage?: number | null
+          project_id: string
+          sort_order?: number | null
+          start_date?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          actual_cost?: number | null
+          actual_hours?: number | null
+          assigned_to_company_id?: string | null
+          assigned_to_group?: string | null
+          assigned_to_user_id?: string | null
+          created_at?: string
+          depends_on?: string[] | null
+          description?: string | null
+          end_date?: string | null
+          estimated_hours?: number | null
+          id?: string
+          name?: string
+          parent_task_id?: string | null
+          planned_cost?: number | null
+          planned_end_date?: string | null
+          planned_start_date?: string | null
+          priority?: string | null
+          progress_percentage?: number | null
+          project_id?: string
+          sort_order?: number | null
+          start_date?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crm_project_tasks_assigned_to_company_id_fkey"
+            columns: ["assigned_to_company_id"]
+            isOneToOne: false
+            referencedRelation: "crm_companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "crm_project_tasks_parent_task_id_fkey"
+            columns: ["parent_task_id"]
+            isOneToOne: false
+            referencedRelation: "crm_project_tasks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "crm_project_tasks_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "crm_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      crm_project_timesheets: {
+        Row: {
+          activity_type: string
+          approved_at: string | null
+          approved_by: string | null
+          created_at: string
+          description: string | null
+          hourly_rate: number | null
+          hours: number
+          id: string
+          notes: string | null
+          project_id: string
+          status: string
+          task_id: string | null
+          total_cost: number | null
+          updated_at: string
+          user_id: string
+          work_date: string
+        }
+        Insert: {
+          activity_type: string
+          approved_at?: string | null
+          approved_by?: string | null
+          created_at?: string
+          description?: string | null
+          hourly_rate?: number | null
+          hours: number
+          id?: string
+          notes?: string | null
+          project_id: string
+          status?: string
+          task_id?: string | null
+          total_cost?: number | null
+          updated_at?: string
+          user_id: string
+          work_date: string
+        }
+        Update: {
+          activity_type?: string
+          approved_at?: string | null
+          approved_by?: string | null
+          created_at?: string
+          description?: string | null
+          hourly_rate?: number | null
+          hours?: number
+          id?: string
+          notes?: string | null
+          project_id?: string
+          status?: string
+          task_id?: string | null
+          total_cost?: number | null
+          updated_at?: string
+          user_id?: string
+          work_date?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crm_project_timesheets_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "crm_projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "crm_project_timesheets_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "crm_project_tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      crm_projects: {
+        Row: {
+          actual_cost: number | null
+          budget: number | null
+          created_at: string
+          description: string | null
+          earned_value: number | null
+          end_date: string | null
+          id: string
+          name: string
+          order_id: string | null
+          planned_end_date: string | null
+          planned_start_date: string | null
+          planned_value: number | null
+          progress_percentage: number | null
+          start_date: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          actual_cost?: number | null
+          budget?: number | null
+          created_at?: string
+          description?: string | null
+          earned_value?: number | null
+          end_date?: string | null
+          id?: string
+          name: string
+          order_id?: string | null
+          planned_end_date?: string | null
+          planned_start_date?: string | null
+          planned_value?: number | null
+          progress_percentage?: number | null
+          start_date?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          actual_cost?: number | null
+          budget?: number | null
+          created_at?: string
+          description?: string | null
+          earned_value?: number | null
+          end_date?: string | null
+          id?: string
+          name?: string
+          order_id?: string | null
+          planned_end_date?: string | null
+          planned_start_date?: string | null
+          planned_value?: number | null
+          progress_percentage?: number | null
+          start_date?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crm_projects_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "crm_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       crm_service_compositions: {
         Row: {
           child_service_id: string
@@ -1281,6 +1433,54 @@ export type Database = {
             columns: ["partner_id"]
             isOneToOne: false
             referencedRelation: "crm_companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      crm_task_dependencies: {
+        Row: {
+          created_at: string
+          dependency_type: string
+          id: string
+          lag_days: number
+          predecessor_task_id: string
+          successor_task_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          dependency_type?: string
+          id?: string
+          lag_days?: number
+          predecessor_task_id: string
+          successor_task_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          dependency_type?: string
+          id?: string
+          lag_days?: number
+          predecessor_task_id?: string
+          successor_task_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "crm_task_dependencies_predecessor_task_id_fkey"
+            columns: ["predecessor_task_id"]
+            isOneToOne: false
+            referencedRelation: "crm_project_tasks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "crm_task_dependencies_successor_task_id_fkey"
+            columns: ["successor_task_id"]
+            isOneToOne: false
+            referencedRelation: "crm_project_tasks"
             referencedColumns: ["id"]
           },
         ]
@@ -2841,6 +3041,7 @@ export type Database = {
           id: string
           mission_description: string
           notes: string | null
+          order_id: string | null
           reimbursement_rate_per_km: number
           requires_diaria: boolean
           status: string | null
@@ -2861,6 +3062,7 @@ export type Database = {
           id?: string
           mission_description: string
           notes?: string | null
+          order_id?: string | null
           reimbursement_rate_per_km?: number
           requires_diaria?: boolean
           status?: string | null
@@ -2881,6 +3083,7 @@ export type Database = {
           id?: string
           mission_description?: string
           notes?: string | null
+          order_id?: string | null
           reimbursement_rate_per_km?: number
           requires_diaria?: boolean
           status?: string | null
@@ -2891,7 +3094,15 @@ export type Database = {
           vehicle_model?: string | null
           vehicle_plate?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "travel_expenses_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "crm_orders"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_profiles: {
         Row: {
@@ -3067,6 +3278,14 @@ export type Database = {
         Args: { archive_date?: string; retention_months: number }
         Returns: string
       }
+      cascade_recalculate_dates: {
+        Args: { p_task_id: string }
+        Returns: undefined
+      }
+      check_dependency_cycle: {
+        Args: { p_predecessor_id: string; p_successor_id: string }
+        Returns: boolean
+      }
       cleanup_old_chat_conversations: { Args: never; Returns: undefined }
       cleanup_rate_limits: { Args: never; Returns: undefined }
       finalize_travel_expense: {
@@ -3119,6 +3338,10 @@ export type Database = {
           source_id: string
           title: string
         }[]
+      }
+      recalculate_task_dates: {
+        Args: { p_task_id: string }
+        Returns: undefined
       }
       schedule_next_backup: { Args: never; Returns: undefined }
       set_session_context: {
