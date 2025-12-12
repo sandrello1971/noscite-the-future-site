@@ -31,7 +31,7 @@ import JooiceLanding from "./pages/JooiceLanding";
 import Chatbot from "./components/Chatbot";
 import IubendaCookieBadge from "./components/IubendaCookieBadge";
 import { GoogleAnalytics } from "./components/GoogleAnalytics";
-import Cards from "./pages/Cards";
+
 
 
 const queryClient = new QueryClient();
@@ -64,7 +64,7 @@ const App = () => (
             <Route path="/commentarium" element={<Commentarium />} />
             <Route path="/commentarium/:slug" element={<CommentariumPost />} />
             <Route path="/jooice" element={<JooiceLanding />} />
-            <Route path="/card" element={<Cards />} />
+            
             <Route path="/nosciteadmin" element={<NosciteAdminDashboard />} />
             <Route path="/nosciteadmin/auth" element={<NosciteAdminAuth />} />
             <Route path="/auth" element={<Auth />} />
