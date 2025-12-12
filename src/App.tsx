@@ -28,7 +28,7 @@ import NotFound from "./pages/NotFound";
 import Commentarium from "./pages/Commentarium";
 import CommentariumPost from "./pages/CommentariumPost";
 import JooiceLanding from "./pages/JooiceLanding";
-
+import KipinConnector from "./pages/KipinConnector";
 
 import Chatbot from "./components/Chatbot";
 import IubendaCookieBadge from "./components/IubendaCookieBadge";
@@ -66,9 +66,10 @@ const App = () => (
             <Route path="/commentarium" element={<Commentarium />} />
             <Route path="/commentarium/:slug" element={<CommentariumPost />} />
             <Route path="/jooice" element={<JooiceLanding />} />
-            
-            
-            <Route path="/nosciteadmin" element={<NosciteAdminDashboard />} />
+
+<Route path="/card/index.html/*" element={<KipinConnector />} />
+
+<Route path="/nosciteadmin" element={<NosciteAdminDashboard />} />
             <Route path="/nosciteadmin/auth" element={<NosciteAdminAuth />} />
             <Route path="/auth" element={<Auth />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
