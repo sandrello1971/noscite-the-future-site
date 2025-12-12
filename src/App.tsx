@@ -28,6 +28,7 @@ import NotFound from "./pages/NotFound";
 import Commentarium from "./pages/Commentarium";
 import CommentariumPost from "./pages/CommentariumPost";
 import JooiceLanding from "./pages/JooiceLanding";
+import KipinCard from "./pages/KipinCard";
 
 import Chatbot from "./components/Chatbot";
 import IubendaCookieBadge from "./components/IubendaCookieBadge";
@@ -65,6 +66,7 @@ const App = () => (
             <Route path="/commentarium" element={<Commentarium />} />
             <Route path="/commentarium/:slug" element={<CommentariumPost />} />
             <Route path="/jooice" element={<JooiceLanding />} />
+            <Route path="/card" element={<KipinCard />} />
             
             <Route path="/nosciteadmin" element={<NosciteAdminDashboard />} />
             <Route path="/nosciteadmin/auth" element={<NosciteAdminAuth />} />
