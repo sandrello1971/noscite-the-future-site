@@ -5,12 +5,16 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, Save, Eye, Upload, Sparkles, Image as ImageIcon, FileImage, Trash2 } from 'lucide-react';
+import { ArrowLeft, Save, Eye, Upload, Sparkles, Image as ImageIcon, FileImage, Trash2, Calendar, Clock } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/components/ui/use-toast';
 import { CommentariumPost } from '@/types/database';
 import DOMPurify from 'dompurify';
 import QuillEditor, { QuillEditorRef } from '@/components/QuillEditor';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar as CalendarComponent } from '@/components/ui/calendar';
+import { format } from 'date-fns';
+import { it } from 'date-fns/locale';
 
 const AUTOSAVE_KEY = 'commentarium-draft-autosave';
 
@@ -60,6 +64,21 @@ const CommentariumEditor = ({ post, onSave, onCancel }: CommentariumEditorProps)
   const [topicPrompt, setTopicPrompt] = useState(savedDraft?.topicPrompt || '');
   const [articleAiLoading, setArticleAiLoading] = useState(false);
   const [generatedImageUrl, setGeneratedImageUrl] = useState<string>(savedDraft?.generatedImageUrl || '');
+  
+  // Scheduling state
+  const [isScheduled, setIsScheduled] = useState<boolean>(
+    post?.published_at && new Date(post.published_at) > new Date() ? true : savedDraft?.isScheduled || false
+  );
+  const [scheduledDate, setScheduledDate] = useState<Date | undefined>(
+    post?.published_at && new Date(post.published_at) > new Date() 
+      ? new Date(post.published_at) 
+      : savedDraft?.scheduledDate ? new Date(savedDraft.scheduledDate) : undefined
+  );
+  const [scheduledTime, setScheduledTime] = useState<string>(
+    post?.published_at && new Date(post.published_at) > new Date()
+      ? format(new Date(post.published_at), 'HH:mm')
+      : savedDraft?.scheduledTime || '09:00'
+  );
 
   // Auto-save to localStorage
   useEffect(() => {
@@ -71,6 +90,9 @@ const CommentariumEditor = ({ post, onSave, onCancel }: CommentariumEditorProps)
       imagePrompt,
       topicPrompt,
       generatedImageUrl,
+      isScheduled,
+      scheduledDate: scheduledDate?.toISOString(),
+      scheduledTime,
       timestamp: Date.now()
     };
     
@@ -79,7 +101,7 @@ const CommentariumEditor = ({ post, onSave, onCancel }: CommentariumEditorProps)
     } catch (e) {
       console.error('Error saving draft:', e);
     }
-  }, [formData, tagsInput, imagePrompt, topicPrompt, generatedImageUrl, post]);
+  }, [formData, tagsInput, imagePrompt, topicPrompt, generatedImageUrl, isScheduled, scheduledDate, scheduledTime, post]);
 
   // Clear draft from localStorage
   const clearDraft = () => {
@@ -104,9 +126,21 @@ const CommentariumEditor = ({ post, onSave, onCancel }: CommentariumEditorProps)
       setImagePrompt('');
       setTopicPrompt('');
       setGeneratedImageUrl('');
+      setIsScheduled(false);
+      setScheduledDate(undefined);
+      setScheduledTime('09:00');
     } catch (e) {
       console.error('Error clearing draft:', e);
     }
+  };
+
+  // Helper to combine date and time
+  const getScheduledDateTime = (): Date | null => {
+    if (!isScheduled || !scheduledDate) return null;
+    const [hours, minutes] = scheduledTime.split(':').map(Number);
+    const dateTime = new Date(scheduledDate);
+    dateTime.setHours(hours, minutes, 0, 0);
+    return dateTime;
   };
 
   // Show notification if draft was loaded
@@ -310,6 +344,19 @@ const CommentariumEditor = ({ post, onSave, onCancel }: CommentariumEditorProps)
       return;
     }
 
+    // Validate scheduled date if scheduling
+    if (isScheduled) {
+      const scheduledDateTime = getScheduledDateTime();
+      if (!scheduledDateTime || scheduledDateTime <= new Date()) {
+        toast({
+          title: "Errore",
+          description: "La data di programmazione deve essere nel futuro",
+          variant: "destructive",
+        });
+        return;
+      }
+    }
+
     setLoading(true);
     try {
       const tags = tagsInput
@@ -327,12 +374,25 @@ const CommentariumEditor = ({ post, onSave, onCancel }: CommentariumEditorProps)
         throw new Error('Utente non autenticato');
       }
 
+      // Determine published_at based on scheduling
+      let publishedAt: string | null = null;
+      let isPublished = formData.published;
+      
+      if (isScheduled) {
+        const scheduledDateTime = getScheduledDateTime();
+        publishedAt = scheduledDateTime?.toISOString() || null;
+        isPublished = true; // Mark as published but with future date
+      } else if (formData.published) {
+        publishedAt = new Date().toISOString();
+      }
+
       const postData = {
         ...formData,
         content: editorContent,
         tags,
         author_id: user.id, // CRITICAL: Set author_id for RLS
-        published_at: formData.published ? new Date().toISOString() : null,
+        published: isPublished,
+        published_at: publishedAt,
         updated_at: new Date().toISOString(),
       };
 
@@ -371,9 +431,20 @@ const CommentariumEditor = ({ post, onSave, onCancel }: CommentariumEditorProps)
         localStorage.removeItem(AUTOSAVE_KEY);
       }
 
+      // Determine success message based on action
+      let successMessage = post?.id ? "Articolo aggiornato" : "Articolo creato";
+      if (isScheduled && scheduledDate) {
+        const scheduledDateTime = getScheduledDateTime();
+        successMessage = `Articolo programmato per il ${format(scheduledDateTime!, 'dd/MM/yyyy')} alle ${scheduledTime}`;
+      } else if (formData.published) {
+        successMessage = post?.id ? "Articolo aggiornato e pubblicato" : "Articolo pubblicato";
+      } else {
+        successMessage = "Bozza salvata";
+      }
+
       toast({
         title: "Successo",
-        description: post?.id ? "Articolo aggiornato" : "Articolo creato",
+        description: successMessage,
       });
 
       onSave();
@@ -582,14 +653,127 @@ const CommentariumEditor = ({ post, onSave, onCancel }: CommentariumEditorProps)
         )}
       </div>
 
-      <div className="flex items-center space-x-2">
-        <Switch
-          id="published"
-          checked={formData.published}
-          onCheckedChange={(checked) => setFormData(prev => ({ ...prev, published: checked }))}
-        />
-        <Label htmlFor="published">Pubblicato</Label>
-      </div>
+      {/* Publication Options */}
+      <Card className="border-primary/20">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-lg flex items-center gap-2">
+            <Calendar className="h-5 w-5" />
+            Opzioni di pubblicazione
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {/* Immediate publish toggle */}
+          <div className="flex items-center justify-between">
+            <div className="space-y-0.5">
+              <Label htmlFor="published" className="text-base">Pubblica subito</Label>
+              <p className="text-sm text-muted-foreground">
+                L'articolo sarà visibile immediatamente
+              </p>
+            </div>
+            <Switch
+              id="published"
+              checked={formData.published && !isScheduled}
+              onCheckedChange={(checked) => {
+                setFormData(prev => ({ ...prev, published: checked }));
+                if (checked) setIsScheduled(false);
+              }}
+              disabled={isScheduled}
+            />
+          </div>
+
+          {/* Scheduling toggle */}
+          <div className="border-t pt-4">
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label htmlFor="scheduled" className="text-base">Programma pubblicazione</Label>
+                <p className="text-sm text-muted-foreground">
+                  Scegli data e ora per la pubblicazione automatica
+                </p>
+              </div>
+              <Switch
+                id="scheduled"
+                checked={isScheduled}
+                onCheckedChange={(checked) => {
+                  setIsScheduled(checked);
+                  if (checked) {
+                    setFormData(prev => ({ ...prev, published: false }));
+                    if (!scheduledDate) {
+                      // Set default to tomorrow at 9:00
+                      const tomorrow = new Date();
+                      tomorrow.setDate(tomorrow.getDate() + 1);
+                      setScheduledDate(tomorrow);
+                    }
+                  }
+                }}
+              />
+            </div>
+
+            {/* Date/Time picker - shown when scheduling is enabled */}
+            {isScheduled && (
+              <div className="mt-4 p-4 bg-muted/50 rounded-lg space-y-4">
+                <div className="grid gap-4 md:grid-cols-2">
+                  {/* Date picker */}
+                  <div className="space-y-2">
+                    <Label>Data</Label>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className="w-full justify-start text-left font-normal"
+                        >
+                          <Calendar className="mr-2 h-4 w-4" />
+                          {scheduledDate ? (
+                            format(scheduledDate, 'PPP', { locale: it })
+                          ) : (
+                            <span>Seleziona data</span>
+                          )}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <CalendarComponent
+                          mode="single"
+                          selected={scheduledDate}
+                          onSelect={setScheduledDate}
+                          disabled={(date) => date < new Date()}
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+
+                  {/* Time picker */}
+                  <div className="space-y-2">
+                    <Label>Ora</Label>
+                    <div className="flex items-center gap-2">
+                      <Clock className="h-4 w-4 text-muted-foreground" />
+                      <Input
+                        type="time"
+                        value={scheduledTime}
+                        onChange={(e) => setScheduledTime(e.target.value)}
+                        className="flex-1"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Preview of scheduled date */}
+                {scheduledDate && (
+                  <div className="text-sm text-primary font-medium">
+                    📅 Sarà pubblicato il {format(scheduledDate, 'EEEE d MMMM yyyy', { locale: it })} alle {scheduledTime}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Status indicator */}
+          {!formData.published && !isScheduled && (
+            <div className="text-sm text-muted-foreground italic">
+              L'articolo verrà salvato come bozza
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 };
