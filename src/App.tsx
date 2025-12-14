@@ -29,6 +29,7 @@ import Commentarium from "./pages/Commentarium";
 import CommentariumPost from "./pages/CommentariumPost";
 import JooiceLanding from "./pages/JooiceLanding";
 import KipinConnector from "./pages/KipinConnector";
+import BusinessCardScanner from "./pages/BusinessCardScanner";
 
 import Chatbot from "./components/Chatbot";
 import IubendaCookieBadge from "./components/IubendaCookieBadge";
@@ -66,6 +67,7 @@ const App = () => (
             <Route path="/commentarium" element={<Commentarium />} />
             <Route path="/commentarium/:slug" element={<CommentariumPost />} />
             <Route path="/jooice" element={<JooiceLanding />} />
+            <Route path="/scanner" element={<BusinessCardScanner />} />
 
 <Route path="/card/index.html/*" element={<KipinConnector />} />
 
