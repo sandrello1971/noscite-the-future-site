@@ -41,20 +41,20 @@ const TagInput = ({ tags, onChange, placeholder = "Digita per cercare o aggiunge
     loadTags();
   }, []);
 
-  // Filter suggestions based on input
+  // Filter suggestions based on input - show all available tags when focused
   useEffect(() => {
+    const availableTags = allTags.filter(tag => !tags.includes(tag));
+    
     if (inputValue.trim()) {
-      const filtered = allTags.filter(tag => 
-        tag.toLowerCase().includes(inputValue.toLowerCase()) && 
-        !tags.includes(tag)
+      const filtered = availableTags.filter(tag => 
+        tag.toLowerCase().includes(inputValue.toLowerCase())
       );
       setSuggestions(filtered);
-      setShowSuggestions(true);
-      setSelectedIndex(-1);
     } else {
-      setSuggestions([]);
-      setShowSuggestions(false);
+      // Show all available tags when input is empty but focused
+      setSuggestions(availableTags);
     }
+    setSelectedIndex(-1);
   }, [inputValue, allTags, tags]);
 
   // Close suggestions on outside click
@@ -131,7 +131,7 @@ const TagInput = ({ tags, onChange, placeholder = "Digita per cercare o aggiunge
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyDown={handleKeyDown}
-          onFocus={() => inputValue.trim() && setShowSuggestions(true)}
+          onFocus={() => setShowSuggestions(true)}
           placeholder={tags.length === 0 ? placeholder : ""}
           className="flex-1 min-w-[120px] border-0 p-0 h-6 focus-visible:ring-0 focus-visible:ring-offset-0"
         />

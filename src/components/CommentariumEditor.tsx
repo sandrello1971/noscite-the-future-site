@@ -56,9 +56,19 @@ const CommentariumEditor = ({ post, onSave, onCancel }: CommentariumEditorProps)
     ...(savedDraft?.formData || {})
   });
   const [loading, setLoading] = useState(false);
-  const [selectedTags, setSelectedTags] = useState<string[]>(
-    post?.tags || savedDraft?.selectedTags || []
-  );
+  
+  // Handle backward compatibility: old drafts used tagsInput as comma-separated string
+  const getInitialTags = () => {
+    if (post?.tags) return post.tags;
+    if (savedDraft?.selectedTags) return savedDraft.selectedTags;
+    // Backward compatibility: convert old tagsInput string to array
+    if (savedDraft?.tagsInput) {
+      return savedDraft.tagsInput.split(',').map((t: string) => t.trim()).filter(Boolean);
+    }
+    return [];
+  };
+  
+  const [selectedTags, setSelectedTags] = useState<string[]>(getInitialTags());
   const [aiLoading, setAiLoading] = useState(false);
   const [imagePrompt, setImagePrompt] = useState(savedDraft?.imagePrompt || '');
   const [showImagePrompt, setShowImagePrompt] = useState(false);
