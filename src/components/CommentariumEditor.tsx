@@ -15,6 +15,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import { format } from 'date-fns';
 import { it } from 'date-fns/locale';
+import TagInput from '@/components/TagInput';
 
 const AUTOSAVE_KEY = 'commentarium-draft-autosave';
 
@@ -55,8 +56,8 @@ const CommentariumEditor = ({ post, onSave, onCancel }: CommentariumEditorProps)
     ...(savedDraft?.formData || {})
   });
   const [loading, setLoading] = useState(false);
-  const [tagsInput, setTagsInput] = useState(
-    post?.tags?.join(', ') || savedDraft?.tagsInput || ''
+  const [selectedTags, setSelectedTags] = useState<string[]>(
+    post?.tags || savedDraft?.selectedTags || []
   );
   const [aiLoading, setAiLoading] = useState(false);
   const [imagePrompt, setImagePrompt] = useState(savedDraft?.imagePrompt || '');
@@ -86,7 +87,7 @@ const CommentariumEditor = ({ post, onSave, onCancel }: CommentariumEditorProps)
     
     const draft = {
       formData,
-      tagsInput,
+      selectedTags,
       imagePrompt,
       topicPrompt,
       generatedImageUrl,
@@ -101,7 +102,7 @@ const CommentariumEditor = ({ post, onSave, onCancel }: CommentariumEditorProps)
     } catch (e) {
       console.error('Error saving draft:', e);
     }
-  }, [formData, tagsInput, imagePrompt, topicPrompt, generatedImageUrl, isScheduled, scheduledDate, scheduledTime, post]);
+  }, [formData, selectedTags, imagePrompt, topicPrompt, generatedImageUrl, isScheduled, scheduledDate, scheduledTime, post]);
 
   // Clear draft from localStorage
   const clearDraft = () => {
@@ -122,7 +123,7 @@ const CommentariumEditor = ({ post, onSave, onCancel }: CommentariumEditorProps)
         featured_image_url: '',
         published: false,
       });
-      setTagsInput('');
+      setSelectedTags([]);
       setImagePrompt('');
       setTopicPrompt('');
       setGeneratedImageUrl('');
@@ -359,10 +360,8 @@ const CommentariumEditor = ({ post, onSave, onCancel }: CommentariumEditorProps)
 
     setLoading(true);
     try {
-      const tags = tagsInput
-        .split(',')
-        .map(tag => tag.trim())
-        .filter(tag => tag);
+      // Use selectedTags directly instead of parsing from input
+      const tags = selectedTags;
 
       // Recupera sempre l'HTML reale dall'editor (così includiamo resize/allineamento immagini)
       const editorContent = editorRef.current?.getHTML() || formData.content;
@@ -609,12 +608,11 @@ const CommentariumEditor = ({ post, onSave, onCancel }: CommentariumEditorProps)
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="tags">Tags (separati da virgola)</Label>
-          <Input
-            id="tags"
-            value={tagsInput}
-            onChange={(e) => setTagsInput(e.target.value)}
-            placeholder="tag1, tag2, tag3"
+          <Label htmlFor="tags">Tags</Label>
+          <TagInput
+            tags={selectedTags}
+            onChange={setSelectedTags}
+            placeholder="Digita per cercare o aggiungere tag..."
           />
         </div>
       </div>
