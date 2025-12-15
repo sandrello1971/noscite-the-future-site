@@ -195,11 +195,24 @@ const handler = async (req: Request): Promise<Response> => {
       },
     });
   } catch (error: any) {
-    console.error("Error in send-contact-email function:", error);
+    // Log detailed error server-side only
+    console.error("Error in send-contact-email function:", error?.message || error);
+    console.error("Stack trace:", error?.stack || 'N/A');
+    
+    // Map known validation errors to user-friendly messages, hide internal errors
+    const isValidationError = error?.message?.includes('Nome') || 
+                              error?.message?.includes('Email') || 
+                              error?.message?.includes('Messaggio') ||
+                              error?.message?.includes('reCAPTCHA');
+    
+    const safeMessage = isValidationError 
+      ? error.message  // Validation errors are safe to show
+      : "Si è verificato un errore. Riprova più tardi.";
+    
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: safeMessage, code: isValidationError ? 'VALIDATION_ERROR' : 'INTERNAL_ERROR' }),
       {
-        status: 500,
+        status: isValidationError ? 400 : 500,
         headers: { "Content-Type": "application/json", ...corsHeaders },
       }
     );
