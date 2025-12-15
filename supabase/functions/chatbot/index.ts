@@ -151,13 +151,21 @@ serve(async (req) => {
       console.error('Embedding search failed:', e);
     }
 
-    // 2) Fallback: ricerca testuale
+    // 2) Fallback: ricerca testuale (with sanitized keyword to prevent SQL injection)
     let knowledgeData: any[] = [];
     if (semanticMatches.length === 0) {
+      // Sanitize keyword: remove SQL wildcards and special characters
+      const rawKeyword = keywords[0] || 'noscite';
+      const sanitizedKeyword = rawKeyword
+        .replace(/[%_'"\\]/g, '') // Remove SQL wildcards and quotes
+        .replace(/[^\w\s\-àèéìòùÀÈÉÌÒÙ]/gi, '') // Keep only alphanumeric, spaces, hyphens, and Italian accents
+        .substring(0, 50); // Limit length
+      
+      const searchPattern = `%${sanitizedKeyword}%`;
       const { data: kbFallback, error: knowledgeError } = await supabase
         .from('knowledge_base')
         .select('content, title, source_id')
-        .or('content.ilike.%' + (keywords[0] || 'noscite') + '%,title.ilike.%' + (keywords[0] || 'noscite') + '%')
+        .or(`content.ilike.${searchPattern},title.ilike.${searchPattern}`)
         .limit(6);
       if (knowledgeError) {
         console.error('Error fetching knowledge base:', knowledgeError);
@@ -276,10 +284,14 @@ serve(async (req) => {
     });
 
   } catch (error) {
-    console.error('Error in chatbot function:', error);
+    // Log detailed error server-side only
+    console.error('Error in chatbot function:', error instanceof Error ? error.message : error);
+    console.error('Stack trace:', error instanceof Error ? error.stack : 'N/A');
+    
+    // Return generic error to client - never expose internal details
     return new Response(JSON.stringify({ 
-      error: 'Errore interno del server',
-      details: error.message 
+      error: 'Si è verificato un errore. Riprova più tardi.',
+      code: 'INTERNAL_ERROR'
     }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
