@@ -4,6 +4,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { CommentariumPost, Document } from "@/types/database";
+import { format } from "date-fns";
+import { it } from "date-fns/locale";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -372,9 +374,22 @@ export default function NosciteAdminDashboard() {
                             <Calendar className="h-4 w-4" />
                             <span>{new Date(post.created_at || '').toLocaleDateString()}</span>
                           </div>
-                          <Badge variant={post.published ? "default" : "secondary"}>
-                            {post.published ? "Pubblicato" : "Bozza"}
-                          </Badge>
+                          {(() => {
+                            const isScheduled = post.published && post.published_at && new Date(post.published_at) > new Date();
+                            const isPublished = post.published && post.published_at && new Date(post.published_at) <= new Date();
+                            
+                            if (isScheduled) {
+                              return (
+                                <Badge variant="outline" className="bg-amber-100 text-amber-800 border-amber-300">
+                                  Pianificato: {format(new Date(post.published_at!), "d MMM yyyy 'alle' HH:mm", { locale: it })}
+                                </Badge>
+                              );
+                            } else if (isPublished) {
+                              return <Badge variant="default">Pubblicato</Badge>;
+                            } else {
+                              return <Badge variant="secondary">Bozza</Badge>;
+                            }
+                          })()}
                           {post.category && (
                             <Badge variant="outline">{post.category}</Badge>
                           )}
