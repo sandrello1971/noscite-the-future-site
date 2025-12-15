@@ -43,11 +43,14 @@ export default function CommentariumPost() {
 
   const loadPost = async (postSlug: string) => {
     try {
+      const nowIso = new Date().toISOString();
       const { data, error } = await supabase
         .from('blog_posts')
         .select('*')
         .eq('slug', postSlug)
         .eq('published', true)
+        .not('published_at', 'is', null)
+        .lte('published_at', nowIso)
         .single();
 
       if (error) throw error;
@@ -61,10 +64,13 @@ export default function CommentariumPost() {
       
       // Load related posts
       if (data.category) {
+        const nowIso = new Date().toISOString();
         const { data: related } = await supabase
           .from('blog_posts')
           .select('*')
           .eq('published', true)
+          .not('published_at', 'is', null)
+          .lte('published_at', nowIso)
           .eq('category', data.category)
           .neq('id', data.id)
           .limit(3);

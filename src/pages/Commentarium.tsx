@@ -21,10 +21,13 @@ export default function Commentarium() {
 
   const loadPosts = async () => {
     try {
+      const nowIso = new Date().toISOString();
       const { data, error } = await supabase
         .from('blog_posts')
         .select('*')
         .eq('published', true)
+        .not('published_at', 'is', null)
+        .lte('published_at', nowIso)
         .order('published_at', { ascending: false });
 
       if (error) throw error;
