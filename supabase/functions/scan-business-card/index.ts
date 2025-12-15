@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -11,6 +12,75 @@ serve(async (req) => {
   }
 
   try {
+    // Authentication check - require valid user
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      console.error("No authorization header provided");
+      return new Response(
+        JSON.stringify({ error: "Authorization required" }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
+    
+    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: authHeader } }
+    });
+
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    
+    if (authError || !user) {
+      console.error("Authentication failed:", authError?.message);
+      return new Response(
+        JSON.stringify({ error: "Unauthorized - valid authentication required" }),
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    console.log(`Authenticated user ${user.id} requesting business card scan`);
+
+    // Rate limiting check - max 20 scans per hour per user
+    const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+    const { data: rateLimitData, error: rateLimitError } = await supabase
+      .from('api_rate_limits')
+      .select('request_count, window_start')
+      .eq('identifier', user.id)
+      .eq('endpoint', 'scan-business-card')
+      .gte('window_start', oneHourAgo)
+      .maybeSingle();
+
+    if (!rateLimitError && rateLimitData && rateLimitData.request_count >= 20) {
+      console.warn(`Rate limit exceeded for user ${user.id}`);
+      return new Response(
+        JSON.stringify({ error: "Rate limit exceeded. Maximum 20 scans per hour." }),
+        { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // Update rate limit counter
+    if (rateLimitData) {
+      await supabase
+        .from('api_rate_limits')
+        .update({ 
+          request_count: rateLimitData.request_count + 1,
+          updated_at: new Date().toISOString()
+        })
+        .eq('identifier', user.id)
+        .eq('endpoint', 'scan-business-card')
+        .gte('window_start', oneHourAgo);
+    } else {
+      await supabase
+        .from('api_rate_limits')
+        .insert({
+          identifier: user.id,
+          endpoint: 'scan-business-card',
+          request_count: 1,
+          window_start: new Date().toISOString()
+        });
+    }
+
     const { frontImage, backImage } = await req.json();
     
     if (!frontImage) {
@@ -25,7 +95,7 @@ serve(async (req) => {
       throw new Error("LOVABLE_API_KEY is not configured");
     }
 
-    console.log("Processing business card scan...");
+    console.log(`Processing business card scan for user ${user.id}...`);
 
     // Build the content array with images
     const content: any[] = [
@@ -149,7 +219,7 @@ Important:
       address: extractedData.address || "",
     };
 
-    console.log("Extracted data:", normalizedData);
+    console.log(`Extracted data for user ${user.id}:`, normalizedData);
 
     return new Response(
       JSON.stringify({ extractedData: normalizedData }),
