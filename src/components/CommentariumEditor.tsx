@@ -165,14 +165,16 @@ const CommentariumEditor = ({ post, onSave, onCancel }: CommentariumEditorProps)
   }, []);
 
   useEffect(() => {
-    // Auto-generate slug from title
-    if (formData.title && !post) {
-      const slug = formData.title
+    // Auto-generate slug from title (only for new posts or if slug is empty)
+    if (formData.title && (!post || !formData.slug)) {
+      const baseSlug = formData.title
         .toLowerCase()
         .replace(/[^\w\s-]/g, '')
         .replace(/\s+/g, '-')
         .trim();
-      setFormData(prev => ({ ...prev, slug }));
+      // Add timestamp suffix to ensure uniqueness
+      const uniqueSlug = post ? baseSlug : `${baseSlug}-${Date.now().toString(36)}`;
+      setFormData(prev => ({ ...prev, slug: uniqueSlug }));
     }
   }, [formData.title, post]);
 
