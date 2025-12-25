@@ -1112,6 +1112,8 @@ export type Database = {
           end_date: string | null
           estimated_hours: number | null
           id: string
+          is_milestone: boolean
+          milestone_date: string | null
           name: string
           parent_task_id: string | null
           planned_cost: number | null
@@ -1138,6 +1140,8 @@ export type Database = {
           end_date?: string | null
           estimated_hours?: number | null
           id?: string
+          is_milestone?: boolean
+          milestone_date?: string | null
           name: string
           parent_task_id?: string | null
           planned_cost?: number | null
@@ -1164,6 +1168,8 @@ export type Database = {
           end_date?: string | null
           estimated_hours?: number | null
           id?: string
+          is_milestone?: boolean
+          milestone_date?: string | null
           name?: string
           parent_task_id?: string | null
           planned_cost?: number | null

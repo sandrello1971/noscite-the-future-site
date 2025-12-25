@@ -15,9 +15,9 @@ const Index = () => {
   return (
     <div className="min-h-screen">
       <SEO 
-        title="Noscite - In Digitali Nova Virtus | Metodo di Trasformazione Digitale"
-        description="Il digitale non è solo tecnologia, ma capacità di creare valore attraverso metodo, visione e innovazione. Scopri il nostro approccio in 5 fasi."
-        keywords="noscite, digitale, trasformazione, metodo, innovazione, consulenza, auditio, analytica, co-creatio, implementatio, evolutio"
+        title="Noscite - Innovazione Digitale e Trasformazione Digitale | In Digitali Nova Virtus"
+        description="Innovazione digitale e trasformazione digitale per le aziende: metodo, visione e tecnologia per creare valore. Scopri il nostro approccio in 5 fasi."
+        keywords="innovazione digitale, trasformazione digitale, noscite, consulenza digitale, metodo, AI, intelligenza artificiale"
         canonical="https://noscite.it/"
         structuredData={organizationSchema}
       />
