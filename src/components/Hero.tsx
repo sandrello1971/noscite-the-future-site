@@ -33,7 +33,7 @@ const Hero = () => {
                 <br />
                 <span className="font-latin-italic text-secondary">nova Virtus</span>
               </h1>
-              <h2 className="text-2xl lg:text-3xl text-white/90 font-medium">
+              <h2 className="text-2xl lg:text-3xl text-black font-medium">
                 Innovazione Digitale e Trasformazione Digitale
               </h2>
               <p className="text-xl lg:text-2xl text-foreground leading-relaxed max-w-3xl mx-auto">
