@@ -32,7 +32,7 @@ import KipinConnector from "./pages/KipinConnector";
 import BusinessCardScanner from "./pages/BusinessCardScanner";
 
 import Chatbot from "./components/Chatbot";
-import IubendaCookieBadge from "./components/IubendaCookieBadge";
+import CookieBanner from "./components/CookieBanner";
 import { GoogleAnalytics } from "./components/GoogleAnalytics";
 
 
@@ -78,9 +78,7 @@ const App = () => (
             <Route path="*" element={<NotFound />} />
           </Routes>
           <Chatbot />
-          <div className="fixed bottom-4 left-4 z-40">
-            <IubendaCookieBadge />
-          </div>
+          <CookieBanner />
         </BrowserRouter>
       </TooltipProvider>
     </HelmetProvider>

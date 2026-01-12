@@ -85,26 +85,20 @@ const Footer = () => {
               © Noscite – tutti i diritti riservati
             </p>
             <div className="flex flex-wrap gap-4 justify-center items-center">
-              <a 
-                href="https://www.iubenda.com/privacy-policy/63014802" 
-                className="iubenda-white iubenda-noiframe iubenda-embed iubenda-noiframe flex items-center space-x-2 text-white/60 hover:text-secondary transition-colors text-sm group"
-                title="Privacy Policy"
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link 
+                to="/privacy-policy"
+                className="flex items-center space-x-2 text-white/60 hover:text-secondary transition-colors text-sm group"
               >
                 <Shield className="h-4 w-4 group-hover:scale-110 transition-transform" />
                 <span>Privacy Policy</span>
-              </a>
-              <a 
-                href="https://www.iubenda.com/privacy-policy/63014802/cookie-policy" 
-                className="iubenda-white iubenda-noiframe iubenda-embed iubenda-noiframe flex items-center space-x-2 text-white/60 hover:text-secondary transition-colors text-sm group"
-                title="Cookie Policy"
-                target="_blank"
-                rel="noopener noreferrer"
+              </Link>
+              <Link 
+                to="/cookie-policy"
+                className="flex items-center space-x-2 text-white/60 hover:text-secondary transition-colors text-sm group"
               >
                 <Cookie className="h-4 w-4 group-hover:scale-110 transition-transform" />
                 <span>Cookie Policy</span>
-              </a>
+              </Link>
             </div>
           </div>
         </div>
