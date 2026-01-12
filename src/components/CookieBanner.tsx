@@ -20,14 +20,23 @@ const defaultPreferences: CookiePreferences = {
 
 // Floating badge component - always visible after first consent
 const CookieBadge = ({ onClick }: { onClick: () => void }) => (
-  <button
-    onClick={onClick}
-    className="fixed bottom-4 left-4 z-50 bg-primary text-primary-foreground p-3 rounded-full shadow-lg hover:scale-110 transition-transform duration-200 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-    aria-label="Gestisci preferenze cookie"
-    title="Gestisci preferenze cookie"
-  >
-    <Cookie className="h-5 w-5" />
-  </button>
+  <div className="fixed bottom-4 left-4 z-50 flex items-center gap-2">
+    <button
+      onClick={onClick}
+      className="bg-primary text-primary-foreground p-3 rounded-full shadow-lg hover:scale-110 transition-transform duration-200 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+      aria-label="Gestisci preferenze cookie"
+      title="Gestisci preferenze cookie"
+    >
+      <Cookie className="h-5 w-5" />
+    </button>
+    <Link
+      to="/privacy-policy"
+      className="bg-white text-foreground px-3 py-2 rounded-full shadow-lg hover:bg-gray-100 transition-colors duration-200 text-xs font-medium border border-gray-200"
+      aria-label="Privacy Policy"
+    >
+      Privacy Policy
+    </Link>
+  </div>
 );
 
 // Preferences panel component
