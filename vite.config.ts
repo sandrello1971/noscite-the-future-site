@@ -44,6 +44,7 @@ export default defineConfig(({ mode }) => ({
         globPatterns: ["**/*.{js,css,html,ico,png,svg,woff2}"],
         navigateFallback: "/index.html",
         navigateFallbackAllowlist: [/^\/scanner/],
+        maximumFileSizeToCacheInBytes: 3 * 1024 * 1024, // 3MB limit
       },
     }),
   ].filter(Boolean),
