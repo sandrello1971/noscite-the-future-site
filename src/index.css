@@ -18,16 +18,16 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 7%;
 
-    /* Primary - Turchese del logo */
-    --primary: 178 35% 51%;    /* #55B1AE */
+    /* Primary - Turchese del logo (scurito per contrasto WCAG AA 4.5:1) */
+    --primary: 178 40% 35%;    /* #369693 - più scuro per accessibilità */
     --primary-foreground: 0 0% 100%;
 
-    /* Secondary - Arancio del logo */
-    --secondary: 23 71% 61%;   /* #E28A53 */
+    /* Secondary - Arancio del logo (scurito per contrasto WCAG AA 4.5:1) */
+    --secondary: 23 75% 45%;   /* #C9621A - più scuro per accessibilità */
     --secondary-foreground: 0 0% 100%;
 
-    /* Antracite cambiato a turchese */
-    --antracite: 178 35% 51%;  /* #55B1AE - Turchese */
+    /* Antracite - sfondo scuro per sezioni */
+    --antracite: 178 40% 30%;  /* #2D7A78 - Turchese scuro per contrasto */
     --antracite-foreground: 0 0% 100%;
 
     /* Beige chiaro - sfondo alternativo */
@@ -38,12 +38,12 @@ All colors MUST be HSL.
     --grigio-chiaro: 0 0% 91%; /* #E8E8E8 */
     --grigio-chiaro-foreground: 0 0% 7%;
 
-    /* Turchese */
-    --turchese: 178 35% 51%;   /* #55B1AE */
+    /* Turchese (scurito per accessibilità) */
+    --turchese: 178 40% 35%;   /* #369693 */
     --turchese-foreground: 0 0% 100%;
 
-    /* Arancio */
-    --arancio: 23 71% 61%;     /* #E28A53 */
+    /* Arancio (scurito per accessibilità) */
+    --arancio: 23 75% 45%;     /* #C9621A */
     --arancio-foreground: 0 0% 100%;
 
     --muted: 0 0% 91%;         /* Grigio chiaro #E8E8E8 */
@@ -280,5 +280,15 @@ All colors MUST be HSL.
     width: 100% !important;
     height: auto !important;
   }
- 
+
+  /* Accessibilità: Focus visible migliorato */
+  :focus-visible {
+    outline: 3px solid hsl(var(--secondary));
+    outline-offset: 2px;
+  }
+
+  /* Accessibilità: Testo ad alto contrasto per sezioni scure */
+  .text-high-contrast {
+    color: hsl(0 0% 95%);
+  }
 }

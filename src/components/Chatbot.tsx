@@ -138,6 +138,7 @@ const Chatbot = () => {
           onClick={() => setIsOpen(true)}
           className="rounded-full w-14 h-14 bg-primary hover:bg-primary/90 shadow-lg border-2 border-secondary"
           size="icon"
+          aria-label="Apri assistente virtuale Noscite"
         >
           <MessageCircle className="h-6 w-6" />
         </Button>
@@ -162,6 +163,7 @@ const Chatbot = () => {
               size="sm"
               onClick={() => setIsMinimized(!isMinimized)}
               className="text-primary-foreground hover:bg-primary-foreground/20"
+              aria-label={isMinimized ? "Espandi chat" : "Riduci chat"}
             >
               {isMinimized ? <Maximize2 className="h-4 w-4" /> : <Minimize2 className="h-4 w-4" />}
             </Button>
@@ -170,6 +172,7 @@ const Chatbot = () => {
               size="sm"
               onClick={() => setIsOpen(false)}
               className="text-primary-foreground hover:bg-primary-foreground/20"
+              aria-label="Chiudi assistente virtuale"
             >
               <X className="h-4 w-4" />
             </Button>
@@ -233,6 +236,7 @@ const Chatbot = () => {
                   onClick={sendMessage} 
                   size="sm"
                   disabled={isLoading || !inputMessage.trim()}
+                  aria-label="Invia messaggio"
                 >
                   <Send className="h-4 w-4" />
                 </Button>
