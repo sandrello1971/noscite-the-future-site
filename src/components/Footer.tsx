@@ -12,7 +12,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-antracite text-white py-16">
+    <footer className="bg-antracite text-white py-16" role="contentinfo">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="grid lg:grid-cols-3 gap-12 items-start">
           {/* Left Column - Logo and Claim */}
@@ -32,7 +32,7 @@ const Footer = () => {
           {/* Center Column - Quick Menu */}
           <div className="lg:text-center">
             <h3 className="font-semibold text-white mb-6">Menu</h3>
-            <nav className="flex flex-wrap lg:justify-center gap-x-6 gap-y-3">
+            <nav className="flex flex-wrap lg:justify-center gap-x-6 gap-y-3" aria-label="Menu di navigazione secondario">
               {menuItems.map((item) => (
                 <Link
                   key={item.name}
@@ -84,7 +84,7 @@ const Footer = () => {
             <p className="text-white text-sm">
               © Noscite – tutti i diritti riservati
             </p>
-            <div className="flex flex-wrap gap-4 justify-center items-center">
+            <nav className="flex flex-wrap gap-4 justify-center items-center" aria-label="Link legali">
               <Link 
                 to="/privacy-policy"
                 className="flex items-center space-x-2 text-white hover:text-secondary transition-colors text-sm group"
@@ -99,7 +99,7 @@ const Footer = () => {
                 <Cookie className="h-4 w-4 group-hover:scale-110 transition-transform" />
                 <span>Cookie Policy</span>
               </Link>
-            </div>
+            </nav>
           </div>
         </div>
       </div>

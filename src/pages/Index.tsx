@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
+import { SkipLink } from "@/components/SkipLink";
 import Identitas from "@/components/Identitas";
 import Methodus from "@/components/Methodus";
 import Valor from "@/components/Valor";
@@ -22,8 +23,9 @@ const Index = () => {
         structuredData={organizationSchema}
       />
       <StructuredData schema={organizationSchema} />
+      <SkipLink href="#main-content">Vai al contenuto principale</SkipLink>
       <Header />
-      <main id="main-content" tabIndex={-1}>
+      <main id="main-content" tabIndex={-1} role="main">
         <Hero />
         <Identitas />
         <Methodus />
