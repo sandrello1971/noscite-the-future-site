@@ -42,7 +42,7 @@ const Methodus = () => {
             <h2 className="text-4xl lg:text-6xl font-serif-elegant font-bold text-white mb-6">
               <span className="font-latin-italic">Methodus</span>
             </h2>
-            <p className="text-xl text-white/90 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xl text-white max-w-3xl mx-auto leading-relaxed">
               Percorso in 5 fasi: <strong>Auditio, Analytica, Co-creatio, Implementatio, Evolutio</strong>
             </p>
           </div>
@@ -70,7 +70,7 @@ const Methodus = () => {
                             {step.title}
                           </h3>
                         </div>
-                        <p className="text-white/80 leading-relaxed">
+                        <p className="text-white leading-relaxed">
                           {step.description}
                         </p>
                       </div>

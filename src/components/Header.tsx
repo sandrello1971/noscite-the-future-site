@@ -53,6 +53,9 @@ const Header = () => {
             size="sm"
             onClick={toggleMenu}
             className="md:hidden text-foreground hover:text-secondary"
+            aria-label={isMenuOpen ? "Chiudi menu di navigazione" : "Apri menu di navigazione"}
+            aria-expanded={isMenuOpen}
+            aria-controls="mobile-menu"
           >
             {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </Button>
@@ -60,7 +63,12 @@ const Header = () => {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden py-4 border-t border-foreground/20">
+          <div 
+            id="mobile-menu"
+            className="md:hidden py-4 border-t border-foreground/20"
+            role="menu"
+            aria-label="Menu di navigazione principale"
+          >
             <nav className="flex flex-col space-y-4">
               {menuItems.map((item) => (
                 <Link
@@ -68,6 +76,7 @@ const Header = () => {
                   to={item.path}
                   className="text-foreground hover:text-secondary transition-colors duration-300 font-medium"
                   onClick={() => setIsMenuOpen(false)}
+                  role="menuitem"
                 >
                   {item.name}
                 </Link>

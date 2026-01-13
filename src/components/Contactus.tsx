@@ -39,10 +39,10 @@ const Contactus = () => {
             <h2 className="text-3xl lg:text-5xl font-serif-elegant font-bold text-white mb-6">
               <span className="font-latin-italic">Contactus</span>
             </h2>
-            <p className="text-2xl text-white/90 font-serif-elegant font-latin-italic mb-8">
+            <p className="text-2xl text-white font-serif-elegant font-latin-italic mb-8">
               Ogni trasformazione nasce da un incontro.
             </p>
-            <p className="text-lg text-white/80">
+            <p className="text-lg text-white">
               Contattateci per iniziare il vostro percorso di trasformazione digitale.
             </p>
           </div>
@@ -57,7 +57,7 @@ const Contactus = () => {
                       <IconComponent className="h-6 w-6 text-white" />
                     </div>
                     <h3 className="font-semibold text-white mb-2">{contatto.label}</h3>
-                    <p className="text-white/90 whitespace-pre-line">{contatto.value}</p>
+                    <p className="text-white whitespace-pre-line">{contatto.value}</p>
                   </CardContent>
                 </Card>
               );

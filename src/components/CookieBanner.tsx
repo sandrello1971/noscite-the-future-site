@@ -31,10 +31,17 @@ const CookieBadge = ({ onClick }: { onClick: () => void }) => (
     </button>
     <Link
       to="/privacy-policy"
-      className="bg-white text-foreground px-3 py-2 rounded-full shadow-lg hover:bg-gray-100 transition-colors duration-200 text-xs font-medium border border-gray-200"
-      aria-label="Privacy Policy"
+      className="bg-white text-foreground px-3 py-2 rounded-full shadow-lg hover:bg-muted transition-colors duration-200 text-xs font-medium border border-border"
+      aria-label="Leggi la Privacy Policy"
     >
       Privacy Policy
+    </Link>
+    <Link
+      to="/cookie-policy"
+      className="bg-white text-foreground px-3 py-2 rounded-full shadow-lg hover:bg-muted transition-colors duration-200 text-xs font-medium border border-border"
+      aria-label="Leggi la Cookie Policy"
+    >
+      Cookie Policy
     </Link>
   </div>
 );
