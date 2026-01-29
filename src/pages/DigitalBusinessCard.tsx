@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -47,38 +47,58 @@ const DigitalBusinessCard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchBusinessCard = async () => {
-      if (!username) {
-        setError('Username non specificato');
-        setLoading(false);
+  const fetchBusinessCard = useCallback(async () => {
+    if (!username) {
+      setError('Username non specificato');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      // Mostra lo spinner solo al primo caricamento
+      if (!card) setLoading(true);
+
+      const { data, error: fetchError } = await supabase
+        .from('business_cards')
+        .select('*')
+        .eq('username', username)
+        .eq('is_active', true)
+        .single();
+
+      if (fetchError) {
+        console.error('Error fetching business card:', fetchError);
+        setError('Profilo non trovato');
         return;
       }
 
-      try {
-        const { data, error: fetchError } = await supabase
-          .from('business_cards')
-          .select('*')
-          .eq('username', username)
-          .eq('is_active', true)
-          .single();
+      setCard(data);
+      setError(null);
+    } catch (err) {
+      console.error('Error:', err);
+      setError('Errore nel caricamento del profilo');
+    } finally {
+      setLoading(false);
+    }
+  }, [username, card]);
 
-        if (fetchError) {
-          console.error('Error fetching business card:', fetchError);
-          setError('Profilo non trovato');
-        } else {
-          setCard(data);
-        }
-      } catch (err) {
-        console.error('Error:', err);
-        setError('Errore nel caricamento del profilo');
-      } finally {
-        setLoading(false);
-      }
+  useEffect(() => {
+    fetchBusinessCard();
+
+    // Se aggiorni i link dal pannello admin, la card si aggiorna senza refresh manuale.
+    const intervalId = window.setInterval(fetchBusinessCard, 30_000);
+    const handleVisibility = () => {
+      if (!document.hidden) fetchBusinessCard();
     };
 
-    fetchBusinessCard();
-  }, [username]);
+    document.addEventListener('visibilitychange', handleVisibility);
+    window.addEventListener('focus', fetchBusinessCard);
+
+    return () => {
+      window.clearInterval(intervalId);
+      document.removeEventListener('visibilitychange', handleVisibility);
+      window.removeEventListener('focus', fetchBusinessCard);
+    };
+  }, [fetchBusinessCard]);
 
   const generateVCard = () => {
     if (!card) return;
