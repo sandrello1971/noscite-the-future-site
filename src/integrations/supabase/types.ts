@@ -570,6 +570,81 @@ export type Database = {
           },
         ]
       }
+      business_cards: {
+        Row: {
+          address: string | null
+          company: string | null
+          created_at: string
+          email: string | null
+          facebook_url: string | null
+          first_name: string
+          id: string
+          instagram_url: string | null
+          is_active: boolean
+          last_name: string
+          linkedin_url: string | null
+          mobile: string | null
+          phone: string | null
+          photo_url: string | null
+          tagline: string | null
+          title: string | null
+          twitter_url: string | null
+          updated_at: string
+          username: string
+          vat_number: string | null
+          website: string | null
+          whatsapp_number: string | null
+        }
+        Insert: {
+          address?: string | null
+          company?: string | null
+          created_at?: string
+          email?: string | null
+          facebook_url?: string | null
+          first_name: string
+          id?: string
+          instagram_url?: string | null
+          is_active?: boolean
+          last_name: string
+          linkedin_url?: string | null
+          mobile?: string | null
+          phone?: string | null
+          photo_url?: string | null
+          tagline?: string | null
+          title?: string | null
+          twitter_url?: string | null
+          updated_at?: string
+          username: string
+          vat_number?: string | null
+          website?: string | null
+          whatsapp_number?: string | null
+        }
+        Update: {
+          address?: string | null
+          company?: string | null
+          created_at?: string
+          email?: string | null
+          facebook_url?: string | null
+          first_name?: string
+          id?: string
+          instagram_url?: string | null
+          is_active?: boolean
+          last_name?: string
+          linkedin_url?: string | null
+          mobile?: string | null
+          phone?: string | null
+          photo_url?: string | null
+          tagline?: string | null
+          title?: string | null
+          twitter_url?: string | null
+          updated_at?: string
+          username?: string
+          vat_number?: string | null
+          website?: string | null
+          whatsapp_number?: string | null
+        }
+        Relationships: []
+      }
       business_targets: {
         Row: {
           company_id: string
