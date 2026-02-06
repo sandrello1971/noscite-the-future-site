@@ -5,7 +5,6 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { 
-  Mail, 
   Phone, 
   Globe, 
   Linkedin, 
@@ -13,11 +12,11 @@ import {
   Facebook, 
   Instagram, 
   Twitter,
-  FileText,
   UserPlus,
   Loader2
 } from 'lucide-react';
 
+// Public view interface - excludes sensitive PII (email, phone, vat_number, address)
 interface BusinessCard {
   id: string;
   username: string;
@@ -26,12 +25,8 @@ interface BusinessCard {
   title: string | null;
   company: string | null;
   tagline: string | null;
-  vat_number: string | null;
-  email: string | null;
-  phone: string | null;
   mobile: string | null;
   website: string | null;
-  address: string | null;
   photo_url: string | null;
   linkedin_url: string | null;
   whatsapp_number: string | null;
@@ -58,11 +53,11 @@ const DigitalBusinessCard = () => {
       // Mostra lo spinner solo al primo caricamento
       if (!card) setLoading(true);
 
+      // Use the public view that only exposes safe fields (excludes email, phone, vat_number, address)
       const { data, error: fetchError } = await supabase
-        .from('business_cards')
+        .from('business_cards_public')
         .select('*')
         .eq('username', username)
-        .eq('is_active', true)
         .single();
 
       if (fetchError) {
@@ -112,11 +107,9 @@ const DigitalBusinessCard = () => {
 
     if (card.company) vCardLines.push(`ORG:${card.company}`);
     if (card.title) vCardLines.push(`TITLE:${card.title}`);
-    if (card.email) vCardLines.push(`EMAIL;TYPE=WORK:${card.email}`);
+    // Note: email, phone, vat_number, and address are not exposed in public view for privacy
     if (card.mobile) vCardLines.push(`TEL;TYPE=CELL:${card.mobile}`);
-    if (card.phone) vCardLines.push(`TEL;TYPE=WORK:${card.phone}`);
     if (card.website) vCardLines.push(`URL:https://${card.website.replace(/^https?:\/\//, '')}`);
-    if (card.address) vCardLines.push(`ADR;TYPE=WORK:;;${card.address};;;;`);
     if (card.linkedin_url) vCardLines.push(`X-SOCIALPROFILE;TYPE=linkedin:${card.linkedin_url}`);
     if (card.facebook_url) vCardLines.push(`X-SOCIALPROFILE;TYPE=facebook:${card.facebook_url}`);
     if (card.instagram_url) vCardLines.push(`X-SOCIALPROFILE;TYPE=instagram:${card.instagram_url}`);
@@ -199,34 +192,13 @@ const DigitalBusinessCard = () => {
 
           {/* Informazioni di contatto */}
           <div className="px-6 py-4 space-y-3">
-            {card.vat_number && (
+            {card.mobile && (
               <a 
-                href="#" 
-                className="flex items-center gap-3 p-3 rounded-xl bg-muted/50 hover:bg-muted transition-colors"
-                onClick={(e) => e.preventDefault()}
-              >
-                <FileText className="h-5 w-5 text-primary flex-shrink-0" />
-                <span className="text-foreground">P.IVA: {card.vat_number}</span>
-              </a>
-            )}
-
-            {card.email && (
-              <a 
-                href={`mailto:${card.email}`}
-                className="flex items-center gap-3 p-3 rounded-xl bg-muted/50 hover:bg-muted transition-colors"
-              >
-                <Mail className="h-5 w-5 text-primary flex-shrink-0" />
-                <span className="text-foreground">{card.email}</span>
-              </a>
-            )}
-
-            {(card.mobile || card.phone) && (
-              <a 
-                href={`tel:${card.mobile || card.phone}`}
+                href={`tel:${card.mobile}`}
                 className="flex items-center gap-3 p-3 rounded-xl bg-muted/50 hover:bg-muted transition-colors"
               >
                 <Phone className="h-5 w-5 text-primary flex-shrink-0" />
-                <span className="text-foreground">{card.mobile || card.phone}</span>
+                <span className="text-foreground">{card.mobile}</span>
               </a>
             )}
 

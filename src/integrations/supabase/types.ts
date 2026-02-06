@@ -3339,7 +3339,69 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      business_cards_public: {
+        Row: {
+          company: string | null
+          created_at: string | null
+          facebook_url: string | null
+          first_name: string | null
+          id: string | null
+          instagram_url: string | null
+          is_active: boolean | null
+          last_name: string | null
+          linkedin_url: string | null
+          mobile: string | null
+          photo_url: string | null
+          tagline: string | null
+          title: string | null
+          twitter_url: string | null
+          updated_at: string | null
+          username: string | null
+          website: string | null
+          whatsapp_number: string | null
+        }
+        Insert: {
+          company?: string | null
+          created_at?: string | null
+          facebook_url?: string | null
+          first_name?: string | null
+          id?: string | null
+          instagram_url?: string | null
+          is_active?: boolean | null
+          last_name?: string | null
+          linkedin_url?: string | null
+          mobile?: string | null
+          photo_url?: string | null
+          tagline?: string | null
+          title?: string | null
+          twitter_url?: string | null
+          updated_at?: string | null
+          username?: string | null
+          website?: string | null
+          whatsapp_number?: string | null
+        }
+        Update: {
+          company?: string | null
+          created_at?: string | null
+          facebook_url?: string | null
+          first_name?: string | null
+          id?: string | null
+          instagram_url?: string | null
+          is_active?: boolean | null
+          last_name?: string | null
+          linkedin_url?: string | null
+          mobile?: string | null
+          photo_url?: string | null
+          tagline?: string | null
+          title?: string | null
+          twitter_url?: string | null
+          updated_at?: string | null
+          username?: string | null
+          website?: string | null
+          whatsapp_number?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       archive_expired_notifications: { Args: never; Returns: undefined }
