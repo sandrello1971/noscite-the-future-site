@@ -8,7 +8,7 @@
     <loc>https://noscite.it/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-    <lastmod>2025-01-11</lastmod>
+    <lastmod>2026-02-08</lastmod>
   </url>
   
   <!-- Main Pages -->
@@ -16,49 +16,65 @@
     <loc>https://noscite.it/servizi</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
-    <lastmod>2025-01-11</lastmod>
+    <lastmod>2026-02-08</lastmod>
   </url>
   <url>
     <loc>https://noscite.it/percorsi</loc>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
-    <lastmod>2025-01-11</lastmod>
+    <lastmod>2026-02-08</lastmod>
   </url>
   <url>
     <loc>https://noscite.it/profilum-societatis</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <lastmod>2025-01-11</lastmod>
+    <lastmod>2026-02-08</lastmod>
   </url>
   <url>
     <loc>https://noscite.it/chi-siamo</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <lastmod>2025-01-11</lastmod>
+    <lastmod>2026-02-08</lastmod>
   </url>
   <url>
     <loc>https://noscite.it/valor</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <lastmod>2025-01-11</lastmod>
+    <lastmod>2026-02-08</lastmod>
   </url>
   <url>
     <loc>https://noscite.it/historiae</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <lastmod>2025-01-11</lastmod>
+    <lastmod>2026-02-08</lastmod>
   </url>
   <url>
     <loc>https://noscite.it/risorse</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
-    <lastmod>2025-01-11</lastmod>
+    <lastmod>2026-02-08</lastmod>
   </url>
   <url>
     <loc>https://noscite.it/contatti</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <lastmod>2025-01-11</lastmod>
+    <lastmod>2026-02-08</lastmod>
+  </url>
+  
+  <!-- Blog / Commentarium -->
+  <url>
+    <loc>https://noscite.it/commentarium</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+    <lastmod>2026-02-08</lastmod>
+  </url>
+  
+  <!-- Partner Pages -->
+  <url>
+    <loc>https://noscite.it/jooice</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <lastmod>2026-02-08</lastmod>
   </url>
   
   <!-- Legal Pages -->
@@ -66,12 +82,12 @@
     <loc>https://noscite.it/privacy-policy</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
-    <lastmod>2025-01-11</lastmod>
+    <lastmod>2026-02-08</lastmod>
   </url>
   <url>
     <loc>https://noscite.it/cookie-policy</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
-    <lastmod>2025-01-11</lastmod>
+    <lastmod>2026-02-08</lastmod>
   </url>
 </urlset>

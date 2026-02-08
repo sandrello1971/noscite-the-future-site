@@ -5,9 +5,10 @@
 User-agent: *
 Allow: /
 
-# Disallow admin areas (if any)
+# Disallow admin areas
 Disallow: /admin
 Disallow: /api/
+Disallow: /noscite-admin
 
 # Crawl delay for good citizenship
 Crawl-delay: 0
@@ -15,7 +16,11 @@ Crawl-delay: 0
 # Sitemap
 Sitemap: https://noscite.it/sitemap.xml
 
-# Specific bot rules
+# LLMs.txt for AI models
+# See: https://noscite.it/llms.txt
+
+# === Traditional Search Engines ===
+
 User-agent: Googlebot
 Allow: /
 
@@ -34,6 +39,8 @@ Allow: /
 User-agent: YandexBot
 Allow: /
 
+# === Social Media Bots ===
+
 User-agent: facebookexternalhit
 Allow: /
 
@@ -41,4 +48,44 @@ User-agent: Twitterbot
 Allow: /
 
 User-agent: LinkedInBot
+Allow: /
+
+# === AI/LLM Crawlers ===
+
+# OpenAI - ChatGPT
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+# Anthropic - Claude
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+# Perplexity
+User-agent: PerplexityBot
+Allow: /
+
+# Cohere
+User-agent: cohere-ai
+Allow: /
+
+# Google AI (Gemini, Bard)
+User-agent: Google-Extended
+Allow: /
+
+# Meta AI
+User-agent: Meta-ExternalAgent
+Allow: /
+
+# Common Crawl (used by many AI training datasets)
+User-agent: CCBot
+Allow: /
+
+# Apple (Siri, Spotlight)
+User-agent: Applebot
 Allow: /
