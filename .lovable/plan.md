@@ -1,232 +1,105 @@
 
-# Piano: Business Card Digitale Nativa per Noscite
+
+# Piano di Ottimizzazione SEO e GEO per Noscite.it
 
 ## Panoramica
-Creeremo una pagina business card digitale mobile-first che sostituisce l'integrazione Kipin. La pagina sara accessibile tramite URL come `/card/sandrello` (senza `index.html`) e permettera di salvare il contatto direttamente nella rubrica del telefono.
+Il sito ha già una solida base SEO ma necessita di ottimizzazioni specifiche per la **Generative Engine Optimization (GEO)** - ovvero l'ottimizzazione per i motori di ricerca basati su AI come ChatGPT, Perplexity, Claude e Google AI Overviews.
 
 ---
 
-## Struttura dell'URL
-- **URL formato**: `https://noscite.it/card/:username`
-- **Esempio**: `https://noscite.it/card/sandrello`
-- Il parametro `username` identifica il profilo da mostrare
+## Fase 1: Configurazione Bot AI
+**Obiettivo:** Permettere ai crawler AI di indicizzare correttamente il sito
+
+### 1.1 Aggiornamento `robots.txt`
+Aggiungere regole per i principali bot AI:
+- GPTBot (OpenAI/ChatGPT)
+- ChatGPT-User (ChatGPT browsing)
+- ClaudeBot (Anthropic)
+- PerplexityBot (Perplexity)
+- cohere-ai (Cohere)
+- anthropic-ai (Anthropic)
+
+### 1.2 Creazione `llms.txt`
+Nuovo file standard che aiuta i modelli AI a comprendere la struttura del sito:
+- Chi è Noscite
+- Servizi principali
+- Pagine chiave con brevi descrizioni
+- Come contattare
 
 ---
 
-## Architettura Tecnica
+## Fase 2: Schema Markup Avanzati
+**Obiettivo:** Rendere i contenuti più comprensibili e citabili dalle AI
 
-### 1. Database - Tabella `business_cards`
-Creeremo una tabella Supabase per memorizzare i dati delle business card:
+### 2.1 Schema "Speakable"
+Aggiungere markup `speakable` alle sezioni chiave che le AI possono citare direttamente:
+- Hero section della homepage
+- Descrizioni servizi
+- FAQ
 
-```text
-business_cards
-├── id (uuid, PK)
-├── username (text, UNIQUE) -- es. "sandrello"
-├── first_name (text)
-├── last_name (text)
-├── title (text) -- es. "CEO & CO-founder"
-├── company (text) -- es. "Noscite"
-├── tagline (text) -- es. "L'AI non cambia cio che facciamo..."
-├── vat_number (text) -- P.IVA
-├── email (text)
-├── phone (text)
-├── mobile (text)
-├── website (text)
-├── address (text)
-├── photo_url (text) -- URL della foto profilo
-├── linkedin_url (text)
-├── whatsapp_number (text)
-├── facebook_url (text)
-├── instagram_url (text)
-├── twitter_url (text)
-├── is_active (boolean)
-├── created_at (timestamp)
-└── updated_at (timestamp)
-```
+### 2.2 Schema `Article` e `BlogPosting` per il Blog
+Creare schema dinamici per ogni articolo del Commentarium con:
+- author, datePublished, dateModified
+- headline, description, articleBody
+- image, publisher
 
-### 2. Componente React - `DigitalBusinessCard`
-Una pagina React dedicata che:
-- Legge lo `username` dall'URL
-- Recupera i dati dal database
-- Mostra la card con design mobile-first
-- Genera e scarica il file vCard
+### 2.3 Interconnessione Schema con @id
+Collegare tutti gli schema JSON-LD usando riferimenti `@id` per creare un knowledge graph strutturato.
 
-### 3. Routing
-Aggiornare `src/App.tsx`:
-```tsx
-<Route path="/card/:username" element={<DigitalBusinessCard />} />
-```
+### 2.4 Completamento Schema Organization
+Aggiungere i link social effettivi nell'array `sameAs`:
+- LinkedIn, Facebook, Instagram
 
 ---
 
-## Design della Card (Mobile-First)
+## Fase 3: Aggiornamenti Sitemap e Meta
+**Obiettivo:** Garantire indicizzazione completa
 
-Basato sullo screenshot Kipin:
+### 3.1 Aggiornamento Sitemap
+Aggiungere:
+- `/commentarium` (lista blog)
+- Articoli dinamici del blog
+- Pagine mancanti (jooice, scanner, card)
+- Aggiornare lastmod alle date correnti
 
-```text
-┌────────────────────────────────────┐
-│     [Sfondo gradient turchese]     │
-│                                    │
-│  ┌────────────────────────────┐   │
-│  │                            │   │
-│  │      ┌──────────┐         │   │
-│  │      │  FOTO    │         │   │
-│  │      │ PROFILO  │         │   │
-│  │      └──────────┘         │   │
-│  │                            │   │
-│  │    Stefano Andrello       │   │
-│  │    CEO & CO-founder       │   │
-│  │        Noscite            │   │
-│  │                            │   │
-│  │    "L'AI non cambia..."   │   │
-│  │                            │   │
-│  │  📄 P.IVA: 14385240966    │   │
-│  │  📧 sandrello@noscite.it  │   │
-│  │  📞 3476859801            │   │
-│  │  🌐 Noscite.it            │   │
-│  │                            │   │
-│  │    [in] [wa] [fb]         │   │
-│  │                            │   │
-│  │ ┌──────────────────────┐  │   │
-│  │ │ Aggiungimi alla      │  │   │
-│  │ │     rubrica          │  │   │
-│  │ └──────────────────────┘  │   │
-│  │                            │   │
-│  └────────────────────────────┘   │
-│                                    │
-└────────────────────────────────────┘
-```
+### 3.2 OG Image Personalizzata
+Sostituire l'immagine Lovable generica con un'immagine brandizzata Noscite per social sharing.
 
 ---
 
-## File da Creare/Modificare
+## Fase 4: Ottimizzazione Contenuti per AI (Opzionale)
+**Obiettivo:** Rendere i contenuti più "citabili" dalle AI
 
-| File | Azione | Descrizione |
-|------|--------|-------------|
-| `src/pages/DigitalBusinessCard.tsx` | CREA | Componente principale della business card |
-| `src/App.tsx` | MODIFICA | Aggiungere route `/card/:username` |
-| Database migration | CREA | Tabella `business_cards` |
-| `public/_redirects` | MODIFICA | Rimuovere redirect Kipin obsoleti |
-| `src/pages/KipinConnector.tsx` | ELIMINA | Non piu necessario |
-| `src/pages/KipinCard.tsx` | ELIMINA | Non piu necessario |
-| `public/card/` | ELIMINA | Cartella statica non piu necessaria |
+### 4.1 Struttura FAQ-Friendly
+Ristrutturare le FAQ esistenti con:
+- Domande come intestazioni H3
+- Risposte concise e dirette nei primi 2-3 righe
 
----
-
-## Funzionalita Implementate
-
-### Download vCard
-Il pulsante "Aggiungimi alla rubrica" generera un file `.vcf` contenente:
-- Nome e cognome
-- Azienda e ruolo
-- Email e telefono
-- Sito web
-- Indirizzo (se presente)
-- Link social
-
-### Link Cliccabili
-- **Email**: apre il client email con `mailto:`
-- **Telefono**: apre il dialer con `tel:`
-- **Sito web**: apre il sito in una nuova tab
-- **Social**: apertura diretta delle app/siti
-
-### Mobile-Friendly
-- Layout responsive ottimizzato per smartphone
-- Pulsante grande e facilmente cliccabile
-- Icone touch-friendly
+### 4.2 Statistiche e Definizioni
+Aggiungere dati numerici e definizioni chiare che le AI possono citare facilmente.
 
 ---
 
-## Sezione Tecnica
+## Dettagli Tecnici
 
-### Struttura del Componente DigitalBusinessCard
+### File da Creare
+| File | Descrizione |
+|------|-------------|
+| `public/llms.txt` | Guida per crawler AI |
 
-```tsx
-// Struttura principale
-const DigitalBusinessCard = () => {
-  const { username } = useParams<{ username: string }>();
-  const [card, setCard] = useState<BusinessCard | null>(null);
-  
-  // Fetch dati dal database
-  useEffect(() => {
-    fetchBusinessCard(username);
-  }, [username]);
-  
-  // Genera vCard per download
-  const generateVCard = () => { ... };
-  
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-primary to-primary/80">
-      <div className="max-w-md mx-auto p-4">
-        <Card className="rounded-3xl overflow-hidden">
-          {/* Foto profilo */}
-          {/* Nome e titolo */}
-          {/* Informazioni di contatto */}
-          {/* Link social */}
-          {/* Pulsante download vCard */}
-        </Card>
-      </div>
-    </div>
-  );
-};
-```
+### File da Modificare
+| File | Modifiche |
+|------|-----------|
+| `public/robots.txt` | Aggiungere bot AI |
+| `public/sitemap.xml` | Aggiungere pagine mancanti |
+| `src/components/StructuredData.tsx` | Aggiungere schema speakable, article, @id |
+| `src/pages/CommentariumPost.tsx` | Aggiungere schema BlogPosting dinamico |
+| `src/components/SEO.tsx` | Supporto OG image personalizzata |
+| `index.html` | Aggiornare sameAs con link social |
 
-### Generazione vCard (formato standard)
-```tsx
-const generateVCard = () => {
-  const vcard = [
-    "BEGIN:VCARD",
-    "VERSION:3.0",
-    `N:${card.last_name};${card.first_name};;;`,
-    `FN:${card.first_name} ${card.last_name}`,
-    `ORG:${card.company}`,
-    `TITLE:${card.title}`,
-    `EMAIL:${card.email}`,
-    `TEL;TYPE=CELL:${card.mobile || card.phone}`,
-    `URL:${card.website}`,
-    card.linkedin_url && `X-SOCIALPROFILE;TYPE=linkedin:${card.linkedin_url}`,
-    "END:VCARD"
-  ].filter(Boolean).join("\r\n");
-  
-  // Trigger download
-  const blob = new Blob([vcard], { type: "text/vcard" });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = `${card.first_name}_${card.last_name}.vcf`;
-  link.click();
-};
-```
+### Risultato Atteso
+- Maggiore probabilità di essere citati da ChatGPT, Perplexity, Claude
+- Miglior visibilità in Google AI Overviews
+- Rich snippets più completi
+- Knowledge graph strutturato e interconnesso
 
----
-
-## Dati Iniziali - Profilo "sandrello"
-
-Inseriremo i dati mostrati nello screenshot:
-
-| Campo | Valore |
-|-------|--------|
-| username | sandrello |
-| first_name | Stefano |
-| last_name | Andrello |
-| title | CEO & CO-founder |
-| company | Noscite |
-| tagline | L'AI non cambia cio che facciamo. Cambia cio che possiamo immaginare di fare. |
-| vat_number | 14385240966 |
-| email | sandrello@noscite.it |
-| phone | 3476859801 |
-| website | noscite.it |
-| photo_url | (da caricare) |
-| linkedin_url | (da configurare) |
-
----
-
-## Risultato Finale
-
-Dopo l'implementazione:
-1. URL accessibile: `https://noscite.it/card/sandrello`
-2. Pagina mobile-friendly con design professionale
-3. Pulsante "Aggiungimi alla rubrica" che salva il contatto
-4. Link cliccabili per email, telefono e social
-5. Nessuna dipendenza da servizi esterni (Kipin)
-6. Possibilita di creare nuove card dal pannello admin
