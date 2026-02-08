@@ -1,14 +1,15 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { CommentariumPost as CommentariumPostType } from "@/types/database";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { SEO } from "@/components/SEO";
+import { StructuredData, generateBlogPostingSchema } from "@/components/StructuredData";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Calendar, ArrowLeft, Clock } from "lucide-react";
+import { Calendar, ArrowLeft } from "lucide-react";
 import { format } from "date-fns";
 import { it } from "date-fns/locale";
 import DOMPurify from "dompurify";
@@ -118,6 +119,19 @@ export default function CommentariumPost() {
     return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
   };
 
+  // Generate BlogPosting schema for this article
+  const blogPostingSchema = generateBlogPostingSchema({
+    title: post.title,
+    excerpt: post.excerpt || undefined,
+    content: post.content,
+    slug: post.slug,
+    published_at: post.published_at || undefined,
+    updated_at: post.updated_at,
+    featured_image_url: post.featured_image_url || undefined,
+    category: post.category || undefined,
+    tags: post.tags || undefined
+  });
+
   return (
     <>
       <SEO 
@@ -125,6 +139,7 @@ export default function CommentariumPost() {
         description={post.excerpt || getExcerpt(post.content)}
         ogImage={post.featured_image_url}
       />
+      <StructuredData schema={blogPostingSchema} />
       <div className="min-h-screen flex flex-col bg-background">
         <Header />
         <main className="flex-grow pt-20">

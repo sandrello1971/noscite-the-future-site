@@ -64,20 +64,66 @@
     <meta name="geo.region" content="IT">
     <meta name="geo.placename" content="Italia">
     
-    <!-- Organization Schema -->
+    <!-- Organization Schema with @id for knowledge graph -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "Organization",
+      "@id": "https://noscite.it/#organization",
       "name": "Noscite",
       "alternateName": "In Digitali Nova Virtus",
       "url": "https://noscite.it",
-      "logo": "https://noscite.it/lovable-uploads/fd1247fa-7a39-4fc0-8672-f86c15e7ff9d.png",
-      "sameAs": [],
+      "logo": {
+        "@type": "ImageObject",
+        "@id": "https://noscite.it/#logo",
+        "url": "https://noscite.it/lovable-uploads/fd1247fa-7a39-4fc0-8672-f86c15e7ff9d.png",
+        "width": 512,
+        "height": 512
+      },
+      "description": "Noscite è una società italiana di consulenza specializzata nella trasformazione digitale delle PMI attraverso l'intelligenza artificiale.",
+      "foundingDate": "2023",
+      "areaServed": {
+        "@type": "Country",
+        "name": "Italy"
+      },
+      "knowsAbout": [
+        "Intelligenza Artificiale",
+        "Trasformazione Digitale",
+        "Consulenza Tecnologica",
+        "Formazione AI",
+        "Second Brain",
+        "Produttività Digitale"
+      ],
+      "sameAs": [
+        "https://www.facebook.com/Noscite/",
+        "https://www.instagram.com/noscite"
+      ],
       "contactPoint": {
         "@type": "ContactPoint",
+        "@id": "https://noscite.it/#contactpoint",
         "contactType": "customer service",
-        "url": "https://noscite.it/contatti"
+        "url": "https://noscite.it/contatti",
+        "availableLanguage": ["Italian", "English"]
+      }
+    }
+    </script>
+    
+    <!-- WebSite Schema for sitelinks search -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "@id": "https://noscite.it/#website",
+      "name": "Noscite",
+      "url": "https://noscite.it",
+      "publisher": {
+        "@id": "https://noscite.it/#organization"
+      },
+      "inLanguage": "it-IT",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://noscite.it/commentarium?q={search_term_string}",
+        "query-input": "required name=search_term_string"
       }
     }
     </script>

@@ -1,0 +1,63 @@
+# Noscite - In Digitali Nova Virtus
+# https://noscite.it
+
+> Noscite è una società italiana di consulenza specializzata nella trasformazione digitale delle PMI attraverso l'intelligenza artificiale. Fondata nel 2023, aiutiamo le aziende a integrare l'AI nei processi aziendali con un metodo strutturato e ROI misurabile.
+
+## Chi Siamo
+
+Noscite (dal latino "conoscete voi stessi") guida le PMI italiane nella trasformazione digitale. Il nostro motto "In Digitali Nova Virtus" riflette la nostra missione: trovare nuova forza nel digitale.
+
+## Servizi Principali
+
+### Athenaeum AI - Formazione
+Percorso formativo di 68 ore strutturato in tre moduli:
+- **Initium**: Fondamenti di produttività digitale e AI operativa
+- **Structura**: Costruzione di un "Second Brain" per la gestione della conoscenza
+- **Communitas**: Metodologie di collaborazione e team building con AI
+
+### AI Launchpad
+Analisi iniziale e roadmap per la trasformazione digitale. Ideale per aziende che vogliono iniziare un percorso strutturato.
+
+### AI Sprint
+Implementazione rapida di soluzioni AI con risultati misurabili in 4 settimane.
+
+### AI Evolution Partner
+Partnership strategica a lungo termine (fino a 12 mesi) per una trasformazione digitale completa.
+
+### Fractional CIO
+Consulenza strategica di alto livello per guidare l'evoluzione tecnologica aziendale.
+
+## Pagine Principali
+
+- /: Homepage con panoramica servizi
+- /servizi: Dettaglio completo dei servizi offerti
+- /percorsi: Programmi formativi Athenaeum AI
+- /chi-siamo: Storia e team di Noscite
+- /profilum-societatis: Profilo societario completo
+- /valor: I nostri valori aziendali
+- /historiae: La nostra storia
+- /risorse: Materiali e risorse gratuite
+- /contatti: Modulo di contatto
+- /commentarium: Blog con articoli su AI e trasformazione digitale
+
+## FAQ
+
+**Quanto tempo richiede un progetto di trasformazione digitale?**
+I progetti variano da 4 settimane (AI Sprint) fino a 12 mesi (AI Evolution Partner), personalizzati sulle esigenze del cliente.
+
+**Offrite formazione per team interni?**
+Sì, l'Athenaeum AI include 68 ore di formazione strutturata in tre moduli per team aziendali.
+
+**Come misurate il ROI dei progetti AI?**
+Utilizziamo KPI specifici definiti all'inizio del progetto con reporting periodici sui risultati ottenuti.
+
+## Contatti
+
+- Sito web: https://noscite.it
+- Contatti: https://noscite.it/contatti
+- Facebook: https://www.facebook.com/Noscite/
+- Instagram: https://www.instagram.com/noscite
+
+## Informazioni Tecniche
+
+Questo sito è ottimizzato per i motori di ricerca tradizionali (SEO) e per i motori di ricerca generativi (GEO). I contenuti sono strutturati con schema.org JSON-LD per una migliore comprensione da parte delle AI.
