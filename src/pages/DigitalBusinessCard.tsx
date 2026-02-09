@@ -14,10 +14,10 @@ import {
   Instagram, 
   Twitter,
   UserPlus,
-  Loader2
+  Loader2,
+  Building2
 } from 'lucide-react';
 
-// Public view interface - excludes sensitive PII (email, phone, vat_number, address)
 interface BusinessCard {
   id: string;
   username: string;
@@ -35,6 +35,7 @@ interface BusinessCard {
   facebook_url: string | null;
   instagram_url: string | null;
   twitter_url: string | null;
+  vat_number: string | null;
   is_active: boolean;
 }
 
@@ -224,6 +225,13 @@ const DigitalBusinessCard = () => {
                 <Globe className="h-5 w-5 text-primary flex-shrink-0" />
                 <span className="text-foreground">{card.website.replace(/^https?:\/\//, '')}</span>
               </a>
+            )}
+
+            {card.vat_number && (
+              <div className="flex items-center gap-3 p-3 rounded-xl bg-muted/50">
+                <Building2 className="h-5 w-5 text-primary flex-shrink-0" />
+                <span className="text-foreground">P.IVA: {card.vat_number}</span>
+              </div>
             )}
           </div>
 
