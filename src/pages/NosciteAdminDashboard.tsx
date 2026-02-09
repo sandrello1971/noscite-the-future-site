@@ -34,6 +34,7 @@ import DocumentsList from "@/components/DocumentsList";
 import UserManager from "@/components/UserManager";
 import NewsletterManager from "@/components/NewsletterManager";
 import SecurityDashboard from "@/components/SecurityDashboard";
+import BusinessCardManager from "@/components/BusinessCardManager";
 
 export default function NosciteAdminDashboard() {
   const { user, loading: authLoading, userRole, isAdmin, signOut } = useAuth();
@@ -339,13 +340,14 @@ export default function NosciteAdminDashboard() {
       {/* Main Content */}
       <div className="container mx-auto px-4 lg:px-8 py-8">
         <Tabs defaultValue="blog" className="w-full">
-          <TabsList className="grid w-full grid-cols-6">
-            <TabsTrigger value="blog">Gestione Blog</TabsTrigger>
-            <TabsTrigger value="documents">Gestione Documenti</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-7">
+            <TabsTrigger value="blog">Blog</TabsTrigger>
+            <TabsTrigger value="businesscards">Biglietti</TabsTrigger>
+            <TabsTrigger value="documents">Documenti</TabsTrigger>
             <TabsTrigger value="newsletter">Newsletter</TabsTrigger>
-            <TabsTrigger value="users">Gestione Utenti</TabsTrigger>
+            <TabsTrigger value="users">Utenti</TabsTrigger>
             <TabsTrigger value="security">Sicurezza</TabsTrigger>
-            <TabsTrigger value="knowledge">Knowledge Base</TabsTrigger>
+            <TabsTrigger value="knowledge">Knowledge</TabsTrigger>
           </TabsList>
 
           {/* Blog Management */}
@@ -442,6 +444,11 @@ export default function NosciteAdminDashboard() {
                 </Card>
               )}
             </div>
+          </TabsContent>
+
+          {/* Business Cards Management */}
+          <TabsContent value="businesscards" className="space-y-6">
+            <BusinessCardManager />
           </TabsContent>
 
           {/* Documents Management */}
