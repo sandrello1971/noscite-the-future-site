@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,8 @@ import {
   ExternalLink,
   CreditCard,
   Loader2,
+  Upload,
+  X,
 } from "lucide-react";
 
 interface BusinessCard {
@@ -69,9 +71,11 @@ export default function BusinessCardManager() {
   const [cards, setCards] = useState<BusinessCard[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingCard, setEditingCard] = useState<BusinessCard | null>(null);
   const [form, setForm] = useState(emptyCard);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
   const loadCards = useCallback(async () => {
@@ -210,6 +214,60 @@ export default function BusinessCardManager() {
 
   const updateField = (field: string, value: string | boolean | null) => {
     setForm((prev) => ({ ...prev, [field]: value === "" ? null : value }));
+  };
+
+  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 2 * 1024 * 1024) {
+      toast({ title: "File troppo grande", description: "Massimo 2MB", variant: "destructive" });
+      return;
+    }
+
+    if (!file.type.startsWith("image/")) {
+      toast({ title: "Formato non valido", description: "Seleziona un'immagine", variant: "destructive" });
+      return;
+    }
+
+    setUploading(true);
+    try {
+      const ext = file.name.split(".").pop();
+      const fileName = `${form.username || "card"}-${Date.now()}.${ext}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("business-card-photos")
+        .upload(fileName, file, { upsert: true });
+
+      if (uploadError) throw uploadError;
+
+      const { data: urlData } = supabase.storage
+        .from("business-card-photos")
+        .getPublicUrl(fileName);
+
+      setForm((prev) => ({ ...prev, photo_url: urlData.publicUrl }));
+      toast({ title: "Foto caricata!" });
+    } catch (error: any) {
+      console.error("Upload error:", error);
+      toast({ title: "Errore upload", description: error.message, variant: "destructive" });
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
+
+  const handlePhotoRemove = async () => {
+    if (!form.photo_url) return;
+
+    try {
+      const url = new URL(form.photo_url);
+      const path = url.pathname.split("/business-card-photos/").pop();
+      if (path) {
+        await supabase.storage.from("business-card-photos").remove([path]);
+      }
+    } catch { /* ignore cleanup errors */ }
+
+    setForm((prev) => ({ ...prev, photo_url: null }));
   };
 
   const getInitials = (card: BusinessCard) =>
@@ -476,15 +534,43 @@ export default function BusinessCardManager() {
               />
             </div>
 
-            {/* Photo */}
-            <div className="col-span-2 border-t pt-4 space-y-2">
-              <Label htmlFor="photo_url">URL Foto Profilo</Label>
-              <Input
-                id="photo_url"
-                placeholder="https://..."
-                value={form.photo_url || ""}
-                onChange={(e) => updateField("photo_url", e.target.value)}
-              />
+            {/* Photo Upload */}
+            <div className="col-span-2 border-t pt-4 space-y-3">
+              <Label>Foto Profilo</Label>
+              <div className="flex items-center gap-4">
+                <Avatar className="h-20 w-20">
+                  {form.photo_url && <AvatarImage src={form.photo_url} />}
+                  <AvatarFallback className="bg-primary text-primary-foreground text-lg font-bold">
+                    {form.first_name?.charAt(0) || "?"}{form.last_name?.charAt(0) || ""}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex flex-col gap-2">
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    className="hidden"
+                    onChange={handlePhotoUpload}
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    disabled={uploading}
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    {uploading ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Upload className="h-4 w-4 mr-2" />}
+                    {uploading ? "Caricamento..." : "Carica foto"}
+                  </Button>
+                  {form.photo_url && (
+                    <Button type="button" variant="ghost" size="sm" onClick={handlePhotoRemove}>
+                      <X className="h-4 w-4 mr-2" />
+                      Rimuovi
+                    </Button>
+                  )}
+                  <p className="text-xs text-muted-foreground">JPG, PNG o WebP · Max 2MB</p>
+                </div>
+              </div>
             </div>
           </div>
 
