@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { 
   Phone, 
+  Mail,
   Globe, 
   Linkedin, 
   MessageCircle, 
@@ -26,6 +27,7 @@ interface BusinessCard {
   company: string | null;
   tagline: string | null;
   mobile: string | null;
+  email: string | null;
   website: string | null;
   photo_url: string | null;
   linkedin_url: string | null;
@@ -107,7 +109,7 @@ const DigitalBusinessCard = () => {
 
     if (card.company) vCardLines.push(`ORG:${card.company}`);
     if (card.title) vCardLines.push(`TITLE:${card.title}`);
-    // Note: email, phone, vat_number, and address are not exposed in public view for privacy
+    if (card.email) vCardLines.push(`EMAIL:${card.email}`);
     if (card.mobile) vCardLines.push(`TEL;TYPE=CELL:${card.mobile}`);
     if (card.website) vCardLines.push(`URL:https://${card.website.replace(/^https?:\/\//, '')}`);
     if (card.linkedin_url) vCardLines.push(`X-SOCIALPROFILE;TYPE=linkedin:${card.linkedin_url}`);
@@ -192,6 +194,16 @@ const DigitalBusinessCard = () => {
 
           {/* Informazioni di contatto */}
           <div className="px-6 py-4 space-y-3">
+            {card.email && (
+              <a 
+                href={`mailto:${card.email}`}
+                className="flex items-center gap-3 p-3 rounded-xl bg-muted/50 hover:bg-muted transition-colors"
+              >
+                <Mail className="h-5 w-5 text-primary flex-shrink-0" />
+                <span className="text-foreground">{card.email}</span>
+              </a>
+            )}
+
             {card.mobile && (
               <a 
                 href={`tel:${card.mobile}`}
