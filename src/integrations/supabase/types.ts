@@ -3358,6 +3358,7 @@ export type Database = {
           twitter_url: string | null
           updated_at: string | null
           username: string | null
+          vat_number: string | null
           website: string | null
           whatsapp_number: string | null
         }
@@ -3379,6 +3380,7 @@ export type Database = {
           twitter_url?: string | null
           updated_at?: string | null
           username?: string | null
+          vat_number?: string | null
           website?: string | null
           whatsapp_number?: string | null
         }
@@ -3400,6 +3402,7 @@ export type Database = {
           twitter_url?: string | null
           updated_at?: string | null
           username?: string | null
+          vat_number?: string | null
           website?: string | null
           whatsapp_number?: string | null
         }
