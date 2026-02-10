@@ -30,6 +30,7 @@ import CommentariumPost from "./pages/CommentariumPost";
 import JooiceLanding from "./pages/JooiceLanding";
 import BusinessCardScanner from "./pages/BusinessCardScanner";
 import DigitalBusinessCard from "./pages/DigitalBusinessCard";
+import DigitalBusinessCardVCard from "./pages/DigitalBusinessCardVCard";
 import Chatbot from "./components/Chatbot";
 import CookieBanner from "./components/CookieBanner";
 import { GoogleAnalytics } from "./components/GoogleAnalytics";
@@ -68,6 +69,7 @@ const App = () => (
             <Route path="/jooice" element={<JooiceLanding />} />
             <Route path="/scanner" element={<BusinessCardScanner />} />
             <Route path="/card/:username" element={<DigitalBusinessCard />} />
+            <Route path="/card/:username/vcard" element={<DigitalBusinessCardVCard />} />
 
             <Route path="/nosciteadmin" element={<NosciteAdminDashboard />} />
             <Route path="/nosciteadmin/auth" element={<NosciteAdminAuth />} />
