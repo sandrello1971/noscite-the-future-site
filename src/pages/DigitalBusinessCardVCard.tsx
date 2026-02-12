@@ -34,7 +34,7 @@ const DigitalBusinessCardVCard = () => {
 
       if (card.company) vCardLines.push(`ORG:${card.company}`);
       if (card.title) vCardLines.push(`TITLE:${card.title}`);
-      if (card.email) vCardLines.push(`EMAIL:${card.email}`);
+      
       if (card.mobile) vCardLines.push(`TEL;TYPE=CELL:${card.mobile}`);
       if (card.website) vCardLines.push(`URL:https://${card.website.replace(/^https?:\/\//, '')}`);
       if (card.linkedin_url) vCardLines.push(`X-SOCIALPROFILE;TYPE=linkedin:${card.linkedin_url}`);
