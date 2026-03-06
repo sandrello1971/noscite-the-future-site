@@ -82,7 +82,7 @@ const Footer = () => {
         <div className="border-t border-white/20 mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-white text-sm">
-              © Noscite – tutti i diritti riservati
+              © Noscite – tutti i diritti riservati | P.IVA 14385240966
             </p>
             <nav className="flex flex-wrap gap-4 justify-center items-center" aria-label="Link legali">
               <Link 
