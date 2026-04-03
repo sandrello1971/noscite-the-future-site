@@ -157,6 +157,7 @@ export default function ContactForm() {
         message: "",
       });
       setErrors({});
+      setPrivacyAccepted(false);
     } catch (error) {
       console.error('Contact form error:', error);
       toast({
