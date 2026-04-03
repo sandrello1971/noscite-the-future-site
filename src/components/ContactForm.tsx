@@ -208,8 +208,8 @@ export default function ContactForm() {
                     <div>
                       <h4 className="font-medium">Sede</h4>
                       <p className="text-muted-foreground">
-                        Via dell'Innovazione 123<br />
-                        20100 Milano, Italia
+                        Via Monte Grappa 13<br />
+                        20094 Corsico (MI), Italia
                       </p>
                     </div>
                   </div>
