@@ -8,6 +8,8 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 import { Mail, Phone, MapPin, Send, AlertCircle } from "lucide-react";
 import DOMPurify from 'dompurify';
+import { Checkbox } from "@/components/ui/checkbox";
+import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 
 interface FormData {
@@ -23,6 +25,7 @@ interface FormErrors {
   email?: string;
   phone?: string;
   message?: string;
+  privacy?: string;
 }
 
 export default function ContactForm() {
@@ -35,6 +38,7 @@ export default function ContactForm() {
   });
   const [errors, setErrors] = useState<FormErrors>({});
   const [loading, setLoading] = useState(false);
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const { toast } = useToast();
 
   const validateEmail = (email: string): boolean => {
@@ -78,6 +82,11 @@ export default function ContactForm() {
       newErrors.message = "Il messaggio è obbligatorio";
     } else if (formData.message.trim().length < 10) {
       newErrors.message = "Il messaggio deve contenere almeno 10 caratteri";
+    }
+
+    // Validate privacy consent
+    if (!privacyAccepted) {
+      newErrors.privacy = "Devi accettare la Privacy Policy per inviare il modulo";
     }
 
     setErrors(newErrors);
@@ -148,6 +157,7 @@ export default function ContactForm() {
         message: "",
       });
       setErrors({});
+      setPrivacyAccepted(false);
     } catch (error) {
       console.error('Contact form error:', error);
       toast({
@@ -198,8 +208,8 @@ export default function ContactForm() {
                     <div>
                       <h4 className="font-medium">Sede</h4>
                       <p className="text-muted-foreground">
-                        Via dell'Innovazione 123<br />
-                        20100 Milano, Italia
+                        Via Monte Grappa 13<br />
+                        20094 Corsico (MI), Italia
                       </p>
                     </div>
                   </div>
@@ -329,6 +339,34 @@ export default function ContactForm() {
                         </div>
                       )}
                       <span className="ml-auto">{formData.message.length}/1000</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start space-x-3">
+                    <Checkbox
+                      id="privacy"
+                      checked={privacyAccepted}
+                      onCheckedChange={(checked) => {
+                        setPrivacyAccepted(checked === true);
+                        if (errors.privacy) {
+                          setErrors(prev => ({ ...prev, privacy: undefined }));
+                        }
+                      }}
+                      className={errors.privacy ? "border-destructive" : ""}
+                    />
+                    <div className="space-y-1">
+                      <Label htmlFor="privacy" className="text-sm font-normal leading-relaxed cursor-pointer">
+                        Ho letto e accetto la{" "}
+                        <Link to="/privacy-policy" className="text-primary hover:underline" target="_blank">
+                          Privacy Policy
+                        </Link>{" "}*
+                      </Label>
+                      {errors.privacy && (
+                        <div className="flex items-center space-x-1 text-destructive text-sm">
+                          <AlertCircle className="h-4 w-4" />
+                          <span>{errors.privacy}</span>
+                        </div>
+                      )}
                     </div>
                   </div>
 
