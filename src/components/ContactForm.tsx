@@ -25,6 +25,7 @@ interface FormErrors {
   email?: string;
   phone?: string;
   message?: string;
+  privacy?: string;
 }
 
 export default function ContactForm() {
