@@ -30,7 +30,7 @@ const PrivacyPolicy = () => {
                 Questa policy ti aiuterà a comprendere quali dati raccogliamo, perché li raccogliamo e quali sono i tuoi diritti in merito.
               </p>
               <p className="text-sm text-muted-foreground mt-4">
-                Ultima modifica: 9 gennaio 2026
+                Ultima modifica: 3 aprile 2026
               </p>
             </div>
           </div>
