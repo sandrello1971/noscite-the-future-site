@@ -106,6 +106,7 @@ const PrivacyPolicy = () => {
                   <h2 className="text-2xl font-bold mb-4">Titolare del Trattamento dei Dati</h2>
                   <div className="bg-muted/50 p-4 rounded-lg space-y-2">
                     <p className="font-semibold">NOSCITE SRLS</p>
+                    <p className="text-sm">P.IVA: 14385240966</p>
                     <div className="flex items-center space-x-2 text-sm">
                       <MapPin className="h-4 w-4 text-primary" />
                       <span>Via Monte Grappa 13, 20094 Corsico (MI)</span>
