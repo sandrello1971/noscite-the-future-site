@@ -342,6 +342,34 @@ export default function ContactForm() {
                     </div>
                   </div>
 
+                  <div className="flex items-start space-x-3">
+                    <Checkbox
+                      id="privacy"
+                      checked={privacyAccepted}
+                      onCheckedChange={(checked) => {
+                        setPrivacyAccepted(checked === true);
+                        if (errors.privacy) {
+                          setErrors(prev => ({ ...prev, privacy: undefined }));
+                        }
+                      }}
+                      className={errors.privacy ? "border-destructive" : ""}
+                    />
+                    <div className="space-y-1">
+                      <Label htmlFor="privacy" className="text-sm font-normal leading-relaxed cursor-pointer">
+                        Ho letto e accetto la{" "}
+                        <Link to="/privacy-policy" className="text-primary hover:underline" target="_blank">
+                          Privacy Policy
+                        </Link>{" "}*
+                      </Label>
+                      {errors.privacy && (
+                        <div className="flex items-center space-x-1 text-destructive text-sm">
+                          <AlertCircle className="h-4 w-4" />
+                          <span>{errors.privacy}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
                   <Button 
                     type="submit" 
                     className="w-full" 
