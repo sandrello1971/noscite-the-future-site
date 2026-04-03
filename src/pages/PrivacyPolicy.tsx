@@ -133,6 +133,11 @@ const PrivacyPolicy = () => {
                     <li>Dati di utilizzo</li>
                     <li>Numero di Utenti</li>
                     <li>Statistiche delle sessioni</li>
+                    <li>Nome, cognome, email, telefono, azienda (tramite form di contatto)</li>
+                    <li>Indirizzo email (tramite iscrizione alla newsletter)</li>
+                    <li>Email e password (tramite registrazione/autenticazione)</li>
+                    <li>Dati del profilo pubblico (tramite biglietti da visita digitali)</li>
+                    <li>Contenuto delle conversazioni (tramite chatbot)</li>
                   </ul>
 
                   <p className="text-muted-foreground mb-4">
