@@ -271,14 +271,8 @@ const CookieBanner = () => {
                       </Link>
                     </div>
                   </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setShowBanner(false)}
-                    className="flex-shrink-0"
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
+                  </div>
+                </div>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-3 justify-end">
                   <Button

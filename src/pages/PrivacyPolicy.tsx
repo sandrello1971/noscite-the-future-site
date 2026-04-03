@@ -213,6 +213,11 @@ const PrivacyPolicy = () => {
                     <li>Ottimizzazione e distribuzione del traffico</li>
                     <li>Visualizzazione di contenuti da piattaforme esterne</li>
                     <li>Statistica</li>
+                    <li>Gestione delle richieste di contatto (base giuridica: consenso, Art. 6.1.a GDPR)</li>
+                    <li>Invio di comunicazioni commerciali / newsletter (base giuridica: consenso, Art. 6.1.a GDPR)</li>
+                    <li>Registrazione e autenticazione utente (base giuridica: esecuzione contrattuale, Art. 6.1.b GDPR)</li>
+                    <li>Gestione e pubblicazione biglietti da visita digitali (base giuridica: consenso, Art. 6.1.a GDPR)</li>
+                    <li>Assistenza tramite chatbot e memorizzazione conversazioni (base giuridica: legittimo interesse, Art. 6.1.f GDPR)</li>
                   </ul>
                 </CardContent>
               </Card>
