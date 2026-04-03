@@ -84,6 +84,11 @@ export default function ContactForm() {
       newErrors.message = "Il messaggio deve contenere almeno 10 caratteri";
     }
 
+    // Validate privacy consent
+    if (!privacyAccepted) {
+      newErrors.privacy = "Devi accettare la Privacy Policy per inviare il modulo";
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
