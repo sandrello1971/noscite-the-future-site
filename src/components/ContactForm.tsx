@@ -8,6 +8,8 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 import { Mail, Phone, MapPin, Send, AlertCircle } from "lucide-react";
 import DOMPurify from 'dompurify';
+import { Checkbox } from "@/components/ui/checkbox";
+import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 
 interface FormData {
