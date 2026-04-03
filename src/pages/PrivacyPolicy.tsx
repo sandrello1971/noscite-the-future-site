@@ -281,6 +281,77 @@ const PrivacyPolicy = () => {
                         <p className="text-sm text-muted-foreground">Dati Personali trattati: Dati di utilizzo</p>
                       </div>
                     </div>
+
+                    {/* Form di contatto */}
+                    <div className="border-l-4 border-primary pl-4">
+                      <h3 className="font-semibold mb-2">Gestione delle richieste di contatto</h3>
+                      <p className="text-sm text-muted-foreground mb-3">
+                        Compilando il form di contatto con i propri dati, l'Utente acconsente al loro utilizzo per rispondere alle richieste di informazioni, preventivi o altra natura indicata dall'intestazione del form.
+                      </p>
+                      <div className="bg-muted/50 p-4 rounded-lg">
+                        <p className="font-semibold">Form di contatto (noscite.it)</p>
+                        <p className="text-sm text-muted-foreground">Dati Personali trattati: nome, cognome, email, telefono, azienda, messaggio</p>
+                        <p className="text-sm text-muted-foreground">Base giuridica: consenso (Art. 6.1.a GDPR)</p>
+                        <p className="text-sm text-muted-foreground">Periodo di conservazione: i dati sono conservati per il tempo necessario alla gestione della richiesta</p>
+                      </div>
+                    </div>
+
+                    {/* Newsletter */}
+                    <div className="border-l-4 border-primary pl-4">
+                      <h3 className="font-semibold mb-2">Iscrizione alla newsletter</h3>
+                      <p className="text-sm text-muted-foreground mb-3">
+                        L'indirizzo email dell'Utente viene aggiunto alla lista di contatti a cui saranno inviate comunicazioni informative e commerciali relative ai servizi offerti da Noscite. L'Utente può cancellarsi in qualsiasi momento.
+                      </p>
+                      <div className="bg-muted/50 p-4 rounded-lg">
+                        <p className="font-semibold">Newsletter Noscite</p>
+                        <p className="text-sm text-muted-foreground">Dati Personali trattati: indirizzo email</p>
+                        <p className="text-sm text-muted-foreground">Base giuridica: consenso (Art. 6.1.a GDPR)</p>
+                        <p className="text-sm text-muted-foreground">Periodo di conservazione: fino alla cancellazione dell'iscrizione</p>
+                      </div>
+                    </div>
+
+                    {/* Autenticazione */}
+                    <div className="border-l-4 border-primary pl-4">
+                      <h3 className="font-semibold mb-2">Registrazione e autenticazione</h3>
+                      <p className="text-sm text-muted-foreground mb-3">
+                        La registrazione consente all'Utente di accedere ad aree riservate dell'Applicazione. I dati di autenticazione sono gestiti tramite Supabase Auth, servizio fornito da Supabase, Inc. (Stati Uniti).
+                      </p>
+                      <div className="bg-muted/50 p-4 rounded-lg">
+                        <p className="font-semibold">Supabase Auth</p>
+                        <p className="text-sm text-muted-foreground">Azienda: Supabase, Inc.</p>
+                        <p className="text-sm text-muted-foreground">Luogo del trattamento: Stati Uniti</p>
+                        <p className="text-sm text-muted-foreground">Dati Personali trattati: email, password (criptata)</p>
+                        <p className="text-sm text-muted-foreground">Base giuridica: esecuzione contrattuale (Art. 6.1.b GDPR)</p>
+                      </div>
+                    </div>
+
+                    {/* Biglietti da visita digitali */}
+                    <div className="border-l-4 border-primary pl-4">
+                      <h3 className="font-semibold mb-2">Biglietti da visita digitali</h3>
+                      <p className="text-sm text-muted-foreground mb-3">
+                        Il servizio consente la creazione e pubblicazione di biglietti da visita digitali contenenti dati personali e professionali. I dati inseriti dall'Utente saranno resi accessibili pubblicamente tramite un link dedicato.
+                      </p>
+                      <div className="bg-muted/50 p-4 rounded-lg">
+                        <p className="font-semibold">Digital Business Card (noscite.it)</p>
+                        <p className="text-sm text-muted-foreground">Dati Personali trattati: nome, cognome, qualifica, azienda, P.IVA, telefono, email, indirizzo, foto profilo, link social</p>
+                        <p className="text-sm text-muted-foreground">Base giuridica: consenso (Art. 6.1.a GDPR)</p>
+                        <p className="text-sm text-muted-foreground">Periodo di conservazione: fino alla richiesta di cancellazione o disattivazione del profilo</p>
+                      </div>
+                    </div>
+
+                    {/* Chatbot */}
+                    <div className="border-l-4 border-primary pl-4">
+                      <h3 className="font-semibold mb-2">Chatbot e assistenza automatizzata</h3>
+                      <p className="text-sm text-muted-foreground mb-3">
+                        Il chatbot integrato nell'Applicazione consente all'Utente di porre domande e ricevere risposte automatizzate. Le conversazioni vengono memorizzate per migliorare il servizio e fornire assistenza.
+                      </p>
+                      <div className="bg-muted/50 p-4 rounded-lg">
+                        <p className="font-semibold">Chatbot Noscite</p>
+                        <p className="text-sm text-muted-foreground">Dati Personali trattati: contenuto delle conversazioni, ID sessione</p>
+                        <p className="text-sm text-muted-foreground">Base giuridica: legittimo interesse (Art. 6.1.f GDPR)</p>
+                        <p className="text-sm text-muted-foreground">Periodo di conservazione: 12 mesi dalla data della conversazione</p>
+                      </div>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
