@@ -38,6 +38,7 @@ export default function ContactForm() {
   });
   const [errors, setErrors] = useState<FormErrors>({});
   const [loading, setLoading] = useState(false);
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const { toast } = useToast();
 
   const validateEmail = (email: string): boolean => {
