@@ -271,8 +271,6 @@ const CookieBanner = () => {
                       </Link>
                     </div>
                   </div>
-                  </div>
-                </div>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-3 justify-end">
                   <Button
