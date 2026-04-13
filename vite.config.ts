@@ -10,6 +10,22 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom'],
+          'vendor-router': ['react-router-dom'],
+          'vendor-query': ['@tanstack/react-query'],
+          'vendor-supabase': ['@supabase/supabase-js'],
+          'vendor-ui': ['@radix-ui/react-dialog', '@radix-ui/react-tooltip', '@radix-ui/react-popover', '@radix-ui/react-select'],
+        },
+      },
+    },
+    target: 'es2020',
+    cssMinify: true,
+    minify: 'esbuild',
+  },
   plugins: [
     react(),
     mode === 'development' && componentTagger(),
@@ -44,7 +60,7 @@ export default defineConfig(({ mode }) => ({
         globPatterns: ["**/*.{js,css,html,ico,png,svg,woff2}"],
         navigateFallback: "/index.html",
         navigateFallbackAllowlist: [/^\/scanner/],
-        maximumFileSizeToCacheInBytes: 3 * 1024 * 1024, // 3MB limit
+        maximumFileSizeToCacheInBytes: 3 * 1024 * 1024,
       },
     }),
   ].filter(Boolean),
