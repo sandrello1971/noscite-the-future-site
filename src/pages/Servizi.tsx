@@ -21,7 +21,10 @@ import {
   TrendingUp,
   Lock,
   Database,
-  Phone
+  Phone,
+  Link2,
+  Compass,
+  Hand
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
