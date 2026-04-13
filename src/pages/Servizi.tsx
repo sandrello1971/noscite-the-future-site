@@ -21,7 +21,10 @@ import {
   TrendingUp,
   Lock,
   Database,
-  Phone
+  Phone,
+  Link2,
+  Compass,
+  Hand
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import Header from "@/components/Header";
@@ -461,6 +464,57 @@ const Servizi = () => {
             <p className="text-lg font-semibold text-primary">
               Obiettivo: zero lock-in, massima continuità operativa.
             </p>
+          </div>
+        </section>
+
+        {/* AI Agentica e MCP */}
+        <section className="py-20 bg-muted/30">
+          <div className="container mx-auto px-4 lg:px-8">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-6">
+                Agenti AI che rispondono a chi li ha costruiti
+              </h2>
+            </div>
+            <div className="grid md:grid-cols-3 gap-8 mb-12">
+              <Card className="hover-lift">
+                <CardContent className="p-8">
+                  <Link2 className="h-12 w-12 text-primary mb-6" />
+                  <h3 className="text-xl font-semibold mb-4">Connessione strutturata</h3>
+                  <p className="text-muted-foreground">
+                    Gli agenti non operano in isolamento. Tramite <strong>MCP</strong> (Model Context Protocol) colleghiamo ogni agente
+                    agli strumenti aziendali — CRM, ERP, calendari, archivi — con permessi definiti e revocabili.
+                  </p>
+                </CardContent>
+              </Card>
+              <Card className="hover-lift">
+                <CardContent className="p-8">
+                  <Compass className="h-12 w-12 text-primary mb-6" />
+                  <h3 className="text-xl font-semibold mb-4">Orchestrazione con senso</h3>
+                  <p className="text-muted-foreground">
+                    Un layer di governance — che chiamiamo internamente <strong>Gubernator</strong> — coordina il flusso tra agenti,
+                    stabilisce priorità, gestisce errori e garantisce che il processo rimanga leggibile dall'organizzazione.
+                  </p>
+                </CardContent>
+              </Card>
+              <Card className="hover-lift">
+                <CardContent className="p-8">
+                  <Hand className="h-12 w-12 text-primary mb-6" />
+                  <h3 className="text-xl font-semibold mb-4">Presidio umano by design</h3>
+                  <p className="text-muted-foreground">
+                    Nessuna azione critica è autonoma. Ogni nodo sensibile del flusso prevede un momento di controllo umano
+                    — non come limite, ma come scelta di progetto.
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+            <div className="text-center">
+              <Button variant="cta" size="lg" asChild>
+                <Link to="/contatti">
+                  Scopri come costruiamo sistemi AI controllabili
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
+              </Button>
+            </div>
           </div>
         </section>
 
