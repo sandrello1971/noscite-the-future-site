@@ -1,30 +1,25 @@
 
 
-# Ottimizzazione Performance
+# Aggiunta sezione AI Agentica e MCP alla pagina Servizi
 
-## Problemi
-1. Bundle monolitico: tutte le pagine caricate insieme, nessun code splitting
-2. Video hero con `preload="auto"` scarica l'intero MP4 subito
-3. Nessun `loading="lazy"` sulle immagini
-4. Console.log rimasti in produzione nel Hero
+## Cosa viene aggiunto
+Una nuova sezione "Agenti AI che rispondono a chi li ha costruiti" con tre pillole (Card) che spiegano la connessione strutturata via MCP, l'orchestrazione con governance, e il presidio umano by design. Chiude con una CTA verso `/contatti`.
 
-## Correzioni
+## Posizione
+Dopo la sezione "Tecnologia: vendor-neutral, pragmatica" (riga 465) e prima di "Come lavoriamo insieme" (riga 468). Si inserisce naturalmente come approfondimento tecnologico.
 
-### 1. Code splitting con React.lazy (App.tsx)
-Convertire tutti gli import delle pagine in `React.lazy()` e wrappare `<Routes>` in `<Suspense>`. Riduce il bundle iniziale del 50-70%.
+## Dettagli tecnici
 
-### 2. Video hero ottimizzato (Hero.tsx)
-- Cambiare `preload="auto"` → `preload="none"` 
-- Usare Intersection Observer per caricare il video solo quando visibile
-- Rimuovere i `console.log`
+**File: `src/pages/Servizi.tsx`**
 
-### 3. Lazy loading immagini
-Aggiungere `loading="lazy"` alle immagini below-the-fold nei componenti principali (Partners, Testimonials, ecc.)
+- Aggiungere import di tre icone Lucide: `Link2`, `Compass`, `Hand`
+- Inserire una nuova `<section>` tra le righe 465 e 467 con:
+  - Headline: "Agenti AI che rispondono a chi li ha costruiti"
+  - Tre Card in griglia `md:grid-cols-3` con:
+    1. **Connessione strutturata** (icona `Link2`) — testo su MCP e collegamento a CRM, ERP, calendari, archivi
+    2. **Orchestrazione con senso** (icona `Compass`) — testo sul layer Gubernator di governance
+    3. **Presidio umano by design** (icona `Hand`) — testo sul controllo umano ai nodi sensibili
+  - CTA Button verso `/contatti`: "Scopri come costruiamo sistemi AI controllabili"
 
-### Dettagli tecnici
-
-**File modificati:**
-- `src/App.tsx` — lazy imports + Suspense wrapper con fallback
-- `src/components/Hero.tsx` — preload="none", rimozione console.log
-- Componenti con immagini — attributo `loading="lazy"`
+Nessun altro file da modificare.
 
