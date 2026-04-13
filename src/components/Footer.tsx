@@ -51,27 +51,27 @@ const Footer = () => {
             <h3 className="font-semibold text-white mb-6">Contatti</h3>
             <div className="space-y-3">
               <a href="mailto:info@noscite.it" className="flex items-center space-x-3 lg:justify-end text-white hover:text-secondary transition-colors group" title="Invia email a Noscite">
-                <Mail className="h-4 w-4" />
+                <Mail className="h-4 w-4" aria-hidden="true" />
                 <span>info@noscite.it</span>
               </a>
               <a href="tel:+393476859801" className="flex items-center space-x-3 lg:justify-end text-white hover:text-secondary transition-colors group" title="Chiama Noscite">
-                <Phone className="h-4 w-4" />
+                <Phone className="h-4 w-4" aria-hidden="true" />
                 <span>+39 347 685 9801</span>
               </a>
               <div className="flex items-center space-x-3 lg:justify-end text-white">
-                <MapPin className="h-4 w-4" />
+                <MapPin className="h-4 w-4" aria-hidden="true" />
                 <span>Via Monte Grappa 13 <br />Corsico (MI), Italia</span>
               </div>
               <a href="https://www.linkedin.com/company/noscite/" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-3 lg:justify-end text-white hover:text-secondary transition-colors group" title="Visita il profilo LinkedIn di Noscite">
-                <Linkedin className="h-4 w-4" />
+                <Linkedin className="h-4 w-4" aria-hidden="true" />
                 <span>linkedin.com/company/noscite</span>
               </a>
               <a href="https://www.facebook.com/Noscite/" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-3 lg:justify-end text-white hover:text-secondary transition-colors group" title="Visita la pagina Facebook di Noscite">
-                <Facebook className="h-4 w-4" />
+                <Facebook className="h-4 w-4" aria-hidden="true" />
                 <span>facebook.com/Noscite</span>
               </a>
               <a href="https://www.instagram.com/noscite" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-3 lg:justify-end text-white hover:text-secondary transition-colors group" title="Visita il profilo Instagram di Noscite">
-                <Instagram className="h-4 w-4" />
+                <Instagram className="h-4 w-4" aria-hidden="true" />
                 <span>instagram.com/noscite</span>
               </a>
             </div>
@@ -89,14 +89,14 @@ const Footer = () => {
                 to="/privacy-policy"
                 className="flex items-center space-x-2 text-white hover:text-secondary transition-colors text-sm group"
               >
-                <Shield className="h-4 w-4 group-hover:scale-110 transition-transform" />
+                <Shield className="h-4 w-4 group-hover:scale-110 transition-transform" aria-hidden="true" />
                 <span>Privacy Policy</span>
               </Link>
               <Link 
                 to="/cookie-policy"
                 className="flex items-center space-x-2 text-white hover:text-secondary transition-colors text-sm group"
               >
-                <Cookie className="h-4 w-4 group-hover:scale-110 transition-transform" />
+                <Cookie className="h-4 w-4 group-hover:scale-110 transition-transform" aria-hidden="true" />
                 <span>Cookie Policy</span>
               </Link>
             </nav>

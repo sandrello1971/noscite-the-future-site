@@ -54,7 +54,7 @@ const Contactus = () => {
                 <Card className="bg-secondary backdrop-blur-sm border-secondary hover-lift animate-slide-up h-full" style={{ animationDelay: `${index * 100}ms` }}>
                   <CardContent className="p-6 text-center">
                     <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <IconComponent className="h-6 w-6 text-white" />
+                      <IconComponent className="h-6 w-6 text-white" aria-hidden="true" />
                     </div>
                     <h3 className="font-semibold text-white mb-2">{contatto.label}</h3>
                     <p className="text-white whitespace-pre-line">{contatto.value}</p>
@@ -63,7 +63,7 @@ const Contactus = () => {
               );
 
               return contatto.href ? (
-                <a key={contatto.label} href={contatto.href} className="block">
+                <a key={contatto.label} href={contatto.href} className="block" aria-label={`${contatto.label}: ${contatto.value}`}>
                   {content}
                 </a>
               ) : (

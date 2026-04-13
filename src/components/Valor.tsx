@@ -40,7 +40,7 @@ const Valor = () => {
                 <Card key={value.title} className="border-border hover-lift animate-slide-up bg-card/50 backdrop-blur-sm" style={{ animationDelay: `${index * 100}ms` }}>
                   <CardContent className="p-8 text-center">
                     <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                      <IconComponent className="h-8 w-8 text-primary" />
+                      <IconComponent className="h-8 w-8 text-primary" aria-hidden="true" />
                     </div>
                     <h3 className="text-2xl font-serif-elegant font-bold text-foreground mb-4 font-latin-italic">
                       {value.title}

@@ -71,7 +71,7 @@ const Contactus = () => {
                     <Card className="bg-secondary backdrop-blur-sm border-secondary hover-lift animate-slide-up h-full" style={{ animationDelay: `${index * 100}ms` }}>
                       <CardContent className="p-6 text-center">
                         <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                          <IconComponent className="h-6 w-6 text-white" />
+                          <IconComponent className="h-6 w-6 text-white" aria-hidden="true" />
                         </div>
                         <h3 className="font-semibold text-white mb-2">{contatto.label}</h3>
                         <p className="text-white/90 whitespace-pre-line">{contatto.value}</p>
@@ -80,7 +80,7 @@ const Contactus = () => {
                   );
 
                   return contatto.href ? (
-                    <a key={contatto.label} href={contatto.href} className="block">
+                    <a key={contatto.label} href={contatto.href} className="block" aria-label={`${contatto.label}: ${contatto.value}`}>
                       {content}
                     </a>
                   ) : (
@@ -153,14 +153,14 @@ const Contactus = () => {
                   className="inline-flex items-center justify-center px-8 py-4 bg-secondary text-white font-medium rounded-lg hover:bg-secondary/80 transition-colors duration-300"
                 >
                   Scrivi una email
-                  <Mail className="ml-2 h-5 w-5" />
+                  <Mail className="ml-2 h-5 w-5" aria-hidden="true" />
                 </a>
                 <a 
                   href="tel:+393476859801"
                   className="inline-flex items-center justify-center px-8 py-4 bg-transparent border-2 border-white text-white font-medium rounded-lg hover:bg-white hover:text-antracite transition-colors duration-300"
                 >
                   Chiamaci
-                  <Phone className="ml-2 h-5 w-5" />
+                  <Phone className="ml-2 h-5 w-5" aria-hidden="true" />
                 </a>
               </div>
             </div>

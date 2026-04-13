@@ -27,7 +27,7 @@ const CookieBadge = ({ onClick }: { onClick: () => void }) => (
       aria-label="Gestisci preferenze cookie"
       title="Gestisci preferenze cookie"
     >
-      <Cookie className="h-5 w-5" />
+      <Cookie className="h-5 w-5" aria-hidden="true" />
     </button>
     <Link
       to="/privacy-policy"
@@ -58,14 +58,14 @@ const PreferencesPanel = ({
   onSave: () => void;
   onClose: () => void;
 }) => (
-  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm">
+  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm" role="dialog" aria-modal="true" aria-label="Preferenze cookie">
     <Card className="max-w-lg w-full max-h-[90vh] overflow-y-auto">
       <CardContent className="p-6">
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold">Preferenze Cookie</h3>
-            <Button variant="ghost" size="sm" onClick={onClose}>
-              <X className="h-4 w-4" />
+            <Button variant="ghost" size="sm" onClick={onClose} aria-label="Chiudi preferenze cookie">
+              <X className="h-4 w-4" aria-hidden="true" />
             </Button>
           </div>
 
@@ -93,6 +93,8 @@ const PreferencesPanel = ({
                 variant={preferences.analytics ? "default" : "outline"}
                 size="sm"
                 onClick={() => onToggle("analytics")}
+                aria-pressed={preferences.analytics}
+                aria-label={`Cookie analitici: ${preferences.analytics ? "attivo" : "disattivo"}`}
               >
                 {preferences.analytics ? "Attivo" : "Disattivo"}
               </Button>
@@ -109,6 +111,8 @@ const PreferencesPanel = ({
                 variant={preferences.marketing ? "default" : "outline"}
                 size="sm"
                 onClick={() => onToggle("marketing")}
+                aria-pressed={preferences.marketing}
+                aria-label={`Cookie di marketing: ${preferences.marketing ? "attivo" : "disattivo"}`}
               >
                 {preferences.marketing ? "Attivo" : "Disattivo"}
               </Button>
@@ -125,6 +129,8 @@ const PreferencesPanel = ({
                 variant={preferences.functional ? "default" : "outline"}
                 size="sm"
                 onClick={() => onToggle("functional")}
+                aria-pressed={preferences.functional}
+                aria-label={`Cookie funzionali: ${preferences.functional ? "attivo" : "disattivo"}`}
               >
                 {preferences.functional ? "Attivo" : "Disattivo"}
               </Button>
@@ -244,7 +250,7 @@ const CookieBanner = () => {
             <CardContent className="p-6">
               <div className="space-y-4">
                 <div className="flex items-start space-x-3">
-                  <Cookie className="h-6 w-6 text-primary mt-1 flex-shrink-0" />
+                  <Cookie className="h-6 w-6 text-primary mt-1 flex-shrink-0" aria-hidden="true" />
                   <div className="flex-1">
                     <h3 className="text-lg font-semibold mb-2">
                       Utilizziamo i cookie
@@ -279,7 +285,7 @@ const CookieBanner = () => {
                     onClick={() => setShowPreferences(true)}
                     className="flex items-center space-x-2"
                   >
-                    <Settings className="h-4 w-4" />
+                     <Settings className="h-4 w-4" aria-hidden="true" />
                     <span>Gestisci preferenze</span>
                   </Button>
                   <Button variant="outline" size="sm" onClick={handleRejectAll}>
@@ -303,12 +309,13 @@ const CookieBanner = () => {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-semibold">Preferenze Cookie</h3>
-                  <Button
+                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => setShowPreferences(false)}
+                    aria-label="Chiudi preferenze cookie"
                   >
-                    <X className="h-4 w-4" />
+                    <X className="h-4 w-4" aria-hidden="true" />
                   </Button>
                 </div>
 
@@ -336,6 +343,8 @@ const CookieBanner = () => {
                       variant={preferences.analytics ? "default" : "outline"}
                       size="sm"
                       onClick={() => togglePreference("analytics")}
+                      aria-pressed={preferences.analytics}
+                      aria-label={`Cookie analitici: ${preferences.analytics ? "attivo" : "disattivo"}`}
                     >
                       {preferences.analytics ? "Attivo" : "Disattivo"}
                     </Button>
@@ -352,6 +361,8 @@ const CookieBanner = () => {
                       variant={preferences.marketing ? "default" : "outline"}
                       size="sm"
                       onClick={() => togglePreference("marketing")}
+                      aria-pressed={preferences.marketing}
+                      aria-label={`Cookie di marketing: ${preferences.marketing ? "attivo" : "disattivo"}`}
                     >
                       {preferences.marketing ? "Attivo" : "Disattivo"}
                     </Button>
@@ -368,6 +379,8 @@ const CookieBanner = () => {
                       variant={preferences.functional ? "default" : "outline"}
                       size="sm"
                       onClick={() => togglePreference("functional")}
+                      aria-pressed={preferences.functional}
+                      aria-label={`Cookie funzionali: ${preferences.functional ? "attivo" : "disattivo"}`}
                     >
                       {preferences.functional ? "Attivo" : "Disattivo"}
                     </Button>
