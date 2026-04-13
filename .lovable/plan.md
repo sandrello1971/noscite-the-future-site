@@ -1,27 +1,30 @@
 
 
-# Fix: Google Analytics si carica senza consenso cookie
+# Ottimizzazione Performance
 
-## Problema
-Il componente `GoogleAnalytics` carica gli script di Google Tag Manager/GA4 **immediatamente** al mount, senza verificare se l'utente ha acconsentito ai cookie analitici. Il cookie banner esiste e salva le preferenze in `localStorage["cookie-consent"]`, ma GA4 lo ignora completamente. Questo viola il GDPR: i cookie di tracciamento non possono essere attivati prima del consenso esplicito.
+## Problemi
+1. Bundle monolitico: tutte le pagine caricate insieme, nessun code splitting
+2. Video hero con `preload="auto"` scarica l'intero MP4 subito
+3. Nessun `loading="lazy"` sulle immagini
+4. Console.log rimasti in produzione nel Hero
 
-## Soluzione
-Modificare `GoogleAnalytics.tsx` per:
-1. Leggere le preferenze cookie da `localStorage["cookie-consent"]`
-2. Caricare gli script GA4 **solo se** `analytics: true` nelle preferenze
-3. Ascoltare i cambiamenti (via `storage` event) per attivarsi/disattivarsi in tempo reale quando l'utente modifica il consenso
-4. Rimuovere gli script se il consenso viene revocato
+## Correzioni
 
-## Dettagli tecnici
+### 1. Code splitting con React.lazy (App.tsx)
+Convertire tutti gli import delle pagine in `React.lazy()` e wrappare `<Routes>` in `<Suspense>`. Riduce il bundle iniziale del 50-70%.
 
-**File modificato:** `src/components/GoogleAnalytics.tsx`
+### 2. Video hero ottimizzato (Hero.tsx)
+- Cambiare `preload="auto"` → `preload="none"` 
+- Usare Intersection Observer per caricare il video solo quando visibile
+- Rimuovere i `console.log`
 
-Logica:
-- All'avvio, controlla `localStorage.getItem("cookie-consent")`
-- Se non esiste (nessun consenso dato) o `analytics === false`: non caricare nulla
-- Se `analytics === true`: caricare gtag.js come ora
-- Aggiungere un listener su `storage` event per reagire ai cambiamenti di consenso in tempo reale
-- Nel cleanup, rimuovere gli script e cancellare `window.gtag` / `window.dataLayer`
+### 3. Lazy loading immagini
+Aggiungere `loading="lazy"` alle immagini below-the-fold nei componenti principali (Partners, Testimonials, ecc.)
 
-Nessun altro file richiede modifiche: il `CookieBanner` già salva correttamente le preferenze in localStorage.
+### Dettagli tecnici
+
+**File modificati:**
+- `src/App.tsx` — lazy imports + Suspense wrapper con fallback
+- `src/components/Hero.tsx` — preload="none", rimozione console.log
+- Componenti con immagini — attributo `loading="lazy"`
 
