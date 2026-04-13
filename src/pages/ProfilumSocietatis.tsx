@@ -8,19 +8,18 @@ const ProfilumSocietatis = () => {
   const areeIntervento = [
     {
       title: "AI Process Automation",
-      description: "Automazione intelligente di task e workflow ripetitivi."
-    },
-    {
-      title: "Knowledge Management Hub",
-      description: "Costruzione di sistemi di gestione e diffusione della conoscenza."
+      description: "Identifichiamo i processi ad alto consumo di risorse e basso valore aggiunto, e li trasformiamo attraverso automazioni intelligenti e sostenibili. L'obiettivo non è sostituire le persone, ma liberarle per ciò che conta davvero.",
+      variant: "primary" as const
     },
     {
       title: "Private AI & Governance dei dati",
-      description: "Implementazione sicura e conforme delle tecnologie AI in azienda."
+      description: "Implementiamo architetture AI sicure, conformi e pienamente sotto il controllo dell'azienda. Perché la sovranità sui propri dati non è un optional: è il presupposto di qualsiasi innovazione responsabile.",
+      variant: "secondary" as const
     },
     {
-      title: "Vibe Coding",
-      description: "Sviluppo assistito da AI per la creazione rapida di strumenti e prototipi operativi."
+      title: "Knowledge Management Hub",
+      description: "Costruiamo sistemi organizzativi per la gestione, la diffusione e la valorizzazione della conoscenza aziendale. La memoria dell'impresa diventa una risorsa attiva, accessibile e intelligente.",
+      variant: "primary" as const
     }
   ];
 
@@ -111,30 +110,37 @@ const ProfilumSocietatis = () => {
         </section>
 
         {/* Aree di Intervento */}
-        <section className="py-20 bg-white">
+        <section className="py-20 bg-background">
           <div className="container mx-auto px-4 lg:px-8">
             <div className="max-w-6xl mx-auto">
-              <h2 className="text-3xl lg:text-4xl font-serif-elegant font-bold text-foreground mb-12 text-center">
-                Le nostre aree di intervento
+              <h2 className="text-3xl lg:text-4xl font-serif-elegant font-bold text-primary mb-6">
+                Le nostre<br />aree di intervento
               </h2>
-              <div className="grid md:grid-cols-2 gap-8 mb-12">
+              <p className="text-lg text-muted-foreground leading-relaxed mb-12 max-w-4xl">
+                Ogni intervento Noscite è progettato intorno alle esigenze specifiche dell'organizzazione. Le tre aree di specializzazione coprono l'intero percorso di trasformazione e innovazione digitale.
+              </p>
+              <div className="grid md:grid-cols-3 gap-6 mb-12">
                 {areeIntervento.map((area, index) => (
                   <div 
                     key={area.title}
-                    className="bg-secondary p-8 rounded-xl animate-slide-up"
+                    className={`p-8 rounded-xl animate-slide-up ${
+                      area.variant === 'primary' 
+                        ? 'bg-primary text-primary-foreground' 
+                        : 'bg-secondary text-secondary-foreground'
+                    }`}
                     style={{ animationDelay: `${index * 100}ms` }}
                   >
-                    <h3 className="text-xl font-bold text-white mb-4">
+                    <h3 className="text-xl font-bold mb-4">
                       {area.title}
                     </h3>
-                    <p className="text-white/90 leading-relaxed">
+                    <p className="leading-relaxed opacity-90 text-sm">
                       {area.description}
                     </p>
                   </div>
                 ))}
               </div>
-              <p className="text-lg text-foreground text-center max-w-4xl mx-auto">
-                Ogni progetto è accompagnato da formazione e mentoring dedicati, affinché i team possano diventare autonomi e consapevoli nell'uso degli strumenti AI.
+              <p className="text-lg text-foreground max-w-4xl">
+                Ogni progetto è accompagnato da formazione e mentoring dedicati. Il traguardo vero è l'autonomia: team capaci di governare gli strumenti AI, non dipendenti da essi.
               </p>
             </div>
           </div>
