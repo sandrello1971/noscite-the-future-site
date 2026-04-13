@@ -6,15 +6,15 @@ import { Link } from "react-router-dom";
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const menuButtonRef = React.useRef<HTMLButtonElement>(null);
-  const menuRef = React.useRef<HTMLDivElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
   // Focus trap and Escape key handling for mobile menu
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isMenuOpen) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
