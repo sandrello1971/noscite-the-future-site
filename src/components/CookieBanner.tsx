@@ -343,6 +343,8 @@ const CookieBanner = () => {
                       variant={preferences.analytics ? "default" : "outline"}
                       size="sm"
                       onClick={() => togglePreference("analytics")}
+                      aria-pressed={preferences.analytics}
+                      aria-label={`Cookie analitici: ${preferences.analytics ? "attivo" : "disattivo"}`}
                     >
                       {preferences.analytics ? "Attivo" : "Disattivo"}
                     </Button>
@@ -359,6 +361,8 @@ const CookieBanner = () => {
                       variant={preferences.marketing ? "default" : "outline"}
                       size="sm"
                       onClick={() => togglePreference("marketing")}
+                      aria-pressed={preferences.marketing}
+                      aria-label={`Cookie di marketing: ${preferences.marketing ? "attivo" : "disattivo"}`}
                     >
                       {preferences.marketing ? "Attivo" : "Disattivo"}
                     </Button>
@@ -375,6 +379,8 @@ const CookieBanner = () => {
                       variant={preferences.functional ? "default" : "outline"}
                       size="sm"
                       onClick={() => togglePreference("functional")}
+                      aria-pressed={preferences.functional}
+                      aria-label={`Cookie funzionali: ${preferences.functional ? "attivo" : "disattivo"}`}
                     >
                       {preferences.functional ? "Attivo" : "Disattivo"}
                     </Button>
