@@ -84,6 +84,7 @@ const Header = () => {
 
           {/* Mobile Menu Button */}
           <Button
+            ref={menuButtonRef}
             variant="ghost"
             size="sm"
             onClick={toggleMenu}
@@ -99,6 +100,7 @@ const Header = () => {
         {/* Mobile Navigation */}
         {isMenuOpen && (
           <div 
+            ref={menuRef}
             id="mobile-menu"
             className="md:hidden py-4 border-t border-foreground/20"
             role="menu"
