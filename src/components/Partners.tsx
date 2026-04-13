@@ -32,6 +32,9 @@ const Partners = () => {
                 src={partner.logo} 
                 alt={`Logo del partner ${partner.name}`}
                 loading="lazy"
+                decoding="async"
+                width={120}
+                height={32}
                 className="h-8 w-auto max-w-full object-contain"
               />
             </div>
