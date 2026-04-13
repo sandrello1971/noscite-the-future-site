@@ -6,19 +6,13 @@ import { AccessibleVideo } from "@/components/AccessibleVideo";
 const Hero = () => {
   return (
     <section className="relative min-h-screen flex items-center pt-16 overflow-hidden">
-      {/* Video Background */}
+      {/* Video Background with Accessible Controls */}
       <div className="absolute inset-0 z-0">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload="none"
-          className="w-full h-full object-cover"
-        >
-          <source src="/noscitelogo.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
+        <AccessibleVideo
+          src="/noscitelogo.mp4"
+          ariaLabel="Video di sfondo con logo Noscite animato"
+          className="w-full h-full"
+        />
       </div>
       
       <div className="container mx-auto px-4 lg:px-8 relative z-20">
@@ -47,7 +41,7 @@ const Hero = () => {
               >
                 <Link to="/methodus">
                   Scopri il nostro approccio
-                  <ArrowRight className="ml-2 h-6 w-6" />
+                  <ArrowRight className="ml-2 h-6 w-6" aria-hidden="true" />
                 </Link>
               </Button>
             </div>

@@ -64,7 +64,7 @@ const Methodus = () => {
                       <div className={`bg-card/10 backdrop-blur-sm p-6 rounded-xl border border-white/20 hover-lift ${isEven ? 'lg:text-right' : 'lg:text-left'}`}>
                         <div className={`flex items-center space-x-4 mb-4 ${isEven ? 'lg:justify-end lg:flex-row-reverse lg:space-x-reverse' : ''}`}>
                           <div className="w-12 h-12 bg-secondary rounded-full flex items-center justify-center shadow-lg">
-                            <IconComponent className="h-6 w-6 text-white" />
+                            <IconComponent className="h-6 w-6 text-white" aria-hidden="true" />
                           </div>
                           <h3 className="text-2xl font-serif-elegant font-bold text-white font-latin-italic">
                             {step.title}
@@ -78,7 +78,7 @@ const Methodus = () => {
                     
                     {/* Timeline Node with Orange Color */}
                     <div className="hidden lg:block relative z-10">
-                      <div className="w-8 h-8 bg-gradient-to-br from-secondary to-secondary/80 rounded-full flex items-center justify-center shadow-lg animate-pulse">
+                      <div className="w-8 h-8 bg-gradient-to-br from-secondary to-secondary/80 rounded-full flex items-center justify-center shadow-lg motion-safe:animate-pulse">
                         <span className="text-white font-bold text-sm">{step.number}</span>
                       </div>
                     </div>

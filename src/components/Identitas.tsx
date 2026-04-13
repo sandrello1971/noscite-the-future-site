@@ -44,7 +44,7 @@ const Identitas = () => {
                 return (
                   <div key={value.title} className="flex items-start space-x-4 animate-slide-up" style={{ animationDelay: `${index * 100}ms` }}>
                     <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <IconComponent className="h-6 w-6 text-primary" />
+                      <IconComponent className="h-6 w-6 text-primary" aria-hidden="true" />
                     </div>
                     <div>
                       <h3 className="text-xl font-serif-elegant font-bold text-foreground mb-2 font-latin-italic">
