@@ -46,7 +46,9 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <GoogleAnalytics />
+          <Suspense fallback={null}>
+            <GoogleAnalytics />
+          </Suspense>
           <Suspense fallback={<div className="min-h-screen bg-background" />}>
             <Routes>
               <Route path="/" element={<Index />} />
@@ -79,7 +81,9 @@ const App = () => (
             </Routes>
             <Chatbot />
           </Suspense>
-          <CookieBanner />
+          <Suspense fallback={null}>
+            <CookieBanner />
+          </Suspense>
         </BrowserRouter>
       </TooltipProvider>
     </HelmetProvider>
