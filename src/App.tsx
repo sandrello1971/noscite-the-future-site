@@ -5,8 +5,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
-import CookieBanner from "./components/CookieBanner";
-import { GoogleAnalytics } from "./components/GoogleAnalytics";
+const CookieBanner = lazy(() => import("./components/CookieBanner"));
+const GoogleAnalytics = lazy(() => import("./components/GoogleAnalytics").then(m => ({ default: m.GoogleAnalytics })));
 
 const Index = lazy(() => import("./pages/Index"));
 const Identitas = lazy(() => import("./pages/Identitas"));
