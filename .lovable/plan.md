@@ -1,47 +1,56 @@
 
 
-# Audit accessibilità WCAG 2.1 AA — Risultati e piano di correzione
+# Audit WCAG 2.1 AA — Correzioni residue
 
-## Issues identificate
+## Stato attuale
+Le correzioni precedenti hanno coperto Hero (AccessibleVideo), Identitas, Methodus, Valor, Contactus, Footer e CookieBanner. Restano gap in altri componenti.
 
-### 1. Video Hero: autoplay senza controlli accessibili (WCAG 2.2.2)
-Il video in `Hero.tsx` (riga 11-21) usa `autoPlay` nativo senza alcun controllo play/pause visibile. Il componente `AccessibleVideo` esiste ma NON viene usato nella Hero — viene usato un `<video>` nudo. Utenti con epilessia, ADHD o preferenza `prefers-reduced-motion` non possono fermarlo.
+## Issues residue
 
-### 2. Icone decorative senza `aria-hidden="true"` (WCAG 1.1.1)
-Tutte le icone Lucide nei componenti Identitas, Methodus, Valor, Contactus, Partners e Footer mancano di `aria-hidden="true"`. Gli screen reader le annunciano come contenuto vuoto o generico, creando rumore.
+### 1. Icone decorative senza `aria-hidden="true"`
+- **Services.tsx** riga 85: 4 icone caratteristiche + 2 icone nei CTA
+- **Atheneum.tsx** riga 57: 3 icone percorsi + 1 icona ArrowRight nel CTA
+- **Historiae.tsx** riga 55: 3 icone storie
+- **Testimonials.tsx** riga 48: icone Star (rating)
 
-### 3. Link contatto senza testo accessibile esplicito (WCAG 2.4.4)
-In `Contactus.tsx`, i link wrappano intere Card ma non hanno `aria-label` — lo screen reader legge tutto il contenuto della card come testo del link, risultando confuso.
+### 2. Partner logo alt text migliorabile
+- **Partners.tsx**: `alt={\`${partner.name} logo\`}` è accettabile ma potrebbe essere più descrittivo: `alt={\`Logo del partner ${partner.name}\`}`
 
-### 4. Animazione `animate-pulse` sulla timeline (WCAG 2.3.1)
-In `Methodus.tsx` riga 81, i nodi della timeline hanno `animate-pulse` infinito. Può essere problematico per utenti con sensibilità al movimento.
+### 3. Sezioni senza landmark `aria-label`
+Nessuna `<section>` ha `aria-label` o `aria-labelledby` — gli screen reader non possono distinguere le sezioni durante la navigazione per landmark.
 
-### 5. Cookie banner: toggle buttons senza `role` e `aria-pressed` (WCAG 4.1.2)
-I pulsanti "Attivo/Disattivo" nel pannello preferenze cookie usano `<Button>` senza `aria-pressed` — lo stato on/off non è comunicato agli screen reader.
+### 4. Navigazione tastiera: focus visibile su card hover-lift
+Le card con `hover-lift` e `cursor-pointer` (Atheneum) non sono focusable da tastiera e non hanno `tabIndex` né `role`.
+
+### 5. Header mobile menu: focus trap assente
+Quando il menu mobile si apre, il focus non è intrappolato — l'utente può tabulare fuori dal menu overlay.
 
 ---
 
 ## Piano di correzione
 
-### File: `src/components/Hero.tsx`
-- Sostituire il `<video>` nudo con il componente `AccessibleVideo` già esistente, oppure aggiungere rispetto per `prefers-reduced-motion` e controlli play/pause.
+### File: `src/components/Services.tsx`
+- Aggiungere `aria-hidden="true"` alle 6 icone Lucide decorative
 
-### File: `src/components/Identitas.tsx`, `Methodus.tsx`, `Valor.tsx`, `Contactus.tsx`, `Footer.tsx`, `Partners.tsx`
-- Aggiungere `aria-hidden="true"` a tutte le icone decorative Lucide.
+### File: `src/components/Atheneum.tsx`
+- Aggiungere `aria-hidden="true"` alle 4 icone Lucide decorative
+- Aggiungere `tabIndex={0}` e `role="article"` alle card percorsi
 
-### File: `src/components/Contactus.tsx`
-- Aggiungere `aria-label` descrittivi ai link delle card contatto (es. `aria-label="Invia email a info@noscite.it"`).
+### File: `src/components/Historiae.tsx`
+- Aggiungere `aria-hidden="true"` alle 3 icone decorative
 
-### File: `src/components/Methodus.tsx`
-- Wrappare `animate-pulse` in una media query `prefers-reduced-motion: no-preference` o rimuoverlo.
+### File: `src/components/Testimonials.tsx`
+- Aggiungere `aria-hidden="true"` alle icone Star
+- Aggiungere `aria-label={\`Valutazione: ${testimonial.rating} stelle su 5\`}` al contenitore rating
 
-### File: `src/components/CookieBanner.tsx`
-- Aggiungere `aria-pressed={preferences.analytics}` (e simili) ai pulsanti toggle delle preferenze cookie.
-- Aggiungere `role="dialog"` e `aria-modal="true"` al pannello preferenze overlay.
+### File: `src/components/Identitas.tsx`, `Methodus.tsx`, `Valor.tsx`, `Contactus.tsx`, `Historiae.tsx`, `Atheneum.tsx`, `Services.tsx`, `Testimonials.tsx`, `Partners.tsx`
+- Aggiungere `aria-labelledby` a ogni `<section>` collegato all'`id` del rispettivo `<h2>`/`<h3>`
+
+### File: `src/components/Header.tsx`
+- Aggiungere focus trap nel menu mobile: quando aperto, Escape chiude il menu e il focus torna al pulsante hamburger
 
 ---
 
 ## Dettagli tecnici
-
-Circa 6 file da modificare. Nessuna dipendenza aggiuntiva. Nessun rischio di regressione visiva — solo attributi ARIA e logica CSS per reduced motion.
+~10 file da modificare. Solo attributi ARIA, `tabIndex` e gestione focus da tastiera. Nessuna dipendenza aggiuntiva, nessun rischio di regressione visiva.
 
