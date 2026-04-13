@@ -1,25 +1,34 @@
 
 
-# Aggiunta sezione AI Agentica e MCP alla pagina Servizi
+# Aggiunta link Privacy Policy nell'HTML statico
 
-## Cosa viene aggiunto
-Una nuova sezione "Agenti AI che rispondono a chi li ha costruiti" con tre pillole (Card) che spiegano la connessione strutturata via MCP, l'orchestrazione con governance, e il presidio umano by design. Chiude con una CTA verso `/contatti`.
+## Problema reale
+L'osservazione è tecnicamente corretta: `index.html` non contiene alcun riferimento a `/privacy-policy`. I crawler che non eseguono JavaScript (e gli auditor di compliance) vedono solo il `<div id="root"></div>` vuoto senza alcun link all'informativa. Sebbene il sito React lo renda disponibile tramite Footer, CookieBanner e badge flottante, l'assenza nell'HTML statico è un gap di trasparenza.
 
-## Posizione
-Dopo la sezione "Tecnologia: vendor-neutral, pragmatica" (riga 465) e prima di "Come lavoriamo insieme" (riga 468). Si inserisce naturalmente come approfondimento tecnologico.
+## Soluzione
+Aggiungere un blocco `<noscript>` nel `<body>` di `index.html` con link testuali di fallback visibili ai crawler e agli utenti senza JavaScript.
 
 ## Dettagli tecnici
 
-**File: `src/pages/Servizi.tsx`**
+**File: `index.html`**
 
-- Aggiungere import di tre icone Lucide: `Link2`, `Compass`, `Hand`
-- Inserire una nuova `<section>` tra le righe 465 e 467 con:
-  - Headline: "Agenti AI che rispondono a chi li ha costruiti"
-  - Tre Card in griglia `md:grid-cols-3` con:
-    1. **Connessione strutturata** (icona `Link2`) — testo su MCP e collegamento a CRM, ERP, calendari, archivi
-    2. **Orchestrazione con senso** (icona `Compass`) — testo sul layer Gubernator di governance
-    3. **Presidio umano by design** (icona `Hand`) — testo sul controllo umano ai nodi sensibili
-  - CTA Button verso `/contatti`: "Scopri come costruiamo sistemi AI controllabili"
+Inserire prima di `<script type="module" src="/src/main.tsx">` un blocco:
 
-Nessun altro file da modificare.
+```html
+<noscript>
+  <div style="padding:2rem;font-family:sans-serif;text-align:center">
+    <p>Noscite — In Digitali Nova Virtus</p>
+    <p>
+      <a href="/privacy-policy">Privacy Policy</a> |
+      <a href="/cookie-policy">Cookie Policy</a> |
+      <a href="/contatti">Contatti</a>
+    </p>
+    <p>© Noscite — P.IVA 14385240966</p>
+  </div>
+</noscript>
+```
+
+Questo garantisce che crawler, auditor e utenti senza JS trovino immediatamente i link normativi nell'HTML statico, senza impatto sull'esperienza degli utenti con JavaScript attivo.
+
+Un singolo file da modificare, nessun rischio di regressione.
 
