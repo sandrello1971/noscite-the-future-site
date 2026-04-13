@@ -83,6 +83,7 @@ export const AccessibleVideo = ({
         muted={isMuted}
         loop
         playsInline
+        preload="metadata"
         onClick={handleVideoClick}
         aria-label={ariaLabel}
         onPlay={() => setIsPlaying(true)}
