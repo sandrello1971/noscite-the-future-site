@@ -62,7 +62,7 @@ const Footer = () => {
                 <MapPin className="h-4 w-4" />
                 <span>Via Monte Grappa 13 <br />Corsico (MI), Italia</span>
               </div>
-              <a href="https://linkedin.com/company/noscite" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-3 lg:justify-end text-white hover:text-secondary transition-colors group" title="Visita il profilo LinkedIn di Noscite">
+              <a href="https://www.linkedin.com/company/noscite/" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-3 lg:justify-end text-white hover:text-secondary transition-colors group" title="Visita il profilo LinkedIn di Noscite">
                 <Linkedin className="h-4 w-4" />
                 <span>linkedin.com/company/noscite</span>
               </a>
