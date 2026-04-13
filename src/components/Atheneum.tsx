@@ -26,11 +26,11 @@ const Atheneum = () => {
   ];
 
   return (
-    <section className="py-20 bg-background">
+    <section className="py-20 bg-background" aria-labelledby="atheneum-heading">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16 animate-fade-in">
-            <h2 className="text-4xl lg:text-6xl font-serif-elegant font-bold text-foreground mb-6">
+            <h2 id="atheneum-heading" className="text-4xl lg:text-6xl font-serif-elegant font-bold text-foreground mb-6">
               <span className="font-latin-italic">Atheneum</span>
             </h2>
             <p className="text-2xl text-muted-foreground font-serif-elegant font-latin-italic mb-8">
@@ -49,12 +49,14 @@ const Atheneum = () => {
               return (
                 <Card 
                   key={percorso.title} 
-                  className="border-border hover-lift animate-slide-up group cursor-pointer bg-card/50 backdrop-blur-sm" 
+                  className="border-border hover-lift animate-slide-up group cursor-pointer bg-card/50 backdrop-blur-sm focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2" 
                   style={{ animationDelay: `${index * 100}ms` }}
+                  tabIndex={0}
+                  role="article"
                 >
                   <CardContent className="p-8">
                     <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-primary/20 transition-colors">
-                      <IconComponent className="h-8 w-8 text-primary" />
+                      <IconComponent className="h-8 w-8 text-primary" aria-hidden="true" />
                     </div>
                     <h3 className="text-2xl font-serif-elegant font-bold text-foreground mb-4 font-latin-italic text-center group-hover:text-secondary transition-colors">
                       {percorso.title}
@@ -93,7 +95,7 @@ const Atheneum = () => {
             >
               <Link to="/atheneum">
                 Esplora i percorsi
-                <ArrowRight className="ml-2 h-5 w-5" />
+                <ArrowRight className="ml-2 h-5 w-5" aria-hidden="true" />
               </Link>
             </Button>
           </div>

@@ -10,10 +10,10 @@ const Partners = () => {
   ];
 
   return (
-    <section className="py-16 bg-muted/20">
+    <section className="py-16 bg-muted/20" aria-labelledby="partners-heading">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="text-center mb-12">
-          <h3 className="text-2xl font-semibold text-foreground mb-4">
+          <h3 id="partners-heading" className="text-2xl font-semibold text-foreground mb-4">
             Partner Strategici
           </h3>
           <p className="text-muted-foreground">
@@ -30,7 +30,7 @@ const Partners = () => {
             >
               <img 
                 src={partner.logo} 
-                alt={`${partner.name} logo`}
+                alt={`Logo del partner ${partner.name}`}
                 loading="lazy"
                 className="h-8 w-auto max-w-full object-contain"
               />

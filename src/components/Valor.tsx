@@ -21,11 +21,11 @@ const Valor = () => {
   ];
 
   return (
-    <section className="py-20 bg-card">
+    <section className="py-20 bg-card" aria-labelledby="valor-heading">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16 animate-fade-in">
-            <h2 className="text-4xl lg:text-6xl font-serif-elegant font-bold text-foreground mb-6">
+            <h2 id="valor-heading" className="text-4xl lg:text-6xl font-serif-elegant font-bold text-foreground mb-6">
               <span className="font-latin-italic">Valor</span>
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-8">
