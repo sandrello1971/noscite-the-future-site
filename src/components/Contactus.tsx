@@ -32,11 +32,11 @@ const Contactus = () => {
   ];
 
   return (
-    <section className="py-20 bg-antracite">
+    <section className="py-20 bg-antracite" aria-labelledby="contactus-heading">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="max-w-4xl mx-auto text-center">
           <div className="mb-16 animate-fade-in">
-            <h2 className="text-3xl lg:text-5xl font-serif-elegant font-bold text-white mb-6">
+            <h2 id="contactus-heading" className="text-3xl lg:text-5xl font-serif-elegant font-bold text-white mb-6">
               <span className="font-latin-italic">Contactus</span>
             </h2>
             <p className="text-2xl text-white font-serif-elegant font-latin-italic mb-8">
@@ -77,7 +77,7 @@ const Contactus = () => {
           <div className="animate-fade-in">
             <Button variant="secondary" size="lg" asChild className="hover:bg-secondary/80 hover:border-secondary transition-colors duration-300">
               <Link to="/contatti">
-                <Mail className="mr-2 h-5 w-5" />
+                <Mail className="mr-2 h-5 w-5" aria-hidden="true" />
                 Inizia la conversazione
               </Link>
             </Button>

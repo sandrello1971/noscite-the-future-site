@@ -27,10 +27,10 @@ const Testimonials = () => {
   ];
 
   return (
-    <section className="py-20 bg-background">
+    <section className="py-20 bg-background" aria-labelledby="testimonials-heading">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="text-center mb-16 animate-fade-in">
-          <h2 className="text-3xl lg:text-5xl font-bold text-foreground mb-6">
+          <h2 id="testimonials-heading" className="text-3xl lg:text-5xl font-bold text-foreground mb-6">
             Cosa Dicono i Nostri Clienti
           </h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
@@ -43,9 +43,9 @@ const Testimonials = () => {
             <Card key={index} className="hover-lift animate-slide-up" style={{ animationDelay: `${index * 150}ms` }}>
               <CardContent className="p-8">
                 {/* Rating */}
-                <div className="flex space-x-1 mb-4">
+                <div className="flex space-x-1 mb-4" aria-label={`Valutazione: ${testimonial.rating} stelle su 5`} role="img">
                   {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star key={i} className="h-5 w-5 fill-secondary text-secondary" />
+                    <Star key={i} className="h-5 w-5 fill-secondary text-secondary" aria-hidden="true" />
                   ))}
                 </div>
                 

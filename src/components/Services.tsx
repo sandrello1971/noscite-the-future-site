@@ -58,10 +58,10 @@ const Services = () => {
   ];
 
   return (
-    <section className="py-20 bg-muted/30">
+    <section className="py-20 bg-muted/30" aria-labelledby="services-heading">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="text-center mb-16 animate-fade-in">
-          <h2 className="text-3xl lg:text-5xl font-bold text-foreground mb-6">
+          <h2 id="services-heading" className="text-3xl lg:text-5xl font-bold text-foreground mb-6">
             Il Metodo Noscite
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
@@ -82,7 +82,7 @@ const Services = () => {
             return (
               <Card key={caratteristica.title} className="text-center hover-lift animate-slide-up" style={{ animationDelay: `${index * 100}ms` }}>
                 <CardContent className="p-6">
-                  <IconComponent className="h-12 w-12 text-primary mx-auto mb-4" />
+                  <IconComponent className="h-12 w-12 text-primary mx-auto mb-4" aria-hidden="true" />
                   <h3 className="text-lg font-semibold mb-2">{caratteristica.title}</h3>
                   <p className="text-sm text-muted-foreground">{caratteristica.description}</p>
                 </CardContent>
@@ -115,14 +115,14 @@ const Services = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button variant="cta" size="lg" asChild>
               <Link to="/contatti">
-                <Phone className="mr-2 h-5 w-5" />
+                <Phone className="mr-2 h-5 w-5" aria-hidden="true" />
                 Contattaci
               </Link>
             </Button>
             <Button variant="outline" size="lg" asChild>
               <Link to="/servizi">
                 Scopri il Metodo Completo
-                <ArrowRight className="ml-2 h-5 w-5" />
+                <ArrowRight className="ml-2 h-5 w-5" aria-hidden="true" />
               </Link>
             </Button>
           </div>

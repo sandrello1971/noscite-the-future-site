@@ -35,11 +35,11 @@ const Methodus = () => {
   ];
 
   return (
-    <section className="py-20 bg-antracite">
+    <section className="py-20 bg-antracite" aria-labelledby="methodus-heading">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16 animate-fade-in">
-            <h2 className="text-4xl lg:text-6xl font-serif-elegant font-bold text-white mb-6">
+            <h2 id="methodus-heading" className="text-4xl lg:text-6xl font-serif-elegant font-bold text-white mb-6">
               <span className="font-latin-italic">Methodus</span>
             </h2>
             <p className="text-xl text-white max-w-3xl mx-auto leading-relaxed">

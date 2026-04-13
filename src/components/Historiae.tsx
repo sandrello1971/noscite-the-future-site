@@ -27,11 +27,11 @@ const Historiae = () => {
   ];
 
   return (
-    <section className="py-20 bg-antracite">
+    <section className="py-20 bg-antracite" aria-labelledby="historiae-heading">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16 animate-fade-in">
-            <h2 className="text-4xl lg:text-6xl font-serif-elegant font-bold text-white mb-6">
+            <h2 id="historiae-heading" className="text-4xl lg:text-6xl font-serif-elegant font-bold text-white mb-6">
               <span className="font-latin-italic">Historiae</span>
             </h2>
             <p className="text-xl text-white/90 max-w-3xl mx-auto leading-relaxed">
@@ -52,7 +52,7 @@ const Historiae = () => {
                     <CardContent className="p-6">
                       <div className="flex items-center space-x-3 mb-6">
                         <div className="w-12 h-12 bg-secondary/30 rounded-full flex items-center justify-center">
-                          <IconComponent className="h-6 w-6 text-secondary" />
+                          <IconComponent className="h-6 w-6 text-secondary" aria-hidden="true" />
                         </div>
                         <h3 className="text-xl font-serif-elegant font-bold text-white font-latin-italic">
                           {story.title}

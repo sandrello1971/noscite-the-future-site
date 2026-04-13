@@ -20,13 +20,13 @@ const Identitas = () => {
   ];
 
   return (
-    <section className="py-20 bg-background">
+    <section className="py-20 bg-background" aria-labelledby="identitas-heading">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="max-w-6xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Left Column - Text */}
             <div className="animate-fade-in">
-              <h2 className="text-4xl lg:text-6xl font-serif-elegant font-bold text-foreground mb-6">
+              <h2 id="identitas-heading" className="text-4xl lg:text-6xl font-serif-elegant font-bold text-foreground mb-6">
                 <span className="font-latin-italic">Identitas</span>
               </h2>
               <p className="text-xl text-muted-foreground leading-relaxed mb-8">
