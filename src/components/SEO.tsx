@@ -10,7 +10,7 @@ interface SEOProps {
 }
 
 export const SEO = ({
-  title = "Noscite - In Digitali Nova Virtus | Athenaeum AI e Consulenza",
+  title = "Noscite - Trasformazione Digitale e AI per PMI | Consulenza",
   description = "Innovazione digitale e AI per PMI italiane: consulenza strategica, formazione Athenaeum AI, implementazione con ROI misurabile. Scopri il metodo Noscite.",
   keywords = "AI, intelligenza artificiale, trasformazione digitale, consulenza tecnologica, formazione AI, Athenaeum AI, AI Sprint, Launchpad",
   ogImage = "https://lovable.dev/opengraph-image-p98pqg.png",
